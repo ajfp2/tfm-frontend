@@ -1,0 +1,77 @@
+  <!-- Navbar Superior -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container-fluid">
+      <!-- Botón hamburguesa solo para móvil -->
+      <button class="btn btn-link text-white me-2 d-md-none" (click)="toggleSidenav()">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+      
+      <!-- Logo y Título -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img [src]="appLogo" alt="Logo" class="logo-img me-2">        
+        <div class="brand-text">
+          <div class="brand-title">{{ title }}</div>
+          <div class="brand-subtitle" *ngIf="subtitle">{{ subtitle }}</div>
+        </div>
+      </a>
+      
+      <!-- Botones a la derecha -->
+      <div class="ms-auto d-flex align-items-center">
+        <!-- Tareas -->
+        <button class="btn btn-link text-white me-2 p-2" (click)="onTasks()">
+          <i class="bi bi-tools fs-5"></i>
+          <span class="position-absolute mt-3 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 0.35em 0.55em;">1</span>
+        </button>
+
+        <!-- Notificaciones -->
+        <button class="btn btn-link text-white position-relative me-2 p-2" (click)="onNotifications()">
+          <i class="bi bi-bell fs-5"></i>
+          <span class="position-absolute mt-2 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 0.35em 0.55em;">3</span>
+        </button>        
+        
+        <!-- Dropdown Usuario -->
+        <div class="dropdown user-dropdown">
+          <button 
+            class="btn btn-link text-white p-0 d-flex align-items-center user-dropdown-toggle" 
+            (click)="toggleUserDropdown()">
+            <img [src]="currentUser.avatar" [alt]="currentUser.name" class="user-avatar me-2">
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          
+          <!-- Menú Dropdown -->
+          <div class="dropdown-menu dropdown-menu-end user-dropdown-menu" [class.show]="userDropdownOpen">
+            <!-- Información del usuario -->
+            <div class="dropdown-header user-info">
+              <img [src]="currentUser.avatar" [alt]="currentUser.name" class="user-avatar-large mb-2">
+              <div class="user-name">{{ currentUser.name }}</div>
+              <div class="user-email">{{ currentUser.email }}</div>
+            </div>
+            
+            <!-- <div class="dropdown-divider"></div> -->
+            
+            <!-- Opciones del menú -->
+            <a class="dropdown-item" href="#" (click)="onProfile(); $event.preventDefault()">
+              <i class="bi bi-person me-2"></i>Mi Perfil
+            </a>
+            <a class="dropdown-item" href="#" (click)="onTasks(); $event.preventDefault()">
+              <i class="bi bi-tools me-2"></i>Tareas
+            </a>
+            <a class="dropdown-item" href="#" (click)="onHelp(); $event.preventDefault()">
+              <i class="bi bi-question-circle me-2"></i>Ayuda
+            </a>
+            
+            <div class="dropdown-divider"></div>
+            
+            <a class="dropdown-item text-danger" href="#" (click)="onLogout(); $event.preventDefault()">
+              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Overlay para cerrar el dropdown -->
+  <div class="user-dropdown-overlay" [class.show]="userDropdownOpen" (click)="closeUserDropdown()"></div>

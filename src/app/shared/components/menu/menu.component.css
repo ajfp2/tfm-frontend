@@ -1,0 +1,208 @@
+/* Sidenav */
+.sidenav {
+  width: 260px;
+  background-color: #2c3e50;
+  color: white;
+  height: 100%;
+  position: fixed;
+  left: -260px;
+  top: 56px;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  z-index: 1020;
+}
+
+.sidenav.sidenav-open {
+  left: 0;
+}
+
+.sidenav-content {
+  padding: 0.75rem 0;
+}
+
+/* Menu List */
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  margin: 0;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: #ecf0f1;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  background-color: #34495e;
+}
+
+/* Estado activo aplicado por routerLinkActive */
+.menu-link.active {
+  background-color: #3498db;
+  color: white;
+  border-left: 4px solid #2ecc71;
+  padding-left: calc(1.5rem - 4px);
+  font-weight: 600;
+}
+
+.menu-link i {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.menu-link .bi-chevron-down {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.menu-link .bi-chevron-down.rotate {
+  transform: rotate(180deg);
+}
+
+/* Submenu */
+.submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #1a252f;
+}
+
+.submenu-item {
+  margin: 0;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1.5rem 0.6rem 3rem;
+  color: #bdc3c7;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.submenu-link:hover {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.submenu-link.active {
+  background-color: #3498db;
+  color: white;
+  border-left: 3px solid #2ecc71;
+  padding-left: calc(3rem - 3px);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.submenu-link.has-active-child {
+  background-color: #243342;
+  color: white;
+}
+
+.submenu-link .bi-chevron-down {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+}
+
+.submenu-link .bi-chevron-down.rotate {
+  transform: rotate(180deg);
+}
+
+/* Submenu Nivel 2 */
+.submenu-level-2 {
+  background-color: #151d24;
+}
+
+.submenu-level-2 .submenu-link {
+  padding-left: 4.5rem;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.submenu-level-2 .submenu-link.active {
+  background-color: #3498db;
+  color: white;
+  border-left: 3px solid #2ecc71;
+  padding-left: calc(4.5rem - 3px);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Overlay para móvil */
+.sidenav-overlay {
+  display: none;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 56px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1010;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidenav-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Transiciones */
+.transition {
+  transition: transform 0.3s ease;
+}
+
+/* Responsive - Desktop */
+@media (min-width: 768px) {
+  .sidenav {
+    left: 0;
+  }
+
+  .sidenav.sidenav-open {
+    left: 0;
+  }
+
+  .sidenav-overlay {
+    display: none !important;
+  }
+}
+
+/* Responsive - Tablet y Móvil */
+@media (max-width: 767px) {
+  .sidenav {
+    left: -260px;
+  }
+
+  .sidenav.sidenav-open {
+    left: 0;
+  }
+}
+
+/* Scrollbar personalizado para el sidenav */
+.sidenav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidenav::-webkit-scrollbar-track {
+  background: #1a252f;
+}
+
+.sidenav::-webkit-scrollbar-thumb {
+  background: #34495e;
+  border-radius: 3px;
+}
+
+.sidenav::-webkit-scrollbar-thumb:hover {
+  background: #4a5f7f;
+}

@@ -1,0 +1,142 @@
+{
+  "menuItems": [
+    {
+      "id": 1,
+      "label": "Dashboard",
+      "icon": "bi-house-door",
+      "route": "/dashboard",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "label": "Peña",
+      "icon": "bi-file-earmark-text",
+      "order": 2,
+      "children": [
+        {
+          "id": 41,
+          "label": "Datos Básicos",
+          "route": "/pena/datosbasicos",
+          "order": 1
+        },
+        {
+          "id": 42,
+          "label": "Datos Bancarios",
+          "route": "/pena/datosbanco",
+          "order": 2
+        },
+        {
+          "id": 43,
+          "label": "Temporadas",
+          "route": "/pena/temporadas",
+          "order": 3
+        },
+        {
+          "id": 44,
+          "label": "Junta Directiva",
+          "route": "/pena/junta",
+          "order": 4
+        },
+        {
+          "id": 45,
+          "label": "Contactos",
+          "route": "/pena/contactos",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "label": "Administrar Socios",
+      "icon": "bi-person-vcard",
+      "order": 3,
+      "children": [        
+        {
+          "id": 31,
+          "label": "Socios",
+          "order": 1,
+          "children": [
+            {
+              "id": 311,
+              "label": "Socios Alta",
+              "route": "/socios/alta",
+              "order": 1
+            },
+            {
+              "id": 312,
+              "label": "Socios Baja",
+              "route": "/socios/baja",
+              "order": 2
+            },
+            {
+              "id": 313,
+              "label": "Socios Menores",
+              "route": "/socios/menores",
+              "order": 2
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "label": "Tipos de Socios",
+          "route": "/socios/tipos",
+          "order": 2
+        }
+      ]
+    },    
+    {
+      "id": 5,
+      "label": "Contabilidad",
+      "icon": "bi-bank2",
+      "route": "/contabilidad",
+      "order": 6
+    },
+    {
+      "id": 5,
+      "label": "Correspondencia",
+      "icon": "bi-mailbox-flag",
+      "order": 5,
+      "children": [
+        {
+          "id": 51,
+          "label": "Gmail",
+          "route": "/reportes/ventas",
+          "order": 1
+        },
+        {
+          "id": 52,
+          "label": "Socios",
+          "route": "/reportes/analisis",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "label": "Usuarios",
+      "icon": "bi-people",
+      "order": 6,
+      "children": [
+        {
+          "id": 61,
+          "label": "Lista de Usuarios",
+          "route": "/usuarios/users",
+          "order": 1
+        },
+        {
+          "id": 62,
+          "label": "Roles",
+          "route": "/usuarios/roles",
+          "order": 2
+        }        
+      ]
+    },
+    {
+      "id": 7,
+      "label": "Configuración",
+      "icon": "bi-gear",
+      "route": "/config",
+      "order": 7
+    }
+  ]
+}

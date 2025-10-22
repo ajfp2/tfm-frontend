@@ -1,0 +1,33 @@
+/* CSS mínimo - Bootstrap maneja la mayoría */
+
+/* Color Picker de Bootstrap ya tiene buenos estilos, solo ajustamos tamaño */
+.form-control-color {
+  width: 60px;
+  height: 45px;
+  cursor: pointer;
+}
+
+/* Ajustes menores para mejorar la presentación */
+.card-header {
+  font-weight: 600;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.btn-barra.active {
+  border-color: #333;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #333;
+}
+
+/* Responsive para botones de acción */
+@media (max-width: 768px) {
+  .d-flex.gap-3 {
+    flex-direction: column;
+  }
+  
+  .d-flex.gap-3 .btn {
+    width: 100%;
+  }
+}

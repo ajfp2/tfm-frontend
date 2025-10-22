@@ -1,0 +1,82 @@
+<!-- Sidenav -->
+<aside class="sidenav" [class.sidenav-open]="isOpen">
+  <div class="sidenav-content">
+    <ul class="menu-list">
+      <ng-container *ngFor="let item of menuItems">
+        <li class="menu-item">
+          <!-- Item sin hijos -->
+          <a 
+            *ngIf="!item.children && item.route"
+            class="menu-link"
+            [routerLink]="[item.route]"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenuOnMobile()">
+            <i [class]="'bi ' + item.icon" *ngIf="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+          
+          <!-- Item con hijos -->
+          <div 
+            *ngIf="item.children"
+            class="menu-link"
+            (click)="toggleMenuItem(item)">
+            <i [class]="'bi ' + item.icon" *ngIf="item.icon"></i>
+            <span>{{ item.label }}</span>
+            <i class="bi bi-chevron-down ms-auto transition" 
+               [class.rotate]="item.expanded"></i>
+          </div>
+          
+          <!-- Submenú nivel 1 -->
+          <ul class="submenu" *ngIf="item.children && item.expanded">
+            <li *ngFor="let subItem of item.children" class="submenu-item">
+              <!-- Subitem sin hijos -->
+              <a 
+                *ngIf="!subItem.children && subItem.route"
+                class="submenu-link"
+                [routerLink]="[subItem.route]"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="closeMenuOnMobile()">
+                <span>{{ subItem.label }}</span>
+              </a>
+              
+              <!-- Subitem con hijos (nivel 2) -->
+              <div *ngIf="subItem.children">
+                <div 
+                  class="submenu-link"
+                  (click)="toggleMenuItem(subItem)">
+                  <span>{{ subItem.label }}</span>
+                  <i class="bi bi-chevron-down ms-auto transition" 
+                     [class.rotate]="subItem.expanded"></i>
+                </div>
+                
+                <!-- Submenú nivel 2 -->
+                <ul class="submenu submenu-level-2" *ngIf="subItem.expanded">
+                  <li *ngFor="let subSubItem of subItem.children" class="submenu-item">
+                    <a 
+                      *ngIf="subSubItem.route"
+                      class="submenu-link"
+                      [routerLink]="[subSubItem.route]"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="closeMenuOnMobile()">
+                      <span>{{ subSubItem.label }}</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</aside>
+
+<!-- Overlay para móvil -->
+<div 
+  class="sidenav-overlay" 
+  [class.show]="isOpen"
+  (click)="closeSidenav.emit()">
+</div>

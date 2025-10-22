@@ -1,0 +1,73 @@
+/* Variables CSS dinámicas */
+:root {
+  --navbar-color: #0d6efd;
+  --gradient-from: #667eea;
+  --gradient-to: #764ba2;
+}
+
+/* Contenedor Principal */
+.app-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+/* Contenido Principal */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+}
+
+/* Transiciones */
+.transition {
+  transition: transform 0.3s ease;
+}
+
+/* Layout Principal */
+.main-layout {
+  display: flex;
+  margin-top: 56px;
+  height: calc(100vh - 56px);
+  position: relative;
+}
+
+/* Contenido Principal */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+  background-color: #f8f9fa;
+}
+
+.content-wrapper {
+  padding: 2rem;
+  min-height: 100%;
+}
+
+
+/* Responsive - Desktop */
+@media (min-width: 768px) {
+ 
+  .main-content {
+    margin-left: 260px;
+  }
+
+}
+
+/* Responsive - Tablet y Móvil */
+@media (max-width: 767px) {
+  
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+}
+

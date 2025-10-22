@@ -1,0 +1,195 @@
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 class="mb-2"><i class="bi bi-gear-fill me-2"></i> Configuración</h2>
+        <p class="text-muted">Personaliza la apariencia de tu aplicación</p>
+    </div>
+
+
+    <!-- Sección: Tipo de Entidad de la Aplicación -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-building me-2"></i> Entidad
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Tipo Entidad: <small>(Ej: Asociación/Club/Comparsa/Filà/Peña)</small></label>
+                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción">
+                    <option value="Entidad">Elegir</option>
+                    <option value="Asociación">Asociación</option>
+                    <option value="Club">Club</option>
+                    <option value="Comparsa">Comparsa</option>
+                    <option value="Filà">Filà</option>
+                    <option value="Peña">Peña</option>
+                </select>
+                <small class="form-text text-danger mb-0">
+                    Esta opción no se podrá volver a modificar (*). Esto servirá para describir ciertos puntos del menú.
+                </small>
+            </div>            
+        </div>
+    </div>
+
+    <!-- Sección: Tipo de Año(Temporadas, años ...) -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-calendar-range me-2"></i> Ejercicio económico
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Ejercicio económico <small>(Ej: Año/Año festero/Cusro/Temporada)</small></label>
+                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción">
+                    <option value="Elegir">Elegir</option>
+                    <option value="Temporada">Temporada</option>
+                    <option value="Año">Año</option>
+                    <option value="Fiestas">Fiestas</option>
+                    <option value="Ejercicio">Ejercicio</option>
+                </select>
+                <small class="form-text text-danger">
+                    Esta opción no se podrá volver a modificar (*). Como manejar los años (Ej: Temporada 2025-2026, Año 2025-2026, Fiestas 2025-2026 ...).
+                </small>
+            </div>            
+        </div>
+    </div>
+
+    <!-- Sección: Título de la Aplicación -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-type me-2"></i> Título de la Aplicación
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Nombre de la aplicación</label>
+                <input type="text" class="form-control" [(ngModel)]="config.appTitle" placeholder="Mi Aplicación" maxlength="50"/>
+                <div class="form-text">
+                    Este título aparecerá en la barra de navegación y en la pestaña del navegador.
+                </div>
+            </div>
+
+            <div class="alert alert-light border">
+                <div class="small text-muted mb-2">Vista previa:</div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-browser-chrome me-2"></i>
+                    <strong>Pestaña del navegador: </strong> {{ config.appTitle }}
+                </div>
+            </div>
+        </div>
+    </div>
+  
+
+    <!-- Sección: Color de la Barra Superior -->
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-palette-fill me-2"></i> Color de la Barra Superior
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Color personalizado</label>
+                    <div class="d-flex align-items-center">
+                        <input type="color" class="form-control form-control-color" [(ngModel)]="config.navbarColor" title="Selecciona un color" />
+                        <input type="text" class="form-control ms-2" [(ngModel)]="config.navbarColor" placeholder="#0d6efd" />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Colores predefinidos</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button *ngFor="let color of navbarColors" type="button" class="btn btn-sm rounded-circle p-3 btn-barra" [title]="color.name"
+                            [style.backgroundColor]="color.value" [class.active]="config.navbarColor === color.value" (click)="applyNavbarColor(color.value)"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-light border">
+                <div class="small text-muted mb-2">Vista previa:</div>
+                <div class="rounded p-3 text-white text-center fw-semibold" [style.backgroundColor]="config.navbarColor">
+                    Barra de Navegación
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección: Gradiente del desplegable del Usuario -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-droplet-fill me-2"></i> Gradiente del Menú de Usuario
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Color inicial</label>
+                    <div class="d-flex align-items-center">
+                        <input type="color" class="form-control form-control-color" [(ngModel)]="config.userDropdownGradient.from" title="Color inicial del gradiente" />
+                        <input type="text" class="form-control ms-2" [(ngModel)]="config.userDropdownGradient.from" placeholder="#667eea" />
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Color final</label>
+                    <div class="d-flex align-items-center">
+                        <input type="color" class="form-control form-control-color" [(ngModel)]="config.userDropdownGradient.to" title="Color final del gradiente" />
+                        <input type="text" class="form-control ms-2" [(ngModel)]="config.userDropdownGradient.to" placeholder="#764ba2" />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Gradientes predefinidos</label>
+                <div class="d-flex flex-wrap gap-2">
+                    <button *ngFor="let gradient of gradientPresets" type="button" class="btn btn-sm text-white"
+                        [style.background]="'linear-gradient(135deg, ' + gradient.from +' 0%, ' + gradient.to +' 100%)' " (click)="applyGradient(gradient)" [title]="gradient.name">
+                        {{ gradient.name }}
+                    </button>
+                </div>
+            </div>
+            <div class="alert alert-light border">
+                <div class="small text-muted mb-2">Vista previa:</div>
+                <div class="rounded p-4 text-white text-center" [style.background]="getGradientStyle()">
+                    <div class="text-white text-center py-3">
+                        <i class="bi bi-person-circle" style="font-size: 3rem"></i>
+                        <div class="mt-2">Menú de Usuario</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección: Logo de la Aplicación -->
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-image-fill me-2"></i> Logo de la Aplicación
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label fw-semibold">Subir logo</label>
+                    <input type="file" class="form-control" accept="image/*" (change)="onLogoFileSelected($event)" />
+                    <small class="form-text text-muted">
+                        Formatos: JPG, PNG, SVG. Tamaño máximo: 2MB. Recomendado: 40x40px o superior.
+                    </small>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Vista previa del logo</label>
+                    <div class="text-center p-3 bg-light border rounded">
+                        <img [src]="previewLogo" alt="Logo preview" class="img-fluid" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                    <!-- <div class="logo-preview-container">
+                        <img [src]="previewLogo" alt="Logo preview" class="logo-preview" />
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-center gap-3 py-4 border-top">
+        <button type="button" class="btn btn-primary btn-lg px-5" (click)="saveConfig()">
+            <i class="bi bi-check-lg me-2"></i> Guardar Cambios
+        </button>
+        
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4" (click)="resetToDefault()">
+            <i class="bi bi-arrow-counterclockwise me-2"></i> Restaurar Valores por Defecto
+        </button>
+    </div>
+</div>
