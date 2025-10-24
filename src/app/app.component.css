@@ -1,9 +1,3 @@
-/* Variables CSS dinámicas */
-:root {
-  --navbar-color: #0d6efd;
-  --gradient-from: #667eea;
-  --gradient-to: #764ba2;
-}
 
 /* Contenedor Principal */
 .app-container {

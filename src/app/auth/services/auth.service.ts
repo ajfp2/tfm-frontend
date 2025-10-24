@@ -151,9 +151,9 @@ export class AuthService {
         
         // Actualizar estado
         this.authStateSignal.set({
-        isAuthenticated: true,
-        user: user,
-        token: token
+            isAuthenticated: true,
+            user: user,
+            token: token
         });
     }
 
@@ -178,9 +178,9 @@ export class AuthService {
         localStorage.removeItem(this.USER_KEY);
         
         this.authStateSignal.set({
-        isAuthenticated: false,
-        user: null,
-        token: null
+            isAuthenticated: false,
+            user: null,
+            token: null
         });
     }
 
@@ -192,18 +192,18 @@ export class AuthService {
         const userStr = localStorage.getItem(this.USER_KEY);
         
         if (token && userStr) {
-        try {
-            const user = JSON.parse(userStr);
-            this.authStateSignal.set({
-            isAuthenticated: true,
-            user: user,
-            token: token
-            });
-            console.log('Estado de autenticación cargado:', user.name);
-        } catch (error) {
-            console.error('Error al cargar estado de autenticación:', error);
-            this.clearAuthData();
-        }
+            try {
+                const user = JSON.parse(userStr);
+                this.authStateSignal.set({
+                    isAuthenticated: true,
+                    user: user,
+                    token: token
+                });
+                console.log('Estado de autenticación cargado:', user.name);
+            } catch (error) {
+                console.error('Error al cargar estado de autenticación:', error);
+                this.clearAuthData();
+            }
         }
     }
 
@@ -213,8 +213,8 @@ export class AuthService {
     getAuthHeaders(): HttpHeaders {
         const token = this.token();
         return new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         });
     }
 }
