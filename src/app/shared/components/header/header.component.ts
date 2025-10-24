@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../../config/services/config.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 interface UserData {
   name: string;
@@ -32,7 +34,7 @@ export class HeaderComponent {
     avatar: 'https://ui-avatars.com/api/?name=Alfonso+Ferrando&background=0D8ABC&color=fff&size=128'
   };
 
-  constructor(public configService: ConfigService, private router: Router) {
+  constructor(public configService: ConfigService, private router: Router, private authS: AuthService, private toastS: ToastService) {
     // Reaccionar a cambios en la configuración
     effect(() => {
       const config = this.configService.config();
@@ -41,6 +43,18 @@ export class HeaderComponent {
       this.appLogo = config.appLogo;
       console.log("EFFECTS- Cargando Configuración ...");
       
+    });
+
+    // Reaccionar a cambios en el usuario autenticado
+    effect(() => {
+      const user = this.authS.currentUser();
+      if (user) {
+        this.currentUser = {
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff&size=128`
+        };
+      }
     });
 
     console.log("CONS- Configuración cargada");
@@ -84,7 +98,19 @@ export class HeaderComponent {
 
   onLogout() {
     console.log('Cerrar sesión clicked');
-    // Implementa tu lógica de logout
+    this.closeUserDropdown();
+    
+    // Llamar al servicio de logout
+    this.authS.logout().subscribe({
+      next: () => {
+        this.toastS.info('Sesión cerrada correctamente', 'Hasta pronto');
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        // Aunque falle, el AuthService ya limpió los datos locales
+      }
+    });
+
   }
 
 }

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { publicGuard, authGuard } from './shared/guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -9,16 +10,24 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     {
+        path: 'login',
+        loadComponent: () => import('./auth/componentes/login/login.component').then(m => m.LoginComponent),
+        canActivate: [publicGuard]  // ← Solo si NO está autenticado
+    },
+    {
         path: 'dashboard',
-        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
+        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+        canActivate: [authGuard]
     },
     {
         path: 'config',
-        loadComponent: () => import('./config/components/settings.component').then(m => m.SettingsComponent)
+        loadComponent: () => import('./config/components/settings.component').then(m => m.SettingsComponent),
+        canActivate: [authGuard]
     },
     {
         path: 'usuarios',
-        loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROUTES)
+        loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROUTES),
+        canActivate: [authGuard]
     },
 
     {
