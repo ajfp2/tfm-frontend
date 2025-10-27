@@ -119,8 +119,10 @@
   transition: background-color 0.2s;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: center;  
 }
+
+
 
 .user-dropdown-menu .dropdown-item:hover {
   background-color: #f8f9fa;

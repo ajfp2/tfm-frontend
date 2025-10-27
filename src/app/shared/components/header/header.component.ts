@@ -1,16 +1,11 @@
-import { Component, effect, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, effect, EventEmitter, Output } from '@angular/core';
+import { Event, Router } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../../config/services/config.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ToastService } from '../../services/toast.service';
 
-interface UserData {
-  name: string;
-  email: string;
-  avatar: string;
-}
 
 @Component({
   selector: 'app-header',
@@ -74,30 +69,35 @@ export class HeaderComponent {
   }
 
 
-  onNotifications() {
+  onNotifications(event: MouseEvent) {
+    event.preventDefault();
     console.log('Notificaciones clicked');
     // Implementa tu lógica de notificaciones
   }
 
-  onTasks() {
+  onTasks(event: MouseEvent) {
+    event.preventDefault();
     console.log('Tasks clicked');
     // Implementa tu lógica de configuración
   }
 
-  onProfile() {
+  onProfile(event: MouseEvent) {
     console.log('Mi perfil clicked');
+    event.preventDefault();
     this.closeUserDropdown();
     // Implementa tu lógica de perfil
   }
 
-  onHelp() {
+  onHelp(event: MouseEvent) {
     console.log('Ayuda clicked');
+    event.preventDefault();
     this.closeUserDropdown();
     // Implementa tu lógica de ayuda
   }
 
-  onLogout() {
-    console.log('Cerrar sesión clicked');
+  onLogout(event: MouseEvent) {
+    console.log('Cerrar sesión click');
+    event.preventDefault();
     this.closeUserDropdown();
     
     // Llamar al servicio de logout

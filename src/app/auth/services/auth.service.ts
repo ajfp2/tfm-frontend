@@ -58,15 +58,13 @@ export class AuthService {
         const token = this.token();
         
         if (!token) {
-        this.clearAuthData();
-        this.router.navigate(['/login']);
-        return throwError(() => new Error('No hay token'));
+            this.clearAuthData();
+            this.router.navigate(['/login']);
+            return throwError(() => new Error('No hay token'));
         }
 
         return this.http.post(`${this.apiUrl}/logout`, {}, {
-        headers: new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        })
+            headers: this.getAuthHeaders()
         }).pipe(
         tap(() => {
             console.log('Logout exitoso');
