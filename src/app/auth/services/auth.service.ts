@@ -3,13 +3,13 @@ import { computed, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthState, LoginCredentials, LoginResponse, User } from '../models/auth.model';
 import { Observable, tap, catchError, throwError, map } from 'rxjs';
+import { environment } from '../../../enviroments/enviroments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-    // private apiUrl = 'http://localhost:8000/api';
-    private apiUrl = 'http://servidor2/ci-intranet-api/public/auth';
+    private apiUrl = environment.api_url;
   
     // Claves para localStorage
     private readonly TOKEN_KEY = 'auth_token';
@@ -44,7 +44,7 @@ export class AuthService {
                 // Guardar token y usuario
                 console.log(response);
                 
-                this.setAuthData(response.access_token, response.user);
+                this.setAuthData(response.token, response.user);
                 console.log('Login exitoso:', response.user);
             }),
             catchError(error => {
@@ -132,7 +132,7 @@ export class AuthService {
     refreshToken(): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, {}).pipe(
         tap(response => {
-            this.setAuthData(response.access_token, response.user);
+            this.setAuthData(response.token, response.user);
         }),
         catchError(error => {
             console.error('Error al refrescar token:', error);
@@ -213,8 +213,7 @@ export class AuthService {
      */
     getAuthHeaders(): HttpHeaders {
         const token = this.token();
-        return new HttpHeaders({
-            'Authorization': `Bearer ${token}`,
+        return new HttpHeaders({            
             'Content-Type': 'application/json'
         });
     }

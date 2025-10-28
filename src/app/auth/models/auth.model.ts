@@ -17,7 +17,7 @@ export interface LoginCredentials {
 
 // Respuesta del login desde Laravel
 export interface LoginResponse {
-  access_token: string;
+  token: string;
   token_type: string;
   expires_in?: number;
   user: User;
