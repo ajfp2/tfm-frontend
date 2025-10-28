@@ -8,7 +8,8 @@ import { Observable, tap, catchError, throwError, map } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:8000/api';
+    // private apiUrl = 'http://localhost:8000/api';
+    private apiUrl = 'http://servidor2/ci-intranet-api/public/auth';
   
     // Claves para localStorage
     private readonly TOKEN_KEY = 'auth_token';
@@ -41,6 +42,8 @@ export class AuthService {
         return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
                 // Guardar token y usuario
+                console.log(response);
+                
                 this.setAuthData(response.access_token, response.user);
                 console.log('Login exitoso:', response.user);
             }),

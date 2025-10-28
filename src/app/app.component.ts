@@ -12,27 +12,13 @@ import { LoginComponent } from "./auth/componentes/login/login.component";
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, HeaderComponent, MenuComponent, ToastComponent, LoginComponent],
+  imports: [CommonModule, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
 export class AppComponent {
-  sidenavOpen = true;
-  // authenticated = false;
-
-  // constructor(private authS: AuthService){
-  //   this.authenticated = this.authS.isAuthenticated();
-  // }
-
-  toggleSidenav(): void {
-    this.sidenavOpen = !this.sidenavOpen;
-    console.log('sidenavOpen Click:', this.sidenavOpen); // DEBUG
-  }
-
-  closeSidenav(): void {
-    this.sidenavOpen = false;
-  }
+  
 }
 
 

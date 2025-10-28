@@ -1,0 +1,19 @@
+<div class="app-container">
+    <app-toast></app-toast>
+
+    <!-- <ng-container *ngIf="!authenticated; else userOK">
+        <app-login></app-login>
+    </ng-container> -->
+
+    <!-- <ng-template #userOK> -->
+        <app-header (toggleSidenavEvent)="toggleSidenav()"></app-header>
+        <div class="main-layout">
+            <app-menu [isOpen]="sidenavOpen" (closeSidenav)="closeSidenav()"></app-menu>
+            <main class="main-content" [class.sidenav-open]="sidenavOpen">
+                <div class="content-wrapper">
+                    
+                </div>
+            </main>
+        </div>
+    <!-- </ng-template> -->
+</div>
