@@ -18,9 +18,10 @@ export class HeaderComponent {
   @Output() toggleSidenavEvent = new EventEmitter<void>();
 
   title = 'Proyecto Almedia';
-  subtitle = 'Curso 2025-2026';
+  subtitle = 'Mi Colegio';
   appLogo = '';
   userDropdownOpen = false;
+  ano = '25-26';
 
   // Datos del usuario
   currentUser = {
@@ -35,6 +36,7 @@ export class HeaderComponent {
       const config = this.configService.config();
       this.title = config.appTitle;
       this.subtitle = config.appSubTitle;
+      this.ano = config.appAno;
       this.appLogo = config.appLogo;
       console.log("EFFECTS- Cargando Configuración ...");
       

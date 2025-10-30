@@ -3,7 +3,7 @@ import { computed, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthState, LoginCredentials, LoginResponse, User } from '../models/auth.model';
 import { Observable, tap, catchError, throwError, map } from 'rxjs';
-import { environment } from '../../../enviroments/enviroments';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -213,7 +213,8 @@ export class AuthService {
      */
     getAuthHeaders(): HttpHeaders {
         const token = this.token();
-        return new HttpHeaders({            
+        return new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         });
     }

@@ -1,96 +1,38 @@
 .login-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
-}
-
-.login-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  padding: 3rem;
-  width: 100%;
-  max-width: 450px;
-  animation: slideUp 0.5s ease-out;
+  background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%); /* Viene de la configuración */
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
 }
 
 .login-logo {
   width: 80px;
   height: 80px;
-  margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
   font-size: 2.5rem;
-  color: white;
-}
-
-.form-label {
-  font-weight: 600;
-  color: #495057;
-}
-
-.form-control-lg {
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-}
-
-.form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+  /* background: linear-gradient(135deg, #66a4ea 0%, #764ba2 100%); */
   border: none;
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-weight: 600;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+  /* background: linear-gradient(135deg, #66a4ea 0%, #764ba2 100%); */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.btn-primary:disabled {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  opacity: 0.6;
-  cursor: not-allowed;
+.form-control:focus {
+  border-color: #3a8df8;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
-.input-group .btn-outline-secondary {
-  border-left: none;
-}
 
-.input-group .form-control:focus + .btn-outline-secondary {
-  border-color: #667eea;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive */
+/* Ajuste de logo mas pequeño en disp. móviles */
 @media (max-width: 576px) {
-  .login-card {
-    padding: 2rem 1.5rem;
-  }
-
   .login-logo {
     width: 60px;
     height: 60px;

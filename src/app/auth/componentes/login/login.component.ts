@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ConfigService } from '../../../config/services/config.service';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +17,12 @@ export class LoginComponent {
     loading = false;
     showPassword = false;
     returnUrl: string = '/dashboard';
+    appLogo = '';
 
-    constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastService: ToastService) {
+    constructor(private fb: FormBuilder, private authService: AuthService, private cf: ConfigService, private router: Router, private route: ActivatedRoute, private toastService: ToastService) {
+        const config = this.cf.config();
+        let regex = /^data:/; regex.test(config.appLogo);
+        this.appLogo = (regex) ? config.appLogo : '';
         // Crear formulario
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -39,7 +44,7 @@ export class LoginComponent {
     /**
      * Enviar formulario de login
      */
-    onSubmit(): void {
+    onLogin(): void {
         // Validar formulario
         if (this.loginForm.invalid) {
             this.markFormGroupTouched(this.loginForm);
