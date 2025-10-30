@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthState, LoginCredentials, LoginResponse, User } from '../models/auth.model';
-import { Observable, tap, catchError, throwError, map } from 'rxjs';
+import { Observable, tap, catchError, throwError, map, of, finalize } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -35,9 +35,7 @@ export class AuthService {
         this.loadAuthState();
     }
 
-    /**
-     * Login - Autenticar usuario
-     */
+    // Login - Autenticar usuario
     login(credentials: LoginCredentials): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
@@ -54,97 +52,79 @@ export class AuthService {
         );
     }
 
-    /**
-     * Logout - Cerrar sesión
-     */
+    // Logout - Cerrar sesión
     logout(): Observable<any> {
         const token = this.token();
+
+        // Limpiamos todos los datos de localstorage
+        this.clearAuthData();
         
-        if (!token) {
-            this.clearAuthData();
+        if (!token) {            
             this.router.navigate(['/login']);
-            return throwError(() => new Error('No hay token'));
+            return of(null);
         }
 
-        return this.http.post(`${this.apiUrl}/logout`, {}, {
-            headers: this.getAuthHeaders()
-        }).pipe(
-        tap(() => {
-            console.log('Logout exitoso');
-        }),
-        catchError(error => {
-            console.error('Error en logout:', error);
-            // Aunque falle el logout en el servidor, limpiamos el cliente
-            return throwError(() => error);
-        }),
-        tap(() => {
-            // Limpiar datos locales siempre
-            this.clearAuthData();
-            this.router.navigate(['/login']);
-        })
+        return this.http.post(`${this.apiUrl}/logout`, {}, { headers: this.getAuthHeaders() }).pipe(
+            tap((res) => console.log('Logout exitoso en el servidor', res) ),
+            catchError(error => {
+                console.error('No se pudo invalidar token en servidor:', error);
+                return of(null);
+            }),
+            finalize(() => this.router.navigate(['/login'] ))
         );
     }
 
-    /**
-     * Obtener perfil del usuario actual
-     */
+
     getProfile(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/profile`).pipe(
-        tap(user => {
-            // Actualizar usuario en el estado
-            this.updateUser(user);
-        }),
-        catchError(error => {
-            console.error('Error al obtener perfil:', error);
-            return throwError(() => error);
-        })
+            tap(user => {
+                // Actualizar usuario en el estado
+                this.updateUser(user);
+            }),
+            catchError(error => {
+                console.error('Error al obtener perfil:', error);
+                return throwError(() => error);
+            })
         );
     }
 
-    /**
-     * Verificar si el token es válido
-     */
+    // Verificar si el token es válido
     verifyToken(): Observable<boolean> {
-        const token = this.token();
-        
+        const token = this.token();        
         if (!token) {
-        return new Observable(observer => {
-            observer.next(false);
-            observer.complete();
-        });
+            return new Observable(observer => {
+                observer.next(false);
+                observer.complete();
+            });
         }
 
         return this.http.get<{ valid: boolean }>(`${this.apiUrl}/verify-token`).pipe(
-        map(response => response.valid),
-        catchError(() => {
-            this.clearAuthData();
-            return new Observable<boolean>(observer => {
-            observer.next(false);
-            observer.complete();
-            });
-        })
+            map(response => response.valid),
+            catchError(() => {
+                this.clearAuthData();
+                return new Observable<boolean>(observer => {
+                    observer.next(false);
+                    observer.complete();
+                });
+            })
         );
     }
 
-    /**
-     * Refrescar token (si Laravel lo soporta)
-     */
+    // Refrescar token
     refreshToken(): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, {}).pipe(
-        tap(response => {
-            this.setAuthData(response.token, response.user);
-        }),
-        catchError(error => {
-            console.error('Error al refrescar token:', error);
-            this.clearAuthData();
-            return throwError(() => error);
-        })
+            tap(response => {
+                this.setAuthData(response.token, response.user);
+            }),
+            catchError(error => {
+                console.error('Error al refrescar token:', error);
+                this.clearAuthData();
+                return throwError(() => error);
+            })
         );
     }
 
-    /**
-     * Guardar datos de autenticación
-     */
+    // Guardar datos de autenticación
     private setAuthData(token: string, user: User): void {
         // Guardar en localStorage
         localStorage.setItem(this.TOKEN_KEY, token);
@@ -158,9 +138,7 @@ export class AuthService {
         });
     }
 
-    /**
-     * Actualizar solo el usuario
-     */
+    // Actualizar solo el usuario
     private updateUser(user: User): void {
         const currentState = this.authState();
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
@@ -171,9 +149,7 @@ export class AuthService {
         });
     }
 
-    /**
-     * Limpiar datos de autenticación
-     */
+    // Limpiar datos de autenticación
     private clearAuthData(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.USER_KEY);
@@ -185,9 +161,7 @@ export class AuthService {
         });
     }
 
-    /**
-     * Cargar estado de autenticación desde localStorage
-     */
+    // Cargar estado de autenticación desde localStorage
     private loadAuthState(): void {
         const token = localStorage.getItem(this.TOKEN_KEY);
         const userStr = localStorage.getItem(this.USER_KEY);
@@ -208,9 +182,7 @@ export class AuthService {
         }
     }
 
-    /**
-     * Obtener headers con autenticación
-     */
+    // Obtener headers con autenticación
     getAuthHeaders(): HttpHeaders {
         const token = this.token();
         return new HttpHeaders({
