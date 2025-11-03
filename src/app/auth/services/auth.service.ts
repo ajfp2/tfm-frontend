@@ -74,7 +74,6 @@ export class AuthService {
         );
     }
 
-
     getProfile(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/profile`).pipe(
             tap(user => {
