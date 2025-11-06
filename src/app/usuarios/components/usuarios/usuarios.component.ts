@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { UserDTO } from '../../models/user.dto';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -7,6 +9,14 @@ import { Component } from '@angular/core';
   styleUrl: './usuarios.component.css'
 })
 export class UsuariosComponent {
-    // constructor(private )
+    userList: UserDTO[] = [];
+    
+    constructor(private us: UserService){
+
+    }
+
+    getListUser() {
+        
+    }
 
 }
