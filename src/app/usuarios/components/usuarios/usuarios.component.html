@@ -1,15 +1,26 @@
 
 <div class="table-responsive">
-    <table class="table">
-        <thead>
+    <table class="table table-hover">
+        <thead class="table-primary text-white">
             <tr>
                 <th>#</th>
                 <th>Nombre</th>
                 <th>Usuario</th>
                 <th>Email</th>
+                <th>Estado</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <tr *ngFor="let user of userList">
+                <td>Foto</td>
+                <td>{{ user.apellidos }}, {{ user.nombre }}</td>
+                <td>{{ user.usuario }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.estado }}</td>
+                <td><i class="bi bi-pencil-square"></i><i class="bi bi-trash3"></i></td>
+            </tr>
+        </tbody>
         <tfoot></tfoot>
     </table>
 </div>

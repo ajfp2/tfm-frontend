@@ -4,7 +4,7 @@ export class UserDTO {
   apellidos: string;
   usuario: string;
   email: string;
-  password: string;
+  password?: string;
   telefono: number;
   perfil: number;
   foto?: string;

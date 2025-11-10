@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { UserDTO } from '../models/user.dto';
-import { catchError, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable({
@@ -14,8 +14,20 @@ export class UserService {
 
     constructor(private http: HttpClient, private toast: ToastService) { }
 
-    getUsers(){
-        return this.http.get<UserDTO>(this.apiUrl + 'user');
+    getUsers(): Observable<UserDTO[]>{
+        return this.http.get<UserDTO[]>(`${this.apiUrl}/users`).pipe(
+            map( (response: any) => {
+                if(response.code !== 200){
+                    throw new Error(response.message || 'Error desconocido');
+                }
+                return response.data;
+            }),
+            catchError( (error) => {
+                console.error();
+                return throwError( () => new Error('No se han podido obtener los usuarios'));
+                
+            })
+        );
     }
 
     // getUserById(userId: string): Observable<UserDTO> {
