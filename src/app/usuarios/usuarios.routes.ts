@@ -7,8 +7,16 @@ export const USUARIOS_ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'users',
-    loadComponent: () => import('./components/usuarios/usuarios.component').then(m => m.UsuariosComponent)
+    path: 'list',
+    loadComponent: () => import('./components/usuarios-list/usuarios-list.component').then(m => m.UsuariosComponent)
+  },
+  {
+    path: 'create-user',
+    loadComponent: () => import('./components/usuarios-form/usuarios-form.component').then(m => m.UsuariosFormComponent)
+  },
+  {
+    path: 'edit-user/:id',
+    loadComponent: () => import('./components/usuarios-form/usuarios-form.component').then(m => m.UsuariosFormComponent)
   },
   {
     path: 'roles',

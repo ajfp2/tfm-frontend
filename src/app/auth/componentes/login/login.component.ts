@@ -44,7 +44,7 @@ export class LoginComponent {
     /**
      * Enviar formulario de login
      */
-    onLogin(): void {
+    login(): void {
         // Validar formulario
         if (this.loginForm.invalid) {
             this.markFormGroupTouched(this.loginForm);

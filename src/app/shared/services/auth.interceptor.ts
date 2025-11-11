@@ -17,7 +17,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-
+  // console.log('token enviado', token);
+  
   // Manejar respuesta
   return next(req).pipe(
     catchError(error => {

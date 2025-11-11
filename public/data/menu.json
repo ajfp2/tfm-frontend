@@ -120,7 +120,7 @@
         {
           "id": 61,
           "label": "Lista de Usuarios",
-          "route": "/usuarios/users",
+          "route": "/usuarios/list",
           "order": 1
         },
         {

@@ -13,19 +13,19 @@ export class UserDTO {
 
   constructor(
     name: string,
-    surname_1: string,
-    alias: string,
+    apellidos: string,
+    usuario: string,
     email: string,
-    password: string,
     telefono: number,
-    perfil: number
+    perfil: number,
+    password?: string
   ) {
     this.nombre = name;
-    this.apellidos = surname_1;
-    this.usuario = alias;
+    this.apellidos = apellidos;
+    this.usuario = usuario;
     this.email = email;
-    this.password = password;
     this.telefono = telefono;
     this.perfil = perfil;
+    if (password) this.password = password;
   }
 }
