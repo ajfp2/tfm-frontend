@@ -5,10 +5,11 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { DefaultImagePipe } from "../../../shared/pipes/default-image.pipe";
 
 @Component({
   selector: 'app-usuarios-form',
-  imports: [ ReactiveFormsModule, CommonModule ],
+  imports: [ReactiveFormsModule, CommonModule, DefaultImagePipe],
   templateUrl: './usuarios-form.component.html',
   styleUrl: './usuarios-form.component.css'
 })
@@ -27,14 +28,19 @@ export class UsuariosFormComponent implements OnInit {
     isValidForm: boolean | null;
 
     private isUpdateMode: boolean;
-    private userId: string | null;
+    private userId: number | null;
+
+    // Para manejar las imagenes del usuario.
+    selectedFile: File | null = null;
+    imagePreview: string | null = null;
 
     title: string = 'Crear Usuario';
     icon: string = 'bi bi-person-add';
+
     constructor(private activatedRoute: ActivatedRoute, private formBuilder: UntypedFormBuilder, private userService: UserService, private toast: ToastService, private router: Router) {
         this.registerUser = new UserDTO('', '', '', '', 0, 2, '');
-
-        this.userId = this.activatedRoute.snapshot.paramMap.get('id');
+        const paramURL = this.activatedRoute.snapshot.paramMap.get('id');
+        this.userId = paramURL ? Number(paramURL) : null;
         this.isUpdateMode = false;
 
         this.isValidForm = null;
@@ -84,7 +90,7 @@ export class UsuariosFormComponent implements OnInit {
             telefono: this.telefono,
             email: this.email,
             password: this.password,
-            pefil: this.perfil
+            perfil: this.perfil
         });
 
     }
@@ -93,7 +99,36 @@ export class UsuariosFormComponent implements OnInit {
         if (this.userId) {
             this.isUpdateMode = true;
             this.title = 'Editar Usuario';
-            this.icon = 'person-vcard';
+            this.icon = 'bi bi-person-vcard';
+
+            // Quitamos la validacion para el modo editar
+            this.password.clearValidators();
+            this.password.updateValueAndValidity();
+
+            this.userService.getUserById(this.userId).subscribe({
+                next: (resp) => {
+                    console.log(resp);
+                    this.registerUser = resp;
+                    
+                    this.registerForm.patchValue({
+                        nombre: resp.nombre,
+                        apellidos: resp.apellidos,
+                        usuario: resp.usuario,
+                        email: resp.email,
+                        telefono: resp.telefono,
+                        perfil: resp.perfil                        
+                    });
+                },
+                error: (err) => {
+                    this.toast.error('Error al cargar el usuario');
+                    console.error(err);
+                }
+            });
+
+            this.userService.getUserById(this.userId).subscribe(resp => {
+                console.log(resp);
+                this.registerUser = resp;                
+            });
 
         }
     }
@@ -142,5 +177,49 @@ export class UsuariosFormComponent implements OnInit {
         // this.headerMenusService.headerManagement.next(headerInfo);
         // this.sharedService.errorLog(errorResponse);
         // });
-  }
+    }
+
+    // Archivo img elegido
+    onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        
+        if (input.files && input.files[0]) {
+            this.selectedFile = input.files[0];
+            
+            // Validar tipo de archivo
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(this.selectedFile.type)) {
+                this.toast.error('Solo se permiten imágenes (JPG, PNG, GIF, WEBP)');
+                this.selectedFile = null;
+                return;
+            }
+            
+            // Validar tamaño (por ejemplo, máximo 5MB)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (this.selectedFile.size > maxSize) {
+                this.toast.error('La imagen no puede superar los 5MB');
+                this.selectedFile = null;
+                return;
+            }
+            
+            // Crear preview
+            const reader = new FileReader();
+            reader.onload = (e: ProgressEvent<FileReader>) => {
+                this.imagePreview = e.target?.result as string;
+            };
+            reader.readAsDataURL(this.selectedFile);
+        }
+    }
+
+    // Borrar img elegida
+    removeImage(): void {
+        this.selectedFile = null;
+        this.imagePreview = null;
+        
+        // Resetear el input file
+        const fileInput = document.getElementById('fotoInput') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    }
 }

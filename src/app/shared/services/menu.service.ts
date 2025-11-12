@@ -68,7 +68,7 @@ export class MenuService {
   }
 
   /**
-   * Obtener menú actual (síncrono)
+   * Obtener menú actual
    */
   getMenuItems(): MenuItem[] {
     return this.menuItemsSubject.value;
@@ -87,7 +87,7 @@ export class MenuService {
   }
 
   /**
-   * Buscar un item del menú por ID (útil para permisos)
+   * Buscar un item del menú por ID
    */
   findMenuItemById(id: number, items?: MenuItem[]): MenuItem | null {
     const searchItems = items || this.menuItemsSubject.value;
@@ -106,7 +106,6 @@ export class MenuService {
 
   /**
    * Filtrar menú por permisos del usuario
-   * (Preparado para cuando implementes autenticación)
    */
   filterMenuByPermissions(allowedIds: number[]): MenuItem[] {
     const filterItems = (items: MenuItem[]): MenuItem[] => {
@@ -126,9 +125,6 @@ export class MenuService {
    * Simular carga desde API (para preparar el futuro backend)
    */
   loadMenuFromAPI(): Observable<MenuItem[]> {
-    // Cuando tengas backend, cambiar a:
-    // return this.http.get<MenuResponse>('https://tu-api.com/api/menu')
-    
     return this.http.get<MenuResponse>('/data/menu.json').pipe(
       map(response => response.menuItems),
       tap(items => this.menuItemsSubject.next(this.sortMenuItems(items))),

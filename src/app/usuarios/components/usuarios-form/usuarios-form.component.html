@@ -1,57 +1,39 @@
 
 <div class="container-fluid mt-4">
     <h2><i [class]="icon"></i> {{ title }}</h2>
-    <!-- <form [formGroup]="registerForm" (ngSubmit)="register()" class="needs-validation" novalidate>
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" id="nombre" class="form-control" formControlName="nombre" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="apellidos" class="form-label">Apellidos</label>
-            <input type="text" id="apellidos" class="form-control" formControlName="apellidos" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="usuario" class="form-label">Usuario</label>
-            <input type="text" id="usuario" class="form-control" formControlName="usuario" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" class="form-control" formControlName="email" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" id="password" class="form-control" formControlName="password" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
-            <input type="text" id="telefono" class="form-control" formControlName="telefono" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="perfil" class="form-label">Perfil</label>
-            <select id="perfil" class="form-select" formControlName="perfil">
-                <option value="1">Administrador</option>
-                <option value="2">Usuario</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Crear Usuario</button>
-    </form> -->
-
-
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card shadow-lg">
-                <!-- <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Crear Usuario</h4>
-                </div> -->
-                <div class="card-body">
-                    <form [formGroup]="registerForm" (ngSubmit)="register()" novalidate>
+    <div class="card shadow-lg mt-4">
+        <div class="card-body">
+            <form [formGroup]="registerForm" (ngSubmit)="register()" novalidate>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="product-image-main text-center">
+                            <!-- mostramos la img -->
+                            <div class="image-container mb-3">
+                                <img [src]="imagePreview || 'public/images/default.avif' | defaultImage" alt="Imagen de usuario" class="img-fluid rounded-circle shadow" style="width: 250px; height: 250px; object-fit: cover;">
+                            </div>
+                            
+                            <!-- selecciono imagen -->
+                            <div class="mb-3">
+                                <label for="fotoInput" class="btn btn-primary w-100">
+                                    <i class="bi bi-cloud-upload"></i> Seleccionar Imagen
+                                </label>
+                                <input type="file" id="fotoInput" class="d-none" accept="image/*"(change)="onFileSelected($event)">
+                            </div>
+                            
+                            <!-- eliminar imagen seleccionada por error -->
+                            <button *ngIf="selectedFile" type="button" class="btn btn-danger w-100" (click)="removeImage()">
+                                <i class="bi bi-trash"></i> Eliminar imagen
+                            </button>
+                            
+                            <!-- Información del archivo seleccionado -->
+                            <div *ngIf="selectedFile" class="mt-2 text-muted small">
+                                <i class="bi bi-file-image"></i> {{ selectedFile.name }}
+                                <br>
+                                {{ (selectedFile.size / 1024).toFixed(2) }} KB
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
@@ -110,11 +92,9 @@
                                 <i class="bi bi-person-plus"></i> Crear Usuario
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-
-
 </div>

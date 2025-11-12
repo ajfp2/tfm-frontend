@@ -1,0 +1,17 @@
+.product-image-main {
+    padding: 20px;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.image-container img {
+    border: 3px solid #dee2e6;
+}
+
+.image-container:hover img {
+    border-color: #0d6efd;
+    transition: border-color 0.3s ease;
+}

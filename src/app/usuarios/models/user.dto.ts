@@ -1,5 +1,5 @@
 export class UserDTO {
-  id?: string;
+  id?: number;
   nombre: string;
   apellidos: string;
   usuario: string;
@@ -8,6 +8,7 @@ export class UserDTO {
   telefono: number;
   perfil: number;
   foto?: string;
+  fotoFile?: File; // Lo utilizare para archivo temporal de la img del usuario.
   estado?: boolean;
   access_token?: string;
 
