@@ -5,7 +5,7 @@ export class UserDTO {
   usuario: string;
   email: string;
   password?: string;
-  telefono: number;
+  telefono: string;
   perfil: number;
   foto?: string;
   fotoFile?: File; // Lo utilizare para archivo temporal de la img del usuario.
@@ -17,7 +17,7 @@ export class UserDTO {
     apellidos: string,
     usuario: string,
     email: string,
-    telefono: number,
+    telefono: string,
     perfil: number,
     password?: string
   ) {

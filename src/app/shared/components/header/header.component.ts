@@ -18,19 +18,20 @@ export class HeaderComponent {
   @Output() toggleSidenavEvent = new EventEmitter<void>();
 
   title = 'Proyecto Almedia';
-  subtitle = 'Mi Colegio';
+  subtitle = 'Mi Peña';
   appLogo = '';
   userDropdownOpen = false;
   ano = '25-26';
 
   // Datos del usuario
   currentUser = {
-    name: 'Alfonso Ferrando',
+    id: 1,
+    nombre: 'Alfonso Ferrando',
     email: 'alfonso.ferrando@almedia.org',
-    avatar: 'https://ui-avatars.com/api/?name=Alfonso+Ferrando&background=0D8ABC&color=fff&size=128'
+    foto: 'https://ui-avatars.com/api/?name=Alfonso+Ferrando&background=0D8ABC&color=fff&size=128'
   };
 
-  constructor(public configService: ConfigService, private router: Router, private authS: AuthService, private toastS: ToastService) {
+  constructor(public configService: ConfigService, private router: Router, private authS: AuthService, private toast: ToastService) {
     // Reaccionar a cambios en la configuración
     effect(() => {
       const config = this.configService.config();
@@ -38,18 +39,20 @@ export class HeaderComponent {
       this.subtitle = config.appSubTitle;
       this.ano = config.appAno;
       this.appLogo = config.appLogo;
-      console.log("EFFECTS- Cargando Configuración ...");
+      // console.log("EFFECTS- Cargando Configuración ...");
       
     });
 
     // Reaccionar a cambios en el usuario autenticado
     effect(() => {
       const user = this.authS.currentUser();
+      // console.log("EFFECTS- Cargando User ...", user);
       if (user) {
         this.currentUser = {
-          name: user.name,
+          id: user.id,
+          nombre: user.nombre,
           email: user.email,
-          avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff&size=128`
+          foto: user.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nombre)}&background=0D8ABC&color=fff&size=128`
         };
       }
     });
@@ -74,27 +77,32 @@ export class HeaderComponent {
   onNotifications(event: MouseEvent) {
     event.preventDefault();
     console.log('Notificaciones clicked');
-    // Implementa tu lógica de notificaciones
+  
   }
 
   onTasks(event: MouseEvent) {
     event.preventDefault();
     console.log('Tasks clicked');
-    // Implementa tu lógica de configuración
+    
   }
 
   onProfile(event: MouseEvent) {
-    console.log('Mi perfil clicked');
     event.preventDefault();
     this.closeUserDropdown();
-    // Implementa tu lógica de perfil
+
+    if (!this.currentUser) {
+        this.toast.error('El ID de usuario no es válido');
+        return;
+    }
+    this.router.navigateByUrl(`/usuarios/edit-user/${this.currentUser.id}`);
+    
   }
 
   onHelp(event: MouseEvent) {
     console.log('Ayuda clicked');
     event.preventDefault();
     this.closeUserDropdown();
-    // Implementa tu lógica de ayuda
+    
   }
 
   onLogout(event: MouseEvent) {
@@ -102,14 +110,14 @@ export class HeaderComponent {
     event.preventDefault();
     this.closeUserDropdown();
     
-    // Llamar al servicio de logout
+    // Llama al servicio de logout
     this.authS.logout().subscribe({
       next: () => {
-        this.toastS.info('Sesión cerrada correctamente', 'Hasta pronto');
+        this.toast.info('Sesión cerrada correctamente', 'Hasta pronto');
       },
       error: (error) => {
         console.error('Error al cerrar sesión:', error);
-        // Aunque falle, el AuthService ya limpió los datos locales
+        // Aunque falle, el AuthService y limpió los datos locales
       }
     });
 

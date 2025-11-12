@@ -57,7 +57,7 @@ export class LoginComponent {
         // Llamar al servicio de autenticación
         this.authService.login(this.loginForm.value).subscribe({
             next: (response) => {
-                this.toastService.success(`Bienvenido ${response.user.name}!`, 'Login exitoso');
+                this.toastService.success(`Bienvenido ${response.user.nombre}!`, 'Login exitoso');
             
                 // Redirigir a la URL de retorno o dashboard
                 setTimeout(() => {

@@ -9,7 +9,7 @@
                         <div class="product-image-main text-center">
                             <!-- mostramos la img -->
                             <div class="image-container mb-3">
-                                <img [src]="imagePreview || 'public/images/default.avif' | defaultImage" alt="Imagen de usuario" class="img-fluid rounded-circle shadow" style="width: 250px; height: 250px; object-fit: cover;">
+                                <img [src]="imagePreview || 'images/default.avif' | defaultImage" alt="Imagen de usuario" class="img-fluid rounded-circle shadow" style="width: 250px; height: 250px; object-fit: cover;">
                             </div>
                             
                             <!-- selecciono imagen -->
@@ -89,7 +89,7 @@
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg" [disabled]="registerForm.invalid">
-                                <i class="bi bi-person-plus"></i> Crear Usuario
+                                <i [class]="icon"></i> Grabar Usuario
                             </button>
                         </div>
                     </div>

@@ -25,8 +25,10 @@ export class UsuariosComponent implements OnInit{
     private loadUsers() {
         this.us.getUsers().subscribe({          
             next: (usuarios) => {
-                this.toast.success('Usuarios obtenidos correctamente')
+                this.toast.info('Usuarios obtenidos correctamente')
                 this.userList = usuarios;
+                console.log(usuarios);
+                
             },
             error: (error) => {
                 console.error('Error en el componente:', error.message);
@@ -39,8 +41,12 @@ export class UsuariosComponent implements OnInit{
         this.router.navigateByUrl('usuarios/create-user');
     }
 
-    updateUser(id: string): void {
-        this.router.navigateByUrl('/usuarios/edit-user/' + id);
+    updateUser(id: number | undefined): void {
+        if (!id) {
+            this.toast.error('El ID de usuario no es válido');
+            return;
+        }
+        this.router.navigateByUrl(`/usuarios/edit-user/${id}`);
     }
 
     // deletePost(postId: string): void {

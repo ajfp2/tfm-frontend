@@ -1,9 +1,9 @@
 // Modelo de usuario
 export interface User {
   id: number;
-  name: string;
+  nombre: string;
   email: string;
-  avatar?: string;
+  foto?: string;
   role?: string;
   permissions?: string[];
 }

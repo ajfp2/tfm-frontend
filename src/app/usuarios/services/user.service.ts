@@ -12,7 +12,7 @@ export class UserService {
 
     private apiUrl = environment.api_url;
 
-    constructor(private http: HttpClient, private toast: ToastService) { }
+    constructor(private http: HttpClient) { }
 
     getUsers(): Observable<UserDTO[]>{
         return this.http.get<UserDTO[]>(`${this.apiUrl}/users`).pipe(
@@ -23,7 +23,7 @@ export class UserService {
                 return response.data;
             }),
             catchError( (error) => {
-                console.error();
+                console.error(error);
                 return throwError( () => new Error('No se han podido obtener los usuarios'));                
             })
         );
@@ -39,23 +39,23 @@ export class UserService {
                     return response.data;
                 }),
                 catchError( (error) => {
-                    console.error();
-                    return throwError( () => new Error('No se han podido obtener el usuario id:'+userId));                
+                    console.error(error);
+                    return throwError( () => new Error('No se han podido obtener el usuario id:'+userId));
                 })
             );
     }
     
-    /*register(user: UserDTO): Observable<UserDTO> {
-        return this.http
-            .post<UserDTO>(this.urlBlogUocApi, user)
-            .pipe(catchError(this.sharedService.handleError));
-        }
-
-    updateUser(userId: string, user: UserDTO): Observable<UserDTO> {
-        return this.http
-            .put<UserDTO>(this.urlBlogUocApi + '/' + userId, user)
-            .pipe(catchError(this.sharedService.handleError));
+    createUser(userData: FormData): Observable<UserDTO> {
+        return this.http.post<UserDTO>(`${this.apiUrl}/users`, userData)
+            .pipe(catchError( (error) =>{
+                return throwError( () => new Error('No se ha podido CREAR el usuario'));
+            }));
     }
 
-    */
+    updateUser(userId: number, userData: FormData): Observable<UserDTO> {
+        return this.http.post<UserDTO>(`${this.apiUrl}/users/${userId}`, userData)
+            .pipe(catchError((error) => {
+                return throwError( () => new Error('No se ha podido ACTUALIZAR el usuario'));
+            }));
+    }
 }

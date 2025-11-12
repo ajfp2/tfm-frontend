@@ -38,7 +38,7 @@ export class UsuariosFormComponent implements OnInit {
     icon: string = 'bi bi-person-add';
 
     constructor(private activatedRoute: ActivatedRoute, private formBuilder: UntypedFormBuilder, private userService: UserService, private toast: ToastService, private router: Router) {
-        this.registerUser = new UserDTO('', '', '', '', 0, 2, '');
+        this.registerUser = new UserDTO('', '', '', '', '', 2, '');
         const paramURL = this.activatedRoute.snapshot.paramMap.get('id');
         this.userId = paramURL ? Number(paramURL) : null;
         this.isUpdateMode = false;
@@ -47,7 +47,7 @@ export class UsuariosFormComponent implements OnInit {
 
         this.nombre = new UntypedFormControl(this.registerUser.nombre, [
             Validators.required,
-            Validators.minLength(5),
+            Validators.minLength(4),
             Validators.maxLength(25),
         ]);
 
@@ -59,7 +59,7 @@ export class UsuariosFormComponent implements OnInit {
 
         this.usuario = new UntypedFormControl(this.registerUser.usuario, [
             Validators.required,
-            Validators.minLength(5),
+            Validators.minLength(4),
             Validators.maxLength(25),
         ]);
 
@@ -109,6 +109,10 @@ export class UsuariosFormComponent implements OnInit {
                 next: (resp) => {
                     console.log(resp);
                     this.registerUser = resp;
+
+                    if (resp.foto) {
+                        this.imagePreview = resp.foto;
+                    }
                     
                     this.registerForm.patchValue({
                         nombre: resp.nombre,
@@ -134,6 +138,79 @@ export class UsuariosFormComponent implements OnInit {
     }
 
     register(): void {
+        if (this.registerForm.invalid) {
+            return;
+        }
+
+        this.isValidForm = true;
+
+            console.log('=== DATOS DEL FORMULARIO ===');
+    console.log('Valores del form:', this.registerForm.value);
+    console.log('isUpdateMode:', this.isUpdateMode);
+    console.log('userId:', this.userId);
+
+        const formData = new FormData();
+        
+        // Copiamos todos los campos del formulario para añadir la foto, sino enviariamos this.registerUser
+        Object.keys(this.registerForm.value).forEach(key => {
+            const value = this.registerForm.value[key];
+            if (value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+        });
+
+        // Añadir img si se ha seleccionado
+        if (this.selectedFile) {
+            console.log('Añadiendo foto:', this.selectedFile.name);
+            formData.append('foto', this.selectedFile, this.selectedFile.name);
+        }
+
+        // Verificar contenido del FormData
+    console.log('=== CONTENIDO DE FORMDATA ===');
+    formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+    });
+
+        if (this.isUpdateMode && this.userId) {
+            // Actualizar usuario
+            formData.append('_method', 'PUT'); // para poder enivar imgs
+            this.userService.updateUser(this.userId, formData).subscribe({
+                next: () => {
+                    this.toast.success('Usuario actualizado correctamente');
+                    this.router.navigate(['/usuarios/list']);
+                },
+                error: (err) => {
+                    this.toast.error('Error al actualizar el usuario');
+                    console.error('Error 422:', err);
+                    console.error('Errores de validación:', err.error);
+                    console.error('Mensaje:', err.error?.message);
+                    console.error('Errores:', err.error?.errors);
+                    
+                    // Mostrar errores específicos
+                    if (err.error?.errors) {
+                        Object.keys(err.error.errors).forEach(field => {
+                            console.error(`Campo ${field}:`, err.error.errors[field]);
+                        });
+                    }
+                }
+            });
+        } else {
+            // Crear usuario
+            this.userService.createUser(formData).subscribe({
+                next: () => {
+                    this.toast.success('Usuario creado correctamente');
+                    this.router.navigate(['/usuarios/list']);
+                },
+                error: (err) => {
+                    this.toast.error('Error al crear el usuario');
+                    console.error(err);
+                }
+            });
+        }
+    }
+
+
+    register2(): void {
         // let responseOK: boolean = false;
         // this.isValidForm = false;
         // let errorResponse: any;

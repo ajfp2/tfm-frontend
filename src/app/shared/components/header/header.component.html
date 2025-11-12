@@ -33,7 +33,7 @@
         <div class="dropdown user-dropdown">
           <button class="btn btn-link text-white p-0 d-flex align-items-center user-dropdown-toggle" 
             (click)="toggleUserDropdown()">
-            <img [src]="currentUser.avatar" [alt]="currentUser.name" class="user-avatar me-2">
+            <img [src]="currentUser.foto" [alt]="currentUser.nombre" class="user-avatar me-2">
             <i class="bi bi-chevron-down"></i>
           </button>
 
@@ -44,8 +44,8 @@
           <div class="dropdown-menu dropdown-menu-end user-dropdown-menu" [class.show]="userDropdownOpen">
             <!-- Información del usuario -->
             <div class="dropdown-header user-info">
-              <img [src]="currentUser.avatar" [alt]="currentUser.name" class="user-avatar-large mb-2">
-              <div class="user-name">{{ currentUser.name }}</div>
+              <img [src]="currentUser.foto" [alt]="currentUser.nombre" class="user-avatar-large mb-2">
+              <div class="user-name">{{ currentUser.nombre }}</div>
               <div class="user-email">{{ currentUser.email }}</div>
             </div>
             
