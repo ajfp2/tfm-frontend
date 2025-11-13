@@ -1,48 +1,79 @@
 <div class="container-fluid py-4">
     <div class="mb-4">
-        <h2 class="mb-2"><i class="bi bi-people-fill me-2"></i> Listado de Usuarios</h2>
+        <h2 class="mb-2"><i class="bi bi-people-fill me-2"></i> Gestión de Usuarios</h2>
         <p class="text-muted">Listado de usuarios con acceso a la APP.</p>
     </div>
 
-    <div class="text-end my-4">
-        <button type="button" class="btn btn-success" (click)="createUser();"><i class="bi bi-person-fill-add me-2"></i> Nuevo Usuario</button>
-    </div>    
 
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead class="table-primary text-white">
-                <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Usuario</th>
-                    <th>Email</th>
-                    <th>Perfil</th>
-                    <th>Estado</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of userList">
-                    <td>Foto</td>
-                    <td>{{ user.apellidos | uppercase }}, {{ user.nombre | uppercase}}</td>
-                    <td>{{ user.usuario }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.perfil }}</td>
-                    <td>
-                        <button class='btn btn-xs btn-success' *ngIf="user.estado; else estadoDesactivado">Activado</button>
-                        <ng-template #estadoDesactivado>
-                            <button class='btn btn-xs btn-danger'>Desactivado</button>
-                        </ng-template>                        
-                    </td>
-                    <td class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class='btn btn-xs btn-primary' (click)="updateUser(user.id);"><i class="bi bi-pencil-square"></i></button>
-                        <button class='btn btn-xs btn-danger'><i class="bi bi-trash3"></i></button>                                                
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot></tfoot>
-        </table>
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h5 class="card-title mb-2">Listado de Usuarios</h5>
+                    <h6 class="card-subtitle text-muted">Listado de usuarios con acceso a la APP</h6>
+                </div>
+                <button type="button" class="btn btn-success" (click)="createUser();"><i class="bi bi-person-fill-add me-2"></i> Nuevo Usuario</button>
+            </div>
+
+            <div class="table-responsive p-2">
+                <table class="table table-hover align-middle">
+                    <thead class="table-primary text-white">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of userList">
+                            <td><img 
+                                [src]="user.foto || 'images/default.avif' | defaultImage" 
+                                [alt]="user.nombre"  class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;"
+                                >
+                            </td>
+                            <td>{{ user.apellidos | uppercase }}, {{ user.nombre | uppercase}}</td>
+                            <td>{{ user.usuario }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                
+                                <span class="badge" [class.bg-primary]="user.perfil === 1" [class.bg-secondary]="user.perfil === 2">
+                                    {{ user.perfil === 1 ? 'Administrador' : 'Usuario' }}
+                                </span>
+                            </td>
+                            <td>                                
+                                <button class='btn btn-sm' [class.btn-success]="user.estado" [class.btn-danger]="!user.estado" (click)="estado_user(user)" *ngIf="user.id && user.id != 1">
+                                    <i [class]="user.estado ? 'bi bi-person-check' : 'bi bi-person-dash'"></i>
+                                    {{ user.estado ? 'Activo' : 'Inactivo' }}
+                                </button>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group" *ngIf="user.id && user.id != 1">
+                                    <button class='btn btn-primary' (click)="updateUser(user.id)" title="Editar usuario">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class='btn btn-danger' (click)="deleteUser(user.id)" title="Eliminar usuario">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Mensaje si no hay usuarios -->
+                        <tr *ngIf="userList.length === 0">
+                            <th colspan="7" class="text-center py-5">
+                                <i class="bi bi-inbox display-1 text-muted"></i>
+                                <p class="text-muted mt-3">No hay usuarios registrados</p>                                
+                            </th>
+                        </tr>
+                    </tbody>                    
+                </table>
+            </div>
+        </div>
     </div>
-
 </div>
 

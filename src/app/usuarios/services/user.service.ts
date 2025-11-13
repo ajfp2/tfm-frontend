@@ -56,6 +56,18 @@ export class UserService {
         return this.http.post<UserDTO>(`${this.apiUrl}/users/${userId}`, userData)
             .pipe(catchError((error) => {
                 return throwError( () => new Error('No se ha podido ACTUALIZAR el usuario'));
-            }));
+        }));
+    }
+
+    deleteUser(){
+
+    }
+
+    estadoUser(user: UserDTO){
+        //activa-user
+        return this.http.put<UserDTO>(`${this.apiUrl}/users/activa-user/${user.id}`, {user})
+            .pipe(catchError((error) => {
+                return throwError( () => new Error('No se ha podido ACTUALIZAR el ESTADO del usuario'));
+        }));
     }
 }

@@ -4,10 +4,11 @@ import { UserService } from '../../services/user.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { DefaultImagePipe } from "../../../shared/pipes/default-image.pipe";
 
 @Component({
   selector: 'app-usuarios',
-  imports: [CommonModule],
+  imports: [CommonModule, DefaultImagePipe],
   templateUrl: './usuarios-list.component.html',
   styleUrl: './usuarios-list.component.css'
 })
@@ -47,6 +48,50 @@ export class UsuariosComponent implements OnInit{
             return;
         }
         this.router.navigateByUrl(`/usuarios/edit-user/${id}`);
+    }
+
+    estado_user(user: UserDTO){
+        user.estado = !user.estado;
+        this.us.estadoUser(user).subscribe({
+            next: (userR) => {
+                console.log("Estado", userR);
+                let sms = 'Desactivado';
+                if(userR.estado == true) sms = 'Activado';
+                this.toast.info('Usuario '+sms +' correctamente')
+
+                
+            },
+            error: (error) => {
+                console.error('Error en el componente:', error.message);
+                this.toast.error(error.message, 'ERROR')
+            } 
+        });
+
+    }
+
+    deleteUser(id: number | undefined): void {
+        // if (!id) {
+        //     this.toast.showError('Error: ID de usuario no válido');
+        //     return;
+        // }
+
+        // // Confirmar eliminación
+        // if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+        //     this.us.deleteUser(id).subscribe({
+        //         next: () => {
+        //             this.toast.showSuccess('Usuario eliminado correctamente');
+        //             this.loadUsers(); // Recargar lista
+        //         },
+        //         error: (err) => {
+        //             console.error('Error al eliminar:', err);
+        //             if (err.status === 403) {
+        //                 this.toast.showError(err.error.message || 'No tienes permisos para eliminar este usuario');
+        //             } else {
+        //                 this.toast.showError('Error al eliminar el usuario');
+        //             }
+        //         }
+        //     });
+        // }
     }
 
     // deletePost(postId: string): void {

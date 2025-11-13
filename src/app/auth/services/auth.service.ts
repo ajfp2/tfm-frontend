@@ -143,8 +143,8 @@ export class AuthService {
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
         
         this.authStateSignal.set({
-        ...currentState,
-        user: user
+            ...currentState,
+            user: user
         });
     }
 
@@ -173,7 +173,7 @@ export class AuthService {
                     user: user,
                     token: token
                 });
-                console.log('Estado de autenticación cargado:', user.name);
+                console.log('Estado de autenticación cargado:', user.nombre);
             } catch (error) {
                 console.error('Error al cargar estado de autenticación:', error);
                 this.clearAuthData();
