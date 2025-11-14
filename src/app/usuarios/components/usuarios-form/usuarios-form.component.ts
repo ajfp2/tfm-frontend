@@ -145,9 +145,9 @@ export class UsuariosFormComponent implements OnInit {
         this.isValidForm = true;
 
             console.log('=== DATOS DEL FORMULARIO ===');
-    console.log('Valores del form:', this.registerForm.value);
-    console.log('isUpdateMode:', this.isUpdateMode);
-    console.log('userId:', this.userId);
+            console.log('Valores del form:', this.registerForm.value);
+            console.log('isUpdateMode:', this.isUpdateMode);
+            console.log('userId:', this.userId);
 
         const formData = new FormData();
         
@@ -166,10 +166,10 @@ export class UsuariosFormComponent implements OnInit {
         }
 
         // Verificar contenido del FormData
-    console.log('=== CONTENIDO DE FORMDATA ===');
-    formData.forEach((value, key) => {
-        console.log(`${key}:`, value);
-    });
+        console.log('=== CONTENIDO DE FORMDATA ===');
+        formData.forEach((value, key) => {
+            console.log(`${key}:`, value);
+        });
 
         if (this.isUpdateMode && this.userId) {
             // Actualizar usuario
@@ -181,11 +181,6 @@ export class UsuariosFormComponent implements OnInit {
                 },
                 error: (err) => {
                     this.toast.error('Error al actualizar el usuario');
-                    console.error('Error 422:', err);
-                    console.error('Errores de validación:', err.error);
-                    console.error('Mensaje:', err.error?.message);
-                    console.error('Errores:', err.error?.errors);
-                    
                     // Mostrar errores específicos
                     if (err.error?.errors) {
                         Object.keys(err.error.errors).forEach(field => {
@@ -207,53 +202,6 @@ export class UsuariosFormComponent implements OnInit {
                 }
             });
         }
-    }
-
-
-    register2(): void {
-        // let responseOK: boolean = false;
-        // this.isValidForm = false;
-        // let errorResponse: any;
-
-        // if (this.registerForm.invalid) {
-        // return;
-        // }
-
-        // this.isValidForm = true;
-        // this.registerUser = this.registerForm.value;
-
-        
-        // this.userService.register(this.registerUser)
-        // .pipe(finalize(
-        // async () => {
-        //     await this.sharedService.managementToast(
-        //     'registerFeedback',
-        //     responseOK,
-        //     errorResponse
-        //     );
-        
-        //     if (responseOK) {
-        //     // Reset the form
-        //     this.registerForm.reset();
-        //     // After reset form we set birthDate to today again (is an example)
-        //     this.birth_date.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
-        //     this.router.navigateByUrl('home');
-        //     }
-        // }
-        // ))
-        // .subscribe(() => {
-        // responseOK = true;
-        // },
-        // err => {
-        // responseOK = false;
-        // errorResponse = err.error;
-        // const headerInfo: HeaderMenus = {
-        //     showAuthSection: false,
-        //     showNoAuthSection: true,
-        // };
-        // this.headerMenusService.headerManagement.next(headerInfo);
-        // this.sharedService.errorLog(errorResponse);
-        // });
     }
 
     // Archivo img elegido

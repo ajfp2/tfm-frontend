@@ -18,7 +18,7 @@ export class HeaderComponent {
   @Output() toggleSidenavEvent = new EventEmitter<void>();
 
   title = 'Proyecto Almedia';
-  subtitle = 'Mi Peña';
+  subtitle = '';
   appLogo = '';
   userDropdownOpen = false;
   ano = '25-26';
@@ -39,8 +39,6 @@ export class HeaderComponent {
       this.subtitle = config.appSubTitle;
       this.ano = config.appAno;
       this.appLogo = config.appLogo;
-      // console.log("EFFECTS- Cargando Configuración ...");
-      
     });
 
     // Reaccionar a cambios en el usuario autenticado
@@ -57,7 +55,6 @@ export class HeaderComponent {
       }
     });
 
-    console.log("CONS- Configuración cargada");
   }
 
   toggleSidenav() {

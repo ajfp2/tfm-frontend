@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { MenuItem, MenuResponse } from '../models/menu.interface';
+import { environment } from '../../../environments/environment';
 
-export interface MenuItem {
-  id?: number;
-  label: string;
-  icon?: string;
-  route?: string;
-  order?: number;
-  children?: MenuItem[];
-  expanded?: boolean;
-}
+// export interface MenuItem {
+//   id?: number;
+//   label: string;
+//   icon?: string;
+//   route?: string;
+//   order?: number;
+//   children?: MenuItem[];
+//   expanded?: boolean;
+// }
 
-interface MenuResponse {
-  menuItems: MenuItem[];
-}
+// interface MenuResponse {
+//   menuItems: MenuItem[];
+// }
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,8 @@ interface MenuResponse {
 
 export class MenuService {
 
+  private apiUrl = environment.api_url;
+  
   private menuItemsSubject = new BehaviorSubject<MenuItem[]>([]);
   public menuItems$ = this.menuItemsSubject.asObservable();
 
@@ -48,9 +52,9 @@ export class MenuService {
 
   /**
    * Cargar menú desde archivo JSON
-   * En el futuro, cambiar la URL a tu API backend
+   * En el futuro, al API backend
    */
-  loadMenu(): Observable<MenuItem[]> {
+  loadMenuJSON(): Observable<MenuItem[]> {
     // Ruta al archivo JSON en la carpeta public
     return this.http.get<MenuResponse>('/data/menu.json').pipe(
       map(response => {
@@ -65,6 +69,10 @@ export class MenuService {
         return of(this.defaultMenu);
       })
     );
+  }
+
+  loadMenuDefault():Observable<MenuItem[]> {
+    return of(this.defaultMenu);
   }
 
   /**
@@ -86,46 +94,13 @@ export class MenuService {
       }));
   }
 
-  /**
-   * Buscar un item del menú por ID
-   */
-  findMenuItemById(id: number, items?: MenuItem[]): MenuItem | null {
-    const searchItems = items || this.menuItemsSubject.value;
-    
-    for (const item of searchItems) {
-      if (item.id === id) {
-        return item;
-      }
-      if (item.children) {
-        const found = this.findMenuItemById(id, item.children);
-        if (found) return found;
-      }
-    }
-    return null;
-  }
 
-  /**
-   * Filtrar menú por permisos del usuario
-   */
-  filterMenuByPermissions(allowedIds: number[]): MenuItem[] {
-    const filterItems = (items: MenuItem[]): MenuItem[] => {
-      return items
-        .filter(item => !item.id || allowedIds.includes(item.id))
-        .map(item => ({
-          ...item,
-          children: item.children ? filterItems(item.children) : undefined
-        }))
-        .filter(item => !item.children || item.children.length > 0);
-    };
-
-    return filterItems(this.menuItemsSubject.value);
-  }
 
   /**
    * Simular carga desde API (para preparar el futuro backend)
    */
-  loadMenuFromAPI(): Observable<MenuItem[]> {
-    return this.http.get<MenuResponse>('/data/menu.json').pipe(
+  loadMenuAPI(): Observable<MenuItem[]> {
+    return this.http.get<MenuResponse>(`${this.apiUrl}/menu`).pipe(
       map(response => response.menuItems),
       tap(items => this.menuItemsSubject.next(this.sortMenuItems(items))),
       catchError(error => {
@@ -134,4 +109,5 @@ export class MenuService {
       })
     );
   }
+
 }

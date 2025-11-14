@@ -35,7 +35,7 @@ export class LoginComponent {
     }
 
     /**
-     * Getter para acceso fácil a los campos del formulario
+     * Getter para ACCEDER a los campos del formulario
      */
     get f() {
         return this.loginForm.controls;
@@ -47,7 +47,7 @@ export class LoginComponent {
     login(): void {
         // Validar formulario
         if (this.loginForm.invalid) {
-            this.markFormGroupTouched(this.loginForm);
+            //this.markFormGroupTouched(this.loginForm);
             this.toastService.warning('Por favor completa todos los campos correctamente');
             return;
         }
@@ -58,11 +58,11 @@ export class LoginComponent {
         this.authService.login(this.loginForm.value).subscribe({
             next: (response) => {
                 this.toastService.success(`Bienvenido ${response.user.nombre}!`, 'Login exitoso');
-            
+                this.router.navigate([this.returnUrl]);
                 // Redirigir a la URL de retorno o dashboard
-                setTimeout(() => {
-                    this.router.navigate([this.returnUrl]);
-                }, 500);
+                // setTimeout(() => {
+                //     this.router.navigate([this.returnUrl]);
+                // }, 500);
             },
             error: (error) => {
                 this.loading = false;
@@ -89,13 +89,13 @@ export class LoginComponent {
         this.showPassword = !this.showPassword;
     }
 
-  /**
-   * Marcar todos los campos como touched para mostrar errores
-   */
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
-    });
-  }
+    /**
+     * Marcar todos los campos como touched para mostrar errores
+     */
+    private markFormGroupTouched(formGroup: FormGroup): void {
+        Object.keys(formGroup.controls).forEach(key => {
+            const control = formGroup.get(key);
+            control?.markAsTouched();
+        });
+    }
 }

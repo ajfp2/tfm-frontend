@@ -2,12 +2,16 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, finalize, throwError } from 'rxjs';
+import { LoaderService } from './loader.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const loaderService = inject(LoaderService);
   const authService = inject(AuthService);
   const router = inject(Router);
   const token = authService.token();
+
+  loaderService.show();
 
   // Si hay token y no es la petición de login, agregar Authorization header
   if (token && !req.url.includes('/login')) {
@@ -28,9 +32,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         authService.logout().subscribe();
         router.navigate(['/login']);
       }
-
       return throwError(() => error);
+    }),
+    finalize(() => {
+      loaderService.hide();
     })
   );
-  // return next(req);
 };

@@ -2,15 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
+import { MenuItem } from '../../models/menu.interface';
+import { ConfigService } from '../../../config/services/config.service';
 
-
-export interface MenuItem {
-  label: string;
-  icon?: string;
-  route?: string;
-  children?: MenuItem[];
-  expanded?: boolean;
-}
 
 @Component({
   selector: 'app-menu',
@@ -25,14 +19,43 @@ export class MenuComponent implements OnInit{
 
   // Menú definido en el propio componente
   menuItems: MenuItem[] = [];
+  configBD = false;
 
-  constructor(private router: Router, private ms: MenuService) {}
+  constructor(private router: Router, private ms: MenuService, private cs: ConfigService) {
+  }
 
   ngOnInit(): void {
-    this.ms.loadMenu().subscribe({
+    this.cs.getConfigApi().subscribe({
+      next: (conf) => {          
+        let cf = conf;
+        this.configBD = conf.modificado;
+
+        if(this.configBD) this.loadMenu();
+        else this.loadMenuDefault();       
+      },
+      error: (error) => {
+        console.error('Error en el componente:', error.message);
+        this.loadMenuDefault();
+        this.configBD = false;          
+      }
+    })
+  }
+
+  loadMenuDefault() {
+    this.ms.loadMenuDefault().subscribe({
       next: (items) => {
         this.menuItems = items;
-        console.log('Menú cargado:', items);
+      },
+      error: (error) => {
+        console.error('Error al cargar el menú:', error);
+      }
+    });
+  }
+
+  loadMenu(): void {
+    this.ms.loadMenuAPI().subscribe({
+      next: (items) => {
+        this.menuItems = items;
       },
       error: (error) => {
         console.error('Error al cargar el menú:', error);
@@ -45,30 +68,14 @@ export class MenuComponent implements OnInit{
     });
   }
 
-  
-
-
   toggleMenuItem(item: MenuItem): void {
     if (item.children) {
       item.expanded = !item.expanded;
     }
   }
 
-  // onMenuItemClick(item: MenuItem): void {
-  //   if (item.route) {
-  //     console.log('Navegando a:', item.route);
-  //     // Aquí puedes agregar la navegación con Router
-  //     this.router.navigate([item.route]);
-  //   }
-    
-  //   // En móvil, cerrar el sidenav después de hacer clic
-  //   if (window.innerWidth < 768) {
-  //     this.closeSidenav.emit();
-  //   }
-  // }
 
-  closeMenuOnMobile(): void {
-    
+  closeMenuOnMobile(): void {    
     if (window.innerWidth < 768) {
       this.closeSidenav.emit();
     }

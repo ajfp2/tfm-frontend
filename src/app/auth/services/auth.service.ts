@@ -54,58 +54,29 @@ export class AuthService {
 
     // Logout - Cerrar sesión
     logout(): Observable<any> {
+        return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+            tap(() => {
+                this.clearAuthData();
+            })
+        );
+    }
+    logout222(): Observable<any> {
         const token = this.token();
 
         // Limpiamos todos los datos de localstorage
         this.clearAuthData();
-        
         if (!token) {            
             this.router.navigate(['/login']);
             return of(null);
         }
 
-        return this.http.post(`${this.apiUrl}/logout`, {}, { headers: this.getAuthHeaders() }).pipe(
+        return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
             tap((res) => console.log('Logout exitoso en el servidor', res) ),
             catchError(error => {
                 console.error('No se pudo invalidar token en servidor:', error);
                 return of(null);
             }),
             finalize(() => this.router.navigate(['/login'] ))
-        );
-    }
-
-    getProfile(): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/profile`).pipe(
-            tap(user => {
-                // Actualizar usuario en el estado
-                this.updateUser(user);
-            }),
-            catchError(error => {
-                console.error('Error al obtener perfil:', error);
-                return throwError(() => error);
-            })
-        );
-    }
-
-    // Verificar si el token es válido
-    verifyToken(): Observable<boolean> {
-        const token = this.token();        
-        if (!token) {
-            return new Observable(observer => {
-                observer.next(false);
-                observer.complete();
-            });
-        }
-
-        return this.http.get<{ valid: boolean }>(`${this.apiUrl}/verify-token`).pipe(
-            map(response => response.valid),
-            catchError(() => {
-                this.clearAuthData();
-                return new Observable<boolean>(observer => {
-                    observer.next(false);
-                    observer.complete();
-                });
-            })
         );
     }
 

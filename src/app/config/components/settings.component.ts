@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppConfig, ConfigService } from '../services/config.service';
+import { AppConfig, ConfigBD, ConfigService } from '../services/config.service';
 import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
@@ -13,7 +13,13 @@ import { ToastService } from '../../shared/services/toast.service';
 export class SettingsComponent implements OnInit {
   config: AppConfig;
   previewLogo = '';
-
+  confEnabled = true;
+  confBD: ConfigBD = {
+    id: 1,
+    tipo: '',
+    ejercicio: '',
+    modificado: false
+  };
   // Colores predefinidos para selección rápida
   navbarColors = [
     { name: 'Azul', value: '#0d6efd' },
@@ -36,15 +42,50 @@ export class SettingsComponent implements OnInit {
 
   constructor(private configService: ConfigService, private toast: ToastService) {
     this.config = { ...this.configService.getConfig() };
-    this.previewLogo = this.config.appLogo;
+    console.log("Conf cargada", this.config);
+    
+    this.previewLogo = this.config.appLogo;    
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.configService.getConfigApi().subscribe({
+      next: (conf) => {
+        this.confBD = conf;
+        if(conf.modificado == true){
+          this.confEnabled = true;
+        } else this.confEnabled = false;
+      },
+      error: (error) => {
+        console.error('Error en el componente:', error.message);
+        this.confEnabled = false;          
+      }
+    });
+  }
 
   // Guardar configuración
-  saveConfig(): void {
-    this.configService.saveConfig(this.config);
-    this.toast.success('Configuración Guardada correctamente');
+  saveConfig(): void {    
+    // solo actualiza la primera vez
+    if(this.confEnabled == false){
+      this.confBD.ejercicio = this.config.appAno;
+      this.confBD.tipo = this.config.appSubTitle;
+
+      this.configService.updateConfigApi(1, this.confBD).subscribe({
+        next: (conf: any) => {       
+          this.confBD = conf.data;
+          if(this.confBD.modificado == true){
+            this.confEnabled = false;
+          } else this.confEnabled = false;
+          this.configService.saveConfig(this.config);
+          this.toast.success('Configuración Guardada correctamente');
+        },
+        error: (error) => {
+          console.error('Error actualizando config:', error.message);
+          this.confEnabled = false;
+          this.toast.error('No se ha podido guardar la configuración');
+        }
+      });
+    } else this.configService.saveConfig(this.config);
+
   }
 
   // Restaurar valores por defecto

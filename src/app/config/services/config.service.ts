@@ -1,5 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
+
+export interface ConfigBD {
+  id?: number;
+  tipo: string;
+  ejercicio: string;
+  modificado: boolean;
+}
 
 export interface AppConfig {
   navbarColor: string;
@@ -19,6 +29,9 @@ export interface AppConfig {
 })
 export class ConfigService {
 
+
+  private apiUrl = environment.api_url;
+  
   private readonly CONFIG_KEY = 'app_config';
 
   // Configuración por defecto
@@ -29,15 +42,15 @@ export class ConfigService {
       to: '#764ba2'
     },
     appTitle: 'Mi Aplicación',
-    appSubTitle: 'Mi SubTitulo',
-    appAno: 'Fiestas',
+    appSubTitle: '',
+    appAno: '',
     appLogo: 'https://ui-avatars.com/api/?name=MA&background=ffffff&color=0d6efd&size=40&bold=true'
   };
 
   // Signal para la configuración reactiva
   config = signal<AppConfig>(this.loadConfig());
 
-  constructor() {
+  constructor(private http: HttpClient) {
     // Aplicar configuración al cargar
     this.applyConfig();
   }
@@ -90,5 +103,28 @@ export class ConfigService {
   updateConfig(partialConfig: Partial<AppConfig>): void {
     const updatedConfig = { ...this.config(), ...partialConfig };
     this.saveConfig(updatedConfig);
+  }
+
+  // Comprobar si hay configuración en BD
+  getConfigApi():Observable<ConfigBD> {
+    return this.http.get(`${this.apiUrl}/configuracion/activa`).pipe(
+      map( (response: any) => {
+          if(response.code !== 200){
+              throw new Error(response.message || 'Error desconocido');
+          }
+          return response.data;
+      }),
+      catchError( (error) => {
+          console.error(error);
+          return throwError( () => new Error('No se han podido obtener la configuración'));                
+      })
+    );
+  }
+
+  updateConfigApi(id: number, conf: ConfigBD): Observable<ConfigBD> {
+      return this.http.put<ConfigBD>(`${this.apiUrl}/configuracion/${id}`, conf)
+          .pipe(catchError((error) => {
+              return throwError( () => new Error('No se ha podido ACTUALIZAR la configuración'));
+      }));
   }
 }

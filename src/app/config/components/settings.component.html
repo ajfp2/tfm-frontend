@@ -13,8 +13,8 @@
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label fw-semibold">Tipo Entidad: <small>(Ej: Asociación/Club/Comparsa/Filà/Peña)</small></label>
-                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción">
-                    <option value="Entidad">Elegir</option>
+                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción" [disabled]="confEnabled">
+                    <option value="">Elegir</option>
                     <option value="Asociación">Asociación</option>
                     <option value="Club">Club</option>
                     <option value="Comparsa">Comparsa</option>
@@ -36,8 +36,8 @@
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label fw-semibold">Ejercicio económico <small>(Ej: Año/Año festero/Cusro/Temporada)</small></label>
-                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción">
-                    <option value="Elegir">Elegir</option>
+                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción" [disabled]="confEnabled">
+                    <option value="">Elegir</option>
                     <option value="Temporada">Temporada</option>
                     <option value="Año">Año</option>
                     <option value="Fiestas">Fiestas</option>
