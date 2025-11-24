@@ -52,13 +52,13 @@ export class MenuService {
 
   /**
    * Cargar menú desde archivo JSON
-   * En el futuro, al API backend
+   * En el futuro, ir al API backend
    */
   loadMenuJSON(): Observable<MenuItem[]> {
     // Ruta al archivo JSON en la carpeta public
     return this.http.get<MenuResponse>('/data/menu.json').pipe(
       map(response => {
-        const sortedMenu = this.sortMenuItems(response.menuItems);
+        const sortedMenu = this.sortMenuItems(response.data);
         this.menuItemsSubject.next(sortedMenu);
         return sortedMenu;
       }),
@@ -85,7 +85,7 @@ export class MenuService {
   /**
    * Ordenar items del menú recursivamente por el campo 'order'
    */
-  private sortMenuItems(items: MenuItem[]): MenuItem[] {
+  private sortMenuItems(items: MenuItem[]): MenuItem[] {    
     return items
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .map(item => ({
@@ -101,7 +101,7 @@ export class MenuService {
    */
   loadMenuAPI(): Observable<MenuItem[]> {
     return this.http.get<MenuResponse>(`${this.apiUrl}/menu`).pipe(
-      map(response => response.menuItems),
+      map(response => response.data),
       tap(items => this.menuItemsSubject.next(this.sortMenuItems(items))),
       catchError(error => {
         console.error('Error al cargar desde API:', error);

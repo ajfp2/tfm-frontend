@@ -111,6 +111,7 @@ export class HeaderComponent {
     this.authS.logout().subscribe({
       next: () => {
         this.toast.info('Sesión cerrada correctamente', 'Hasta pronto');
+        this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error('Error al cerrar sesión:', error);

@@ -109,6 +109,8 @@ export class ConfigService {
   getConfigApi():Observable<ConfigBD> {
     return this.http.get(`${this.apiUrl}/configuracion/activa`).pipe(
       map( (response: any) => {
+        console.log(response);
+        
           if(response.code !== 200){
               throw new Error(response.message || 'Error desconocido');
           }
