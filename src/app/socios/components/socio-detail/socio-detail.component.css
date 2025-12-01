@@ -1,0 +1,166 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  font-weight: 600;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-header h5 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.card-body .row {
+  padding: 0.5rem 0;
+}
+
+.card-body .row:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.fw-bold {
+  color: #495057;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.8em;
+  font-weight: 500;
+}
+
+.font-monospace {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 0.95rem;
+}
+
+/* Botones de acción */
+.btn-group .btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-group .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Enlaces */
+a {
+  color: #0d6efd;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #0a58ca;
+}
+
+/* Alert personalizado */
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+  background-color: #fff3cd;
+}
+
+/* Animación de entrada */
+.card {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejorar espaciado */
+h2 {
+  font-weight: 700;
+  color: #212529;
+}
+
+.d-flex.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Spinner de carga */
+.spinner-border {
+  border-width: 0.3rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .col-lg-6:first-child {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Hover en filas de información */
+.card-body .row {
+  transition: background-color 0.2s ease;
+}
+
+.card-body .row:hover {
+  background-color: #f8f9fa;
+}
+
+/* Mejorar legibilidad en móviles */
+@media (max-width: 576px) {
+  .card-body .row > div {
+    padding: 0.25rem 0;
+  }
+  
+  .card-body .col-sm-4,
+  .card-body .col-sm-8 {
+    width: 100%;
+  }
+  
+  .card-body .col-sm-4 {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Iconos */
+.bi {
+  vertical-align: middle;
+}
+
+
+/* Bordes redondeados en badges */
+.badge {
+  border-radius: 0.375rem;
+}
+
+/* Sombra en el header */
+.row.mb-4 {
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
+}

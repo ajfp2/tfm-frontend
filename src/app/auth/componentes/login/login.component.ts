@@ -47,7 +47,7 @@ export class LoginComponent {
     login(): void {
         // Validar formulario
         if (this.loginForm.invalid) {
-            //this.markFormGroupTouched(this.loginForm);
+
             this.toastService.warning('Por favor completa todos los campos correctamente');
             return;
         }
@@ -59,10 +59,7 @@ export class LoginComponent {
             next: (response) => {
                 this.toastService.success(`Bienvenido ${response.user.nombre}!`, 'Login exitoso');
                 this.router.navigate([this.returnUrl]);
-                // Redirigir a la URL de retorno o dashboard
-                // setTimeout(() => {
-                //     this.router.navigate([this.returnUrl]);
-                // }, 500);
+
             },
             error: (error) => {
                 this.loading = false;

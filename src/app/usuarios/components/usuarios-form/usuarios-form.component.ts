@@ -107,7 +107,6 @@ export class UsuariosFormComponent implements OnInit {
 
             this.userService.getUserById(this.userId).subscribe({
                 next: (resp) => {
-                    console.log(resp);
                     this.registerUser = resp;
 
                     if (resp.foto) {
@@ -130,7 +129,6 @@ export class UsuariosFormComponent implements OnInit {
             });
 
             this.userService.getUserById(this.userId).subscribe(resp => {
-                console.log(resp);
                 this.registerUser = resp;                
             });
 
@@ -165,8 +163,6 @@ export class UsuariosFormComponent implements OnInit {
             formData.append('foto', this.selectedFile, this.selectedFile.name);
         }
 
-        // Verificar contenido del FormData
-        console.log('=== CONTENIDO DE FORMDATA ===');
         formData.forEach((value, key) => {
             console.log(`${key}:`, value);
         });
@@ -246,5 +242,10 @@ export class UsuariosFormComponent implements OnInit {
         if (fileInput) {
             fileInput.value = '';
         }
+    }
+
+    volver(){
+        let back = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/dashboard';
+        this.router.navigate([back]);
     }
 }

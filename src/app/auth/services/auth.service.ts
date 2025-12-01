@@ -60,25 +60,6 @@ export class AuthService {
             })
         );
     }
-    logout222(): Observable<any> {
-        const token = this.token();
-
-        // Limpiamos todos los datos de localstorage
-        this.clearAuthData();
-        if (!token) {            
-            this.router.navigate(['/login']);
-            return of(null);
-        }
-
-        return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
-            tap((res) => console.log('Logout exitoso en el servidor', res) ),
-            catchError(error => {
-                console.error('No se pudo invalidar token en servidor:', error);
-                return of(null);
-            }),
-            finalize(() => this.router.navigate(['/login'] ))
-        );
-    }
 
     // Refrescar token
     refreshToken(): Observable<LoginResponse> {
@@ -108,7 +89,7 @@ export class AuthService {
         });
     }
 
-    // Actualizar solo el usuario
+    // Actualizar solo el usuario en localstorage
     private updateUser(user: User): void {
         const currentState = this.authState();
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));

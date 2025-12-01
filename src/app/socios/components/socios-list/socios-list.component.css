@@ -1,0 +1,33 @@
+.nav-tabs .nav-link {
+  color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+  font-weight: bold;
+}
+
+.table th {
+  white-space: nowrap;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.35em 0.65em;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.input-group-text {
+  background-color: #e9ecef;
+}

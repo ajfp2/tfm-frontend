@@ -1,0 +1,133 @@
+.card-header {
+  font-weight: 600;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.text-danger {
+  font-weight: bold;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+small.text-muted {
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+
+/* Campo IBAN principal (readonly) */
+#IBAN {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  cursor: default;
+}
+
+#IBAN.is-valid {
+  border-color: #198754;
+  background-color: #d1e7dd;
+}
+
+/* Estilos para IBAN */
+.iban-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.iban-input {
+  width: 80px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 2px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.iban-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  transform: scale(1.05);
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.font-monospace {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.input-group-text {
+  background-color: #e9ecef;
+}
+
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-success {
+  border-left-color: #198754;
+}
+
+.alert-danger {
+  border-left-color: #dc3545;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+}
+
+@media (max-width: 768px) {
+  .iban-container {
+    justify-content: center;
+  }
+  
+  .iban-input {
+    width: 70px;
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,391 @@
+<div class="container-fluid mt-4">
+  
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="bi bi-person-fill me-2"></i>{{ isUpdateMode ? 'Editar Socio' : 'Nuevo Socio' }}</h2>
+                <button class="btn btn-secondary" (click)="cancelar()"><i class="bi bi-arrow-left me-2"></i> Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="socioForm" (ngSubmit)="grabar()">
+        
+        <!-- SECCIÓN: Datos Personales -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i> Datos Personales</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                
+                    <!-- Nombre -->
+                    <div class="col-md-6 mb-3">
+                        <label for="Nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="Nombre" formControlName="Nombre" [class.is-invalid]="isFieldInvalid('Nombre')" placeholder="Nombre del socio">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('Nombre')">
+                            {{ getErrorMessage('Nombre') }}
+                        </div>
+                    </div>
+
+                    <!-- Apellidos -->
+                    <div class="col-md-6 mb-3">
+                        <label for="Apellidos" class="form-label"> Apellidos <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="Apellidos" formControlName="Apellidos" [class.is-invalid]="isFieldInvalid('Apellidos')" placeholder="Apellidos del socio">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('Apellidos')">
+                            {{ getErrorMessage('Apellidos') }}
+                        </div>
+                    </div>
+
+                    <!-- DNI -->
+                    <div class="col-md-4 mb-3">
+                        <label for="DNI" class="form-label">DNI <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="DNI" formControlName="DNI" [class.is-invalid]="isFieldInvalid('DNI')" placeholder="12345678A" maxlength="9">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('DNI')">
+                            {{ getErrorMessage('DNI') }}
+                        </div>
+                    </div>
+
+                    <!-- Móvil -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Movil" class="form-label">Teléfono Móvil</label>
+                        <input type="text" class="form-control" id="Movil" formControlName="Movil" [class.is-invalid]="isFieldInvalid('Movil')" placeholder="600123456" maxlength="9">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('Movil')">
+                            {{ getErrorMessage('Movil') }}
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="Email" formControlName="Email" [class.is-invalid]="isFieldInvalid('Email')" placeholder="correo@ejemplo.com">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('Email')">
+                            {{ getErrorMessage('Email') }}
+                        </div>
+                    </div>
+
+                    <!-- Talla -->
+                    <div class="col-md-3 mb-3">
+                        <label for="Talla" class="form-label">Talla</label>
+                        <select class="form-select" id="Talla" formControlName="Talla">
+                            <option value="">Seleccionar...</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XXXL">XXXL</option>
+                        </select>
+                    </div>
+
+                    <!-- Sexo -->
+                    <div class="col-md-3 mb-3">
+                        <label for="Sexo" class="form-label">Sexo</label>
+                        <select class="form-select" id="Sexo" formControlName="Sexo">
+                            <option value="">Seleccionar...</option>
+                            <option value="H">Hombre</option>
+                            <option value="M">Mujer</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <!-- Fecha de Nacimiento -->
+                    <div class="col-md-6 mb-3">
+                        <label for="FNac" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="FNac" formControlName="FNac">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN: Dirección -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i> Dirección</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                
+                    <!-- Dirección -->
+                    <div class="col-md-8 mb-3">
+                        <label for="Direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="Direccion" formControlName="Direccion" placeholder="Calle, número, piso...">
+                    </div>
+
+                    <!-- Código Postal -->
+                    <div class="col-md-4 mb-3">
+                        <label for="CP" class="form-label">Código Postal</label>
+                        <input type="text" class="form-control" id="CP" formControlName="CP" [class.is-invalid]="isFieldInvalid('CP')" placeholder="03530" maxlength="5">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('CP')">
+                            {{ getErrorMessage('CP') }}
+                        </div>
+                    </div>
+
+                    <!-- País -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Pais" class="form-label">País</label>
+                        <select class="form-select" id="Pais" formControlName="Pais">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let pais of nacionalidades" [value]="pais.id">{{ pais.pais }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Provincia -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Provincia" class="form-label">Provincia</label>
+                        <select class="form-select" id="Provincia" formControlName="Provincia">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let provincia of provincias" [value]="provincia.id">{{ provincia.provincia }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Municipio -->
+                    <div class="col-md-4 mb-3">
+                        <label for="Poblacion" class="form-label">Municipio</label>
+                        <select class="form-select" id="Poblacion" formControlName="Poblacion">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let municipio of municipiosFiltrados" [value]="municipio.id">{{ municipio.municipio }}</option>
+                        </select>
+                        <small class="text-muted" *ngIf="!socioForm.get('Provincia')?.value">Primero selecciona una provincia</small>
+                    </div>
+
+                    <!-- Nacionalidad -->
+                    <div class="col-md-12 mb-3">
+                        <label for="Nacionalidad" class="form-label">Nacionalidad</label>
+                        <select class="form-select" id="Nacionalidad" formControlName="Nacionalidad">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let nac of nacionalidades" [value]="nac.id">{{ nac.nacionalidad }}</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>        
+
+        <!-- SECCIÓN: Datos de Alta -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>Datos de Alta</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                
+                    <!-- Tipo de Socio -->
+                    <div class="col-md-6 mb-3">
+                        <label for="fk_tipoSocio" class="form-label">Tipo de Socio <span class="text-danger">*</span></label>
+                        <select class="form-select" id="fk_tipoSocio" formControlName="fk_tipoSocio" [class.is-invalid]="isFieldInvalid('fk_tipoSocio')">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let tipo of tiposSocio" [value]="tipo.id_tipo">
+                                {{ tipo.tipo }}
+                                <span *ngIf="tipo.exentos_pago"> (Exento de pago)</span>
+                            </option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('fk_tipoSocio')">
+                            {{ getErrorMessage('fk_tipoSocio') }}
+                        </div>
+                    </div>
+
+                    <!-- Fecha de Alta -->
+                    <div class="col-md-6 mb-3">
+                        <label for="fecha_alta" class="form-label">Fecha de Alta <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="fecha_alta" formControlName="fecha_alta" [class.is-invalid]="isFieldInvalid('fecha_alta')">
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('fecha_alta')">
+                            {{ getErrorMessage('fecha_alta') }}
+                        </div>
+                    </div>
+
+                    <!-- Forma de Pago -->
+                    <div class="col-md-6 mb-3">
+                        <label for="formaPago" class="form-label">Forma de Pago <span class="text-danger">*</span></label>
+                        <select class="form-select" id="formaPago" formControlName="formaPago" [class.is-invalid]="isFieldInvalid('formaPago')">
+                            <option value="">Seleccionar...</option>
+                            <option *ngFor="let forma of formasPago" [value]="forma.id">{{ forma.forma }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('formaPago')">
+                            {{ getErrorMessage('formaPago') }}
+                        </div>
+                    </div>
+
+                    <!-- Número de Carnet -->
+                    <div class="col-md-6 mb-3">
+                        <label for="n_carnet" class="form-label">Nº de Carnet</label>
+                        <input type="number" class="form-control" id="n_carnet" formControlName="n_carnet" placeholder="0">
+                        <small class="text-muted">Si es un peña de futbol, nº de carnet o de socio del equipo</small>
+                    </div>
+
+                    <!-- Checkboxes de correspondencia -->
+                    <div class="col-md-12 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Configuración de Correspondencia</h6>
+                                <div class="row">
+                                                                
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="c_email" formControlName="c_email">
+                                            <label class="form-check-label" for="c_email">
+                                                Correspondencia por email
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="c_carta" formControlName="c_carta">
+                                            <label class="form-check-label" for="c_carta">
+                                                Correspondencia por carta
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sin_correspondencia" formControlName="sin_correspondencia">
+                                            <label class="form-check-label" for="sin_correspondencia">
+                                                Sin correspondencia
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ficha Madrid -->
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fichaMadrid" formControlName="fichaMadrid">
+                            <label class="form-check-label" for="fichaMadrid">
+                                Ficha Entregada y Enviada
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: Datos Bancarios -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-bank me-2"></i>Datos Bancarios</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">                    
+                    <!-- IBAN - Inputs separados para introducir/modificar -->
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Introducir IBAN (4 dígitos por campo)</label>
+                        
+                        <div class="iban-container">
+                            <!-- Parte 1: ES12 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-1" [value]="ibanParte1" (input)="onIbanInput(1, $event)" 
+                            (keydown)="onIbanKeydown(1, $event)" placeholder="ES12" maxlength="4">
+                            
+                            <!-- Parte 2 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-2" [value]="ibanParte2"(input)="onIbanInput(2, $event)"
+                            (keydown)="onIbanKeydown(2, $event)"placeholder="3456"maxlength="4">
+                            
+                            <!-- Parte 3 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-3" [value]="ibanParte3" (input)="onIbanInput(3, $event)"
+                            (keydown)="onIbanKeydown(3, $event)"placeholder="7890"maxlength="4">
+                            
+                            <!-- Parte 4 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-4" [value]="ibanParte4"(input)="onIbanInput(4, $event)"
+                            (keydown)="onIbanKeydown(4, $event)" placeholder="1234" maxlength="4">
+                            
+                            <!-- Parte 5 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-5" [value]="ibanParte5" (input)="onIbanInput(5, $event)"
+                            (keydown)="onIbanKeydown(5, $event)"placeholder="5678"maxlength="4">
+                            
+                            <!-- Parte 6 -->
+                            <input type="text" class="form-control iban-input text-uppercase" id="iban-parte-6" [value]="ibanParte6" (input)="onIbanInput(6, $event)"
+                            (keydown)="onIbanKeydown(6, $event)" placeholder="9012" maxlength="4">
+                        
+                            <!-- Botón limpiar -->
+                            <button type="button" class="btn btn-secondary" (click)="limpiarIBAN()" title="Limpiar IBAN"><i class="bi bi-x-circle"></i></button>
+                        </div>
+
+                        <!-- Mensajes de validación -->
+                        <div class="mt-2">
+                        <div *ngIf="ibanValido" class="alert alert-success py-2 mb-0 d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                            <div>
+                            <strong>¡IBAN válido!</strong><br>
+                            <small>El IBAN se ha guardado correctamente: {{ ibanParte1 }}{{ ibanParte2 }}{{ ibanParte3 }}{{ ibanParte4 }}{{ ibanParte5 }}{{ ibanParte6 }}</small>
+                            </div>
+                        </div>
+                        
+                        <div *ngIf="ibanError" class="alert alert-danger py-2 mb-0 d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                            <div>
+                            <strong>Error:</strong> {{ ibanError }}
+                            </div>
+                        </div>
+                        
+                        <div *ngIf="!ibanValido && !ibanError && (ibanParte1 || ibanParte2 || ibanParte3 || ibanParte4 || ibanParte5 || ibanParte6)" 
+                            class="alert alert-warning py-2 mb-0 d-flex align-items-center">
+                            <i class="bi bi-hourglass-split me-2 fs-5"></i>
+                            <div>
+                            <strong>Completa los 24 dígitos</strong><br>
+                            <small>Faltan {{ 24 - (ibanParte1.length + ibanParte2.length + ibanParte3.length + ibanParte4.length + ibanParte5.length + ibanParte6.length) }} caracteres</small>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- IBAN -->
+                    <div class="col-8 mb-4">
+                        <label for="IBAN" class="form-label">IBAN <span class="text-muted">Generado automáticamente si el IBAN es correcto</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
+
+                            <input type="text" class="form-control font-monospace" id="IBAN" formControlName="IBAN" 
+                            placeholder="El IBAN aparecerá aquí al completar los campos de abajo"
+                            readonly [class.is-valid]="ibanValido && socioForm.get('IBAN')?.value" style="font-size: 1.1rem; letter-spacing: 2px;">
+
+                            <span class="input-group-text" *ngIf="ibanValido && socioForm.get('IBAN')?.value"><i class="bi bi-check-circle-fill text-success"></i></span>
+                        </div>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Si aparece el IBAN es correcto</small>
+                    </div>
+
+                    <!-- BIC (autocompletado y editable) -->
+                    <div class="col-4 mb-3">
+                        <label for="BIC" class="form-label">BIC / SWIFT</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-building"></i></span>
+                            <input type="text" class="form-control text-uppercase" id="BIC" formControlName="BIC" placeholder="Se detectará automáticamente" maxlength="11">
+                            <button *ngIf="socioForm.get('BIC')?.value" type="button" class="btn btn-outline-secondary" (click)="limpiarBIC()" title="Limpiar BIC">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted"><i class="bi bi-lightbulb me-1"></i>El BIC se detecta automáticamente. Se puede modificar si es necesario.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary btn-lg" (click)="cancelar()">
+                        <i class="bi bi-x-circle me-2"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading || socioForm.invalid">
+                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                        <i *ngIf="!isLoading" class="bi bi-save me-2"></i> {{ isUpdateMode ? 'Actualizar Socio' : 'Crear Socio' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>

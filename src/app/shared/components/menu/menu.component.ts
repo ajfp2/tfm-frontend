@@ -34,7 +34,7 @@ export class MenuComponent implements OnInit{
         else this.loadMenuDefault();       
       },
       error: (error) => {
-        console.error('Error en el componente:', error.message);
+        console.error('Error en el componente menu.ts:', error.message);
         this.loadMenuDefault();
         this.configBD = false;          
       }
@@ -53,6 +53,8 @@ export class MenuComponent implements OnInit{
   }
 
   loadMenu(): void {
+    console.log("CARGA MENU API");
+    
     this.ms.loadMenuAPI().subscribe({
       next: (items) => {
         this.menuItems = items;

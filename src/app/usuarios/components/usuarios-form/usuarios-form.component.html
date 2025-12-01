@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 mt-4">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
@@ -88,13 +88,14 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg" [disabled]="registerForm.invalid">
+                            <button type="submit" class="btn btn-success btn-md" [disabled]="registerForm.invalid">
                                 <i [class]="icon"></i> Grabar Usuario
-                            </button>
+                            </button>                            
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <button type="button" class="btn btn-secondary btn-md mt-3 float-end" (click)="volver();"><i class="bi bi-arrow-left me-2"></i> Volver</button>
 </div>

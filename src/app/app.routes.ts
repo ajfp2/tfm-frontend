@@ -26,6 +26,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
             },
             {
+                path: 'socios',
+                loadChildren: () => import('./socios/socios.routes').then(m => m.SOCIOS_ROUTES)
+            },
+            {
                 path: 'config',
                 loadComponent: () => import('./config/components/settings.component').then(m => m.SettingsComponent)
             },

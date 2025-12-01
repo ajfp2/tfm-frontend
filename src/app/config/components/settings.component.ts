@@ -42,12 +42,14 @@ export class SettingsComponent implements OnInit {
 
   constructor(private configService: ConfigService, private toast: ToastService) {
     this.config = { ...this.configService.getConfig() };
-    console.log("Conf cargada", this.config);
+    console.log("Conf Local Storage cargada", this.config);
     
     this.previewLogo = this.config.appLogo;    
   }
 
   ngOnInit(): void {
+    console.log("NgOnInit LoadConfig API");
+    
     this.configService.getConfigApi().subscribe({
       next: (conf) => {
         this.confBD = conf;

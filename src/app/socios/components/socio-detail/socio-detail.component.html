@@ -1,0 +1,358 @@
+<div class="container-fluid mt-4" *ngIf="socio">
+  
+    <!-- Header con acciones -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h2 class="mb-2"><i class="bi bi-person-badge me-2"></i>{{ getNombreCompleto() }}</h2>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-primary">Nº Socio: {{ socio.alta?.nsocio || socio.baja?.nsocio }}</span>
+                        <span class="badge" [class.bg-success]="isActivo()" [class.bg-danger]="isBaja()">{{ isActivo() ? 'ACTIVO' : 'BAJA' }}</span>
+                        <span class="badge bg-info" *ngIf="socio.alta?.tipo_socio">{{ socio.alta?.tipo_socio?.tipo }}</span>
+                        <span class="badge bg-warning" *ngIf="socio.baja?.tipo_socio">{{ socio.baja?.tipo_socio?.tipo }}</span>
+                    </div>
+                </div>
+                
+                <div class="btn-group" role="group">
+                    <button class="btn btn-secondary" (click)="volver()"><i class="bi bi-arrow-left me-2"></i> Volver</button>
+                    <button class="btn btn-warning" (click)="editarSocio()"><i class="bi bi-pencil me-2"></i> Editar</button>
+                    <button *ngIf="isActivo()" class="btn btn-danger" (click)="darBaja()"><i class="bi bi-person-dash me-2"></i> Dar de Baja</button>
+                    <button *ngIf="isBaja()" class="btn btn-success" (click)="reactivar()"><i class="bi bi-arrow-counterclockwise me-2"></i> Reactivar</button>
+                    <button *ngIf="isBaja()" class="btn btn-dark" (click)="eliminar()"><i class="bi bi-trash me-2"></i> Eliminar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Columna izquierda -->
+        <div class="col-lg-6">
+            
+            <!-- Datos Personales -->
+            <div class="card mb-4">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i> Datos Personales</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">DNI:</div>
+                        <div class="col-sm-8">{{ socio.DNI }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Nombre:</div>
+                        <div class="col-sm-8">{{ socio.Nombre }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Apellidos:</div>
+                        <div class="col-sm-8">{{ socio.Apellidos }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Sexo:</div>
+                        <div class="col-sm-8">
+                            <span *ngIf="socio.Sexo === 'H'">Hombre</span>
+                            <span *ngIf="socio.Sexo === 'M'">Mujer</span>
+                            <span *ngIf="socio.Sexo === 'Otro'">Otro</span>
+                            <span *ngIf="!socio.Sexo">N/A</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Fecha de Nacimiento:</div>
+                        <div class="col-sm-8">
+                            {{ socio.FNac | date:'dd/MM/yyyy' }}
+                            <span class="badge bg-secondary ms-2 text-end" *ngIf="getEdad()">{{ getEdad() }} años</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Talla:</div>
+                        <div class="col-sm-8">{{ socio.Talla || 'N/A' }}</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Datos de Contacto -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-telephone me-2"></i> Datos de Contacto</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Teléfono:</div>
+                        <div class="col-sm-8">
+                            <a *ngIf="socio.Movil" [href]="'tel:' + socio.Movil" class="text-decoration-none">
+                                <i class="bi bi-phone me-1"></i>{{ socio.Movil }}
+                            </a>
+                            <span *ngIf="!socio.Movil">N/A</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Email:</div>
+                        <div class="col-sm-8">
+                            <a *ngIf="socio.Email" [href]="'mailto:' + socio.Email" class="text-decoration-none">
+                                <i class="bi bi-envelope me-1"></i>{{ socio.Email }}
+                            </a>
+                            <span *ngIf="!socio.Email">N/A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos Dirección -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i> Dirección</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Dirección:</div>
+                        <div class="col-sm-8">{{ socio.Direccion || 'N/A' }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Código Postal:</div>
+                        <div class="col-sm-8">{{ socio.CP || 'N/A' }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Municipio:</div>
+                        <div class="col-sm-8">{{ socio.municipio?.municipio || 'N/A' }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Provincia:</div>
+                        <div class="col-sm-8">{{ socio.provincia?.provincia || 'N/A' }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">País:</div>
+                        <div class="col-sm-8">{{ socio.pais?.pais || 'N/A' }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Nacionalidad:</div>
+                        <div class="col-sm-8">{{ socio.nacionalidad?.nacionalidad || 'N/A' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="col-lg-6">
+            
+            <!-- Datos de Alta/Baja -->
+            <div class="card mb-4">
+                <div class="card-header text-white" [class.bg-success]="isActivo()" [class.bg-danger]="isBaja()">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i> {{ isActivo() ? 'Datos de Alta' : 'Datos de Baja' }}</h5>
+                </div>
+
+                <div class="card-body">
+                    
+                    <!-- Está activo -->
+                    <ng-container *ngIf="isActivo() && socio.alta">
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Tipo de Socio:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-primary">{{ socio.alta.tipo_socio?.tipo }}</span>
+                                <span class="badge bg-warning ms-2" *ngIf="socio.alta.tipo_socio?.exentos_pago">Exento de pago</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Fecha de Alta:</div>
+                            <div class="col-sm-8">{{ socio.alta.fecha_alta | date:'dd/MM/yyyy HH:mm' }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Nº Carnet:</div>
+                            <div class="col-sm-8">{{ socio.alta.n_carnet || 'N/A' }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Forma de Pago:</div>
+                            <div class="col-sm-8">
+                                <span class="badge" [class.bg-info]="socio.alta.formaPago === 1" [class.bg-warning]="socio.alta.formaPago === 2">
+                                    {{ socio.alta.formaPago === 1 ? 'Banco' : 'Efectivo' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Correspondencia:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-secondary me-1" *ngIf="socio.alta.sin_correspondencia">Sin correspondencia</span>
+                                <span class="badge bg-primary me-1" *ngIf="socio.alta.c_carta">Por carta</span>
+                                <span class="badge bg-info me-1" *ngIf="socio.alta.c_email">Por email</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Ficha Madrid:</div>
+                            <div class="col-sm-8">
+                                <span class="badge" [class.bg-success]="socio.alta.fichaMadrid" [class.bg-secondary]="!socio.alta.fichaMadrid">
+                                    {{ socio.alta.fichaMadrid ? 'Sí' : 'No' }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </ng-container>
+
+                    <!-- Si está de baja -->
+                    <ng-container *ngIf="isBaja() && socio.baja">
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Tipo de Socio:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-primary">{{ socio.baja.tipo_socio?.tipo }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Fecha de Alta:</div>
+                            <div class="col-sm-8">{{ socio.baja.fecha_alta | date:'dd/MM/yyyy HH:mm' }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Fecha de Baja:</div>
+                            <div class="col-sm-8">
+                                <span class="text-danger fw-bold">{{ socio.baja.fecha_baja | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Motivo de Baja:</div>
+                            <div class="col-sm-8">
+                                <div class="alert alert-warning mb-0 py-2">{{ socio.baja.motivo_baja }}</div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Estado de Deuda:</div>
+                            <div class="col-sm-8">
+                                <span class="badge" [class.bg-danger]="socio.baja.deudor" [class.bg-success]="!socio.baja.deudor">
+                                    {{ socio.baja.deudor ? 'Deudor' : 'Sin deuda' }}
+                                </span>
+                                <span class="ms-2" *ngIf="socio.baja.deudor"><strong>{{ socio.baja.deuda }}€</strong></span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </div>
+
+            <!-- Datos Bancarios -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-bank me-2"></i> Datos Bancarios</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">IBAN:</div>
+                        <div class="col-sm-8">
+                            <span class="font-monospace">{{ formatearIBAN(socio.IBAN) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">BIC:</div>
+                        <div class="col-sm-8">
+                            <span class="font-monospace">{{ socio.BIC || 'N/A' }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal para dar de baja a un SOCIO-->
+<div class="modal fade" id="modalBajaSocio" tabindex="-1" aria-labelledby="modalBajaSocioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalBajaSocioLabel">
+                <i class="bi bi-person-dash me-2"></i>Dar de Baja a {{ socio?.Nombre }} {{ socio?.Apellidos }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form #formBaja="ngForm">                
+                    <!-- Información del socio -->
+                    <div class="alert alert-info mb-3">
+                        <strong>Socio:</strong> {{ getNombreCompleto() }}<br>
+                        <strong>Nº Socio:</strong> {{ socio?.alta?.nsocio }}
+                    </div>
+
+                    <!-- Motivo de baja Socio -->
+                    <div class="mb-3">
+                        <label for="motivo_baja" class="form-label">Motivo de la baja <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="motivo_baja" rows="4" [(ngModel)]="datosBaja.motivo_baja" name="motivo_baja" required
+                        placeholder="Describe el motivo de la baja (ej: Falta de pago, Traslado, Voluntaria, etc.)"></textarea>
+                        <small class="text-muted">Este motivo quedará registrado en el historial del socio</small>
+                    </div>
+
+                    <!-- Deuda Socio -->
+                    <div class="mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="esDeudor" [(ngModel)]="datosBaja.deudor" name="deudor" style="width: 3em; height: 1.5em;">
+                                    <label class="form-check-label ms-2" for="esDeudor">
+                                        <strong class="fs-5">El socio tiene deudas pendientes</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Importe de la deuda (solo si es deudor) -->
+                    <div class="mb-3" *ngIf="datosBaja.deudor">
+                        <label for="deuda" class="form-label">Importe de la deuda <span class="text-danger">*</span></label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+                            <input type="number" class="form-control" id="deuda" [(ngModel)]="datosBaja.deuda" name="deuda" min="0" step="0.01" placeholder="0.00" [required]="datosBaja.deudor">
+                            <span class="input-group-text">€</span>
+                        </div>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i> Introduce el importe total de la deuda pendiente</small>
+                    </div>
+
+                    <!-- Advertencia final -->
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Atención:</strong> Esta acción dará de baja al socio inmediatamente. 
+                        El socio podrá ser reactivado posteriormente desde la pestaña de "Socios de Baja".
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-2"></i> Cancelar</button>
+                <button type="button" class="btn btn-danger btn-lg" [disabled]="!formBaja.valid" (click)="confirmarBaja()">
+                    <i class="bi bi-person-dash me-2"></i> Confirmar Baja
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
