@@ -488,7 +488,7 @@ export class SociosFormComponent implements OnInit{
                 IBAN: ''
             });
         }
-        }
+    }
 
     // Validar IBAN usando el algoritmo Módulo 97
     validarIBANModulo97(iban: string): boolean {

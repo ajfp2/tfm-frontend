@@ -54,6 +54,8 @@ export class SettingsComponent implements OnInit {
       next: (conf) => {
         this.confBD = conf;
         if(conf.modificado == true){
+          this.config.appAno = this.confBD.ejercicio;
+          this.config.appSubTitle = this.confBD.tipo;
           this.confEnabled = true;
         } else this.confEnabled = false;
       },

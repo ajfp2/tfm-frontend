@@ -1,0 +1,116 @@
+<div class="container-fluid mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-calendar-range"></i> Gestión de Temporadas</h2>
+        <button class="btn btn-success" routerLink="/temporadas/crear-temp">
+        <i class="bi bi-plus-circle"></i> Nueva Temporada
+        </button>
+    </div>
+
+
+    <!-- Tabla de temporadas -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>                            
+                            <th>Temporada</th>
+                            <th>Estado</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Saldo Inicial</th>
+                            <th>Saldo Final</th>
+                            <th>Cuotas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="temporadas.length === 0">
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No hay temporadas registradas, cree una nueva temporada
+                            </td>
+                        </tr>
+                        <tr *ngFor="let temporada of temporadas" [class.table-success]="temporada.activa">
+                            <td>{{ temporada.temporada }}</td>                            
+                            <td>
+                                <span class="badge" 
+                                    [class.bg-success]="temporada.activa"
+                                    [class.bg-secondary]="!temporada.activa">
+                                <i class="bi" 
+                                    [class.bi-check-circle]="temporada.activa"
+                                    [class.bi-circle]="!temporada.activa"></i>
+                                {{ temporada.activa ? ' ACTIVA' : ' Inactiva' }}
+                                </span>
+                            </td>
+                            
+                            
+                            <td>{{ temporada.fechaIni | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td>{{ temporada.fechaFin | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td>{{ temporada.saldoIni | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</td>
+                            <td>{{ temporada.saldoFin | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</td>
+
+
+                            <td>
+                                <span class="badge" 
+                                    [class.bg-info]="temporada.cuotaPasada"
+                                    [class.bg-warning]="!temporada.cuotaPasada">
+                                <i class="bi" 
+                                    [class.bi-check-circle-fill]="temporada.cuotaPasada"
+                                    [class.bi-hourglass-split]="!temporada.cuotaPasada"></i>
+                                {{ temporada.cuotaPasada ? 'Generadas' : 'Pendientes' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                <!-- Botón Activar -->
+                                <button class="btn btn-success" 
+                                        *ngIf="!temporada.activa"
+                                        (click)="activarTemporada(temporada)"
+                                        title="Activar temporada">
+                                    <i class="bi bi-check-circle"></i> Activar
+                                </button>
+
+                                <!-- Botón Ver -->
+                                <button class="btn btn-info" 
+                                        [routerLink]="['/temporadas/detalle-temp', temporada.id]"
+                                        title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                <!-- Botón Editar -->
+                                <button class="btn btn-warning" 
+                                        [routerLink]="['/temporadas/editar-temp', temporada.id]"
+                                        title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                <!-- Botón Eliminar (si NO está activa) -->
+                                <button class="btn btn-danger" 
+                                        *ngIf="!temporada.activa"
+                                        (click)="eliminarTemporada(temporada)"
+                                        title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="alert alert-info mt-3" *ngIf="temporadas.length > 0">
+        <h5><i class="bi bi-info-circle"></i><strong> Información:</strong></h5>
+        <ul class="mb-0 mt-2">
+            <li>Solo puede haber una temporada activa a la vez</li>
+            <li>Al activar una temporada, la actual se desactivará automáticamente</li>
+            <li>No se puede eliminar una temporada activa</li>
+            <li>No se puede eliminar una temporada con cuotas o cargos asociados</li>
+        </ul>
+    </div>
+</div>

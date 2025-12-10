@@ -23,7 +23,11 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard',
-                loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
+                loadComponent: () => import('./dashboard/components/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'temporadas',
+                loadChildren: () => import('./temporadas/temporadas.routes').then(m => m.TEMPORADAS_ROUTES)
             },
             {
                 path: 'socios',

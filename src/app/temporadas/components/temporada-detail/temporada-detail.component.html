@@ -1,0 +1,232 @@
+<div class="container-fluid mt-4">
+    <!-- Detalle de la temporada -->
+    <div *ngIf="temporada">
+        
+        <!-- Header con acciones -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="text-black bi bi-calendar-range"></i> Temporada {{ temporada.temporada }}
+            
+            <!-- Badge estado -->
+            <span class="badge ms-2" [class.bg-success]="temporada.activa" [class.bg-secondary]="!temporada.activa">
+                <i class="text-white bi" [class.bi-check-circle]="temporada.activa" [class.bi-circle]="!temporada.activa"></i>
+                {{ temporada.activa ? 'ACTIVA' : 'Inactiva' }}
+            </span>
+
+            <!-- Badge estado temporal -->
+            <span class="badge ms-2" [class.bg-info]="estaEnCurso()" [class.bg-warning]="noHaComenzado()" [class.bg-dark]="yaTermino()">
+            <i class="text-white bi" [class.bi-hourglass-split]="estaEnCurso()" [class.bi-clock]="noHaComenzado()" [class.bi-check-circle-fill]="yaTermino()"></i>
+            <span *ngIf="estaEnCurso()">En Curso</span>
+            <span *ngIf="noHaComenzado()">Próxima</span>
+            <span *ngIf="yaTermino()">Finalizada</span>
+            </span>
+        </h2>
+
+            <div class="btn-group">
+                <button class="btn btn-success" *ngIf="!temporada.activa" (click)="activarTemporada()"><i class="bi bi-check-circle"></i> Activar</button>
+                <button class="btn btn-primary" [routerLink]="['/temporadas/editar-temp', temporada.id]"><i class="bi bi-pencil"></i> Editar</button>
+                <button class="btn btn-danger" *ngIf="!temporada.activa" (click)="eliminarTemporada()"><i class="bi bi-trash"></i> Eliminar</button>
+                <button class="btn btn-secondary" routerLink="/temporadas/list"><i class="bi bi-arrow-left"></i> Volver</button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de información -->
+        <div class="row mb-4">
+            <!-- Tarjeta 1: Información Básica -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información Básica</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted" style="width: 40%;">
+                                        <i class="bi bi-calendar3"></i> Temporada:
+                                    </td>
+                                    <td><strong>{{ temporada.temporada }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        <i class="bi bi-tag"></i> Abreviatura:
+                                    </td>
+                                    <td><strong>{{ temporada.abreviatura }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        <i class="bi bi-toggle-on"></i> Estado:
+                                    </td>
+                                    <td>
+                                        <span class="badge" 
+                                            [class.bg-success]="temporada.activa"
+                                            [class.bg-secondary]="!temporada.activa">
+                                        {{ temporada.activa ? 'Activa' : 'Inactiva' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        <i class="bi bi-receipt"></i> Cuotas:
+                                    </td>
+                                    <td>
+                                        <span class="badge" [class.bg-info]="temporada.cuotaPasada" [class.bg-warning]="!temporada.cuotaPasada">
+                                            <i class="bi" [class.bi-check-circle-fill]="temporada.cuotaPasada" [class.bi-hourglass-split]="!temporada.cuotaPasada"></i>
+                                            {{ temporada.cuotaPasada ? 'Generadas' : 'Pendientes' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2: Fechas y Duración -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Fechas y Duración</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted" style="width: 40%;"><i class="bi bi-calendar-check"></i> Fecha Inicio:</td>
+                                    <td><strong>{{ temporada.fechaIni | date:'dd/MM/yyyy HH:mm' }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted"><i class="bi bi-calendar-x"></i> Fecha Fin:</td>
+                                    <td><strong>{{ temporada.fechaFin | date:'dd/MM/yyyy HH:mm' }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted"><i class="bi bi-hourglass"></i> Duración:</td>
+                                    <td>
+                                        <strong>{{ calcularDuracionMeses() }} meses</strong>
+                                        <small class="text-muted"> ({{ calcularDuracionDias() }} días)</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted"><i class="bi bi-clock-history"></i> Estado Temporal:</td>
+                                    <td>
+                                        <span class="badge" [class.bg-info]="estaEnCurso()" [class.bg-warning]="noHaComenzado()" [class.bg-dark]="yaTermino()">
+                                            <span *ngIf="estaEnCurso()"><i class="bi bi-hourglass-split"></i> En Curso</span>
+                                            <span *ngIf="noHaComenzado()"><i class="bi bi-clock"></i> No ha comenzado</span>
+                                            <span *ngIf="yaTermino()"><i class="bi bi-check-circle-fill"></i> Finalizada</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Estadísticas (placeholder) -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Estadísticas de la Temporada</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <i class="bi bi-people-fill fs-1 text-primary"></i>
+                                <h4 class="mt-2">--</h4>
+                                <p class="text-muted mb-0">Socios Activos</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="bi bi-receipt fs-1 text-success"></i>
+                                <h4 class="mt-2">--</h4>
+                                <p class="text-muted mb-0">Cuotas Generadas</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="bi bi-check-circle fs-1 text-success"></i>
+                                <h4 class="mt-2">--</h4>
+                                <p class="text-muted mb-0">Cuotas Pagadas</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+                                <h4 class="mt-2">--</h4>
+                                <p class="text-muted mb-0">Cuotas Pendientes</p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i>
+                                Las estadísticas se mostrarán cuando haya datos de cuotas
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Datos Financieros -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0"><i class="bi bi-cash-coin"></i> Datos Financieros</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="bi bi-piggy-bank fs-1 text-warning"></i>
+                                    <h4 class="mt-2">{{ temporada.saldoIni| currency:'EUR':'symbol':'1.2-2':'es-ES' }}</h4>
+                                    <p class="text-muted mb-0">Saldo Inicial</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="bi bi-arrow-up-circle fs-1 text-success"></i>
+                                    <h4 class="mt-2">-- €</h4>
+                                    <p class="text-muted mb-0">Ingresos Totales</p>
+                                    <small class="text-muted">(Próximamente)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="bi bi-arrow-down-circle fs-1 text-danger"></i>
+                                    <h4 class="mt-2">-- €</h4>
+                                    <p class="text-muted mb-0">Gastos Totales</p>
+                                    <small class="text-muted">(Próximamente)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Auditoría -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Información de Auditoría</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1">
+                                    <i class="bi bi-calendar-plus"></i>
+                                    <strong> Fecha de Creación:</strong>
+                                </p>
+                                <p class="text-muted">{{ temporada.created_at | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><i class="bi bi-calendar-check text-primary"></i><strong> Última Actualización:</strong></p>
+                                <p class="text-muted">{{ temporada.updated_at | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

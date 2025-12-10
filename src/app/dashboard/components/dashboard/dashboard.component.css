@@ -1,0 +1,199 @@
+
+/* Tarjetas de estadísticas principales (KPIs) */
+.stat-card {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Gradientes para las tarjetas KPI */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.bg-gradient-danger {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+
+.bg-gradient-info {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+/* Icono de las tarjetas KPI */
+.stat-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+/* Ajustes de las tarjetas generales */
+.card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  border-radius: 8px 8px 0 0 !important;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+/* Cajas de estadísticas con fondo claro */
+.bg-light {
+  background-color: #f8f9fa !important;
+  border: 1px solid #e9ecef;
+  transition: background-color 0.2s;
+}
+
+.bg-light:hover {
+  background-color: #e9ecef !important;
+}
+
+/* Barras de progreso personalizadas */
+.progress {
+  border-radius: 10px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  border-radius: 10px;
+  transition: width 0.6s ease;
+}
+
+/* Tablas */
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.table thead th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+/* Enlaces en tablas */
+.table a {
+  color: #495057;
+  font-weight: 500;
+}
+
+.table a:hover {
+  color: #007bff;
+}
+
+/* Badges */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+}
+
+/* Header del dashboard */
+h2 {
+  font-weight: 600;
+  /* color: #2c3e50; */
+}
+
+h2 i {
+  color: #3498db;
+}
+
+/* Animaciones de carga */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Alertas */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+/* Botones */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Card footer */
+.card-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stat-card h2 {
+    font-size: 1.75rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-card small {
+    font-size: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .table {
+    font-size: 0.875rem;
+  }
+}
+
+/* Números grandes en tarjetas */
+h4, h5 {
+  font-weight: 700;
+}
+
+/* Mejora visual de iconos */
+.bi {
+  vertical-align: middle;
+}
+
+/* Sin datos */
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Hover en iconos */
+i.fs-1 {
+  transition: transform 0.2s;
+}
+
+.bg-light:hover i.fs-1 {
+  transform: scale(1.1);
+}

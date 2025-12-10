@@ -32,6 +32,13 @@ export class SociosService {
         return this.http.get<{ data: SocioPersona[] }>(`${this.apiUrl}/socios`, { params });
     }
 
+    /*
+     * Obtenemos los socios exentos de pago
+    */
+    getSociosExentos(): Observable<{ data: SocioPersona[] }> {
+        return this.http.get<{ data: SocioPersona[] }>(`${this.apiUrl}/socios/exentos`);
+    }
+
     /**
      * Obtener un socio por Id
     */

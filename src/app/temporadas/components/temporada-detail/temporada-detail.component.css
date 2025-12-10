@@ -1,0 +1,125 @@
+
+/* Cambios generales de las tarjetas BS */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  border-radius: 8px 8px 0 0 !important;
+  font-weight: 600;
+}
+
+/* Tablas sin bordes */
+.table-borderless td {
+  padding: 0.75rem 0.5rem;
+  vertical-align: middle;
+}
+
+.table-borderless tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.table-borderless tr:last-child {
+  border-bottom: none;
+}
+
+/* Iconos en las tablas */
+.table-borderless i {
+  margin-right: 5px;
+  font-size: 1.1rem;
+}
+
+/* Badges */
+.badge {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+}
+
+/* Tarjetas de estadísticas financieras */
+.bg-light {
+  background-color: #f8f9fa !important;
+  border: 1px solid #e9ecef;
+}
+
+.bg-light:hover {
+  background-color: #e9ecef !important;
+  cursor: default;
+}
+
+.bg-light i {
+  opacity: 0.8;
+}
+
+.bg-light h4 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* Botones de acciones */
+.btn-group {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-group .btn {
+  border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.btn-group .btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+/* Header con título */
+h2 {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+h2 i {
+  color: #3498db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    border-radius: 4px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Alerta de información */
+.alert {
+  border-radius: 8px;
+}
+
+/* Animación de carga */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

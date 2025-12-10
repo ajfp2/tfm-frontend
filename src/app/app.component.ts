@@ -9,6 +9,10 @@ import { RouterOutlet } from '@angular/router';
 // import { LoginComponent } from "./auth/componentes/login/login.component";
 import { SpinnerComponent } from "./shared/components/spinner/spinner.component";
 
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs, 'es-ES');
+
 
 
 @Component({
