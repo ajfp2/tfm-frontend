@@ -13,7 +13,7 @@
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label fw-semibold">Tipo Entidad: <small>(Ej: Asociación/Club/Comparsa/Filà/Peña)</small></label>
-                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción" [disabled]="confEnabled">
+                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción">
                     <option value="">Elegir</option>
                     <option value="Asociación">Asociación</option>
                     <option value="Club">Club</option>
@@ -21,9 +21,9 @@
                     <option value="Filà">Filà</option>
                     <option value="Peña">Peña</option>
                 </select>
-                <small class="form-text text-danger mb-0">
+                <!-- <small class="form-text text-danger mb-0">
                     Esta opción no se podrá volver a modificar (*). Esto servirá para describir ciertos puntos del menú.
-                </small>
+                </small> -->
             </div>            
         </div>
     </div>
@@ -36,16 +36,16 @@
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label fw-semibold">Ejercicio económico <small>(Ej: Año/Año festero/Cusro/Temporada)</small></label>
-                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción" [disabled]="confEnabled">
+                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción">
                     <option value="">Elegir</option>
+                    <option value="Ejercicio">Ejercicio</option>
                     <option value="Temporadas">Temporadas</option>
                     <option value="Año">Año</option>
-                    <option value="Fiestas">Fiestas</option>
-                    <option value="Ejercicio">Ejercicio</option>
+                    <option value="Fiestas">Fiestas</option>                    
                 </select>
-                <small class="form-text text-danger">
+                <!-- <small class="form-text text-danger">
                     Esta opción no se podrá volver a modificar (*). Como manejar los años (Ej: Temporada 2025-2026, Año 2025-2026, Fiestas 2025-2026 ...).
-                </small>
+                </small> -->
             </div>            
         </div>
     </div>

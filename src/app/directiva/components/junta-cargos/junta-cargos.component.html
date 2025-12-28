@@ -1,0 +1,152 @@
+<div class="container-fluid mt-4">
+  
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="bi bi-gear-fill me-2"></i> Gestionar Junta Directiva</h2>
+                    <p class="text-muted mb-0">Temporada: <strong>{{ temporadaActual?.temporada }}</strong></p>
+                </div>
+                <button class="btn btn-outline-secondary" (click)="volver()"><i class="bi bi-arrow-left me-2"></i>Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <!-- Formulario para asignar -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i> Asignar Nuevo Cargo</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Formulario -->
+                    <form [formGroup]="asignarForm" (ngSubmit)="onSubmit()" *ngIf="sociosActivos.length > 0 && cargosDisponibles.length > 0">
+                        
+                        <!-- Cargo -->
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Cargo <span class="text-danger">*</span></label>
+                            <select class="form-select" id="cargo" formControlName="a_cargo"
+                                [class.is-invalid]="asignarForm.get('a_cargo')?.invalid && asignarForm.get('a_cargo')?.touched">
+                                <option value="">Seleccione un cargo...</option>
+                                <option *ngFor="let cargo of cargosDisponibles" [value]="cargo.id" [disabled]="isCargoAsignado(cargo.id)">
+                                    {{ cargo.cargo }}<span *ngIf="isCargoAsignado(cargo.id)"> (Ya asignado)</span>
+                                </option>
+                            </select>
+                            <div class="invalid-feedback">Seleccione un cargo</div>
+                        </div>
+
+                        <!-- Búsqueda de Socio -->
+                        <div class="mb-3">
+                            <label for="searchSocio" class="form-label">Buscar Socio</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" id="searchSocio" formControlName="searchSocio" placeholder="Buscar por nombre o DNI..." (input)="buscarSocio($event)">
+                            </div>
+                        </div>
+
+                        <!-- Lista de Socios -->
+                        <div class="mb-3">
+                            <label class="form-label">Socio <span class="text-danger">*</span></label>
+                        
+                            <!-- Socio seleccionado -->
+                            <div *ngIf="asignarForm.get('a_persona')?.value" class="alert alert-info py-2 mb-2">
+                                <small><i class="bi bi-person-check me-2"></i>Seleccionado: <strong>{{ getSocioSeleccionado() }}</strong></small>
+                            </div>
+
+                            <!-- Listado de socios -->
+                            <div class="socio-list">
+                                <div *ngFor="let socio of sociosFiltrados" class="socio-item" [class.selected]="asignarForm.get('a_persona')?.value === socio.Id_Persona" [class.disabled]="isSocioEnJunta(socio.Id_Persona || 0)"
+                                    (click)="!isSocioEnJunta(socio.Id_Persona || 0) && selectSocio(socio.Id_Persona || 0)">                            
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm me-2"> {{ getInitials(socio.Apellidos + ', ' + socio.Nombre) }}</div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">{{ socio.Apellidos }}, {{ socio.Nombre }}</div>
+                                            <small class="text-muted">{{ socio.DNI }}</small>
+                                        </div>
+                                        <div>
+                                            <i *ngIf="asignarForm.get('a_persona')?.value === socio.Id_Persona" class="bi bi-check-circle-fill text-success"></i>
+                                            <small *ngIf="isSocioEnJunta(socio.Id_Persona || 0)" class="badge bg-warning text-dark"> Ya en junta</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sin resultados -->
+                                <div *ngIf="sociosFiltrados.length === 0" class="text-center py-3 text-muted">
+                                    <i class="bi bi-inbox"></i>
+                                    <p class="mb-0 small">No se encontraron socios</p>
+                                </div>
+                            </div>
+                            
+                            <div *ngIf="asignarForm.get('a_persona')?.invalid && asignarForm.get('a_persona')?.touched" class="text-danger small mt-1">
+                                Seleccione un socio
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" [disabled]="asignarForm.invalid || isSubmitting">
+                            <span *ngIf="!isSubmitting"><i class="bi bi-check-circle me-2"></i> Asignar Cargo</span>
+                            <span *ngIf="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span> Asignando...</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" (click)="asignarForm.reset()" [disabled]="isSubmitting">
+                            <i class="bi bi-x-circle me-2"></i>Limpiar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Miembros actuales -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people me-2"></i>
+                        Miembros Actuales ({{ miembrosActuales.length }})
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Sin miembros -->
+                    <div *ngIf="miembrosActuales.length === 0" class="text-center py-5">
+                        <i class="bi bi-inbox display-3 text-muted opacity-50"></i>
+                        <p class="mt-3 text-muted">No hay miembros asignados en esta temporada</p>
+                    </div>
+
+                    <!-- Lista de miembros -->
+                    <div *ngIf="miembrosActuales.length > 0" class="miembros-list">
+                        <div *ngFor="let miembro of miembrosActuales" class="miembro-card mb-3">
+                            <div class="d-flex align-items-center">
+                                
+                                <!-- Avatar -->
+                                <div class="avatar me-3" [ngClass]="getCargoColorClass(miembro.cargo)">{{ getInitials(miembro.nombreCompleto) }}</div>
+                                
+                                <!-- Info -->
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ miembro.nombreCompleto }}</h6>
+                                    <div><span class="badge" [ngClass]="getCargoColorClass(miembro.cargo)">{{ miembro.cargo }}</span></div>
+                                    <div class="mt-1"><small class="text-muted"><i class="bi bi-envelope me-1"></i>{{ miembro.email }}</small></div>
+                                </div>
+                                
+                                <!-- Botón eliminar -->
+                                <div>
+                                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarAsignacion(miembro)" title="Eliminar asignación">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

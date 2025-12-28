@@ -1,166 +1,285 @@
+/* ESTILOS GENERALES DE CARDS */
 .card {
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  border: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeInUp 0.4s ease-out;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
-  font-weight: 600;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .card-header h5 {
-  margin: 0;
-  font-size: 1.1rem;
+    margin: 0;
+    font-size: 1.1rem;
 }
 
+/* FILAS DE INFORMACIÓN EN CARDS */
 .card-body .row {
-  padding: 0.5rem 0;
+    padding: 0.5rem 0;
+    transition: background-color 0.2s ease;
 }
 
 .card-body .row:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.fw-bold {
-  color: #495057;
-}
-
-.badge {
-  font-size: 0.85rem;
-  padding: 0.4em 0.8em;
-  font-weight: 500;
-}
-
-.font-monospace {
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
-  letter-spacing: 1px;
-  font-size: 0.95rem;
-}
-
-/* Botones de acción */
-.btn-group .btn {
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .btn-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .btn-group .btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-}
-
-/* Enlaces */
-a {
-  color: #0d6efd;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: #0a58ca;
-}
-
-/* Alert personalizado */
-.alert {
-  border-left: 4px solid;
-}
-
-.alert-warning {
-  border-left-color: #ffc107;
-  background-color: #fff3cd;
-}
-
-/* Animación de entrada */
-.card {
-  animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mejorar espaciado */
-h2 {
-  font-weight: 700;
-  color: #212529;
-}
-
-.d-flex.gap-2 {
-  gap: 0.5rem;
-}
-
-/* Spinner de carga */
-.spinner-border {
-  border-width: 0.3rem;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  .col-lg-6:first-child {
-    margin-bottom: 1rem;
-  }
-}
-
-/* Hover en filas de información */
-.card-body .row {
-  transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .card-body .row:hover {
-  background-color: #f8f9fa;
+     background-color: #f8f9fa;
 }
 
-/* Mejorar legibilidad en móviles */
-@media (max-width: 576px) {
-  .card-body .row > div {
-    padding: 0.25rem 0;
-  }
-  
-  .card-body .col-sm-4,
-  .card-body .col-sm-8 {
-    width: 100%;
-  }
-  
-  .card-body .col-sm-4 {
+/* TEXTOS Y TIPOGRAFÍA */
+.fw-bold {
+    color: #495057;
+}
+
+h2 {
+    font-weight: 700;
+    color: #212529;
+}
+
+.font-monospace {
+    font-family: 'Courier New', monospace;
     font-weight: bold;
-    margin-bottom: 0.25rem;
-  }
+    letter-spacing: 1px;
+    font-size: 0.95rem;
 }
 
-/* Iconos */
-.bi {
-  vertical-align: middle;
-}
-
-
-/* Bordes redondeados en badges */
+/* BADGES */
 .badge {
-  border-radius: 0.375rem;
+    font-size: 0.85rem;
+    padding: 0.4em 0.8em;
+    font-weight: 500;
+    border-radius: 0.375rem;
 }
 
-/* Sombra en el header */
+.table .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+    font-weight: 600;
+}
+
+/* BOTONES DE ACCIÓN */
+.btn-group .btn {
+    white-space: nowrap;
+}
+
+/* ENLACES  */
+
+a {
+    color: #0d6efd;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #0a58ca;
+}
+
+/* ALERTS  */
+.alert {
+    border-left: 4px solid;
+    border-radius: 0.5rem;
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+    background-color: #fff3cd;
+}
+
+.alert-success {
+    border-left-color: #198754;
+    background-color: #d1e7dd;
+}
+
+.alert-danger {
+    border-left-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.alert .h4 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.alert .small {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+/* TABLAS (SECCIÓN DE DEUDAS) */
+.table-responsive {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table th {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.75rem 0.5rem;
+}
+
+.table td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-danger {
+    background-color: #f8d7da !important;
+}
+
+.table-success {
+    background-color: #d1e7dd !important;
+}
+
+.table-warning {
+    background-color: #fff3cd !important;
+}
+
+.table tfoot {
+    background-color: #f8f9fa;
+    border-top: 2px solid #dee2e6;
+}
+
+.table tfoot td {
+    padding: 1rem 0.5rem;
+    font-size: 1.1rem;
+}
+
+
+.display-4 {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.d-flex.gap-2 {
+    gap: 0.5rem;
+}
+
+/* Sombra en el header principal */
 .row.mb-4 {
-  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ANIMACIONES */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación específica para card de deudas */
+.card:has(.bi-cash-coin) {
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE - TABLETS (max-width: 992px)
+   ============================================ */
+
+@media (max-width: 992px) {
+    .col-lg-6:first-child {
+        margin-bottom: 1rem;
+    }
+}
+
+/*  TABLETS (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Botones de acción en columna vert */
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+  
+    .btn-group .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Resumen de deudas más compacto */
+    .alert .h4 {
+        font-size: 1.25rem;
+    }
+  
+    .alert .row > div {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 0.5rem;
+    }
+  
+    .alert .row > div:last-child {
+        border-bottom: none;
+    }
+
+
+    .table {
+        font-size: 0.85rem;
+    }
+  
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+/*  MÓVILES (max-width: 576px) */
+
+@media (max-width: 576px) {
+    /* Filas de información en cards */
+    .card-body .row > div {
+        padding: 0.25rem 0;
+    }
+    
+    .card-body .col-sm-4,
+    .card-body .col-sm-8 {
+        width: 100%;
+    }
+    
+    .card-body .col-sm-4 {
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+    }
 }

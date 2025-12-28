@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Temporada } from '../../models/temporada.model';
 import { TemporadasService } from '../../services/temporadas.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ConfigService } from '../../../config/services/config.service';
 
 // import { registerLocaleData } from '@angular/common';
 // import localeEs from '@angular/common/locales/es';
@@ -18,11 +19,15 @@ import { ToastService } from '../../../shared/services/toast.service';
 export class TemporadasListComponent implements OnInit{
 
     temporadas: Temporada[] = [];
-    constructor(private ts: TemporadasService, private toast: ToastService) {}
+    titulo: string = 'Temporadas';
+    constructor(private ts: TemporadasService, private toast: ToastService, private cf: ConfigService) {}
 
 
     ngOnInit(): void {
         this.cargarTemporadas();
+        const conf = this.cf.getConfig();
+        if(conf.appAno) this.titulo = conf.appAno;
+
     }
 
     cargarTemporadas(): void {

@@ -1,1 +1,125 @@
-<p>socios-exentos works!</p>
+<div class="container-fluid mt-4">
+  
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="bi bi-person-lines-fill me-2"></i> Socios Exentos</h2>
+                <button class="btn btn-success" (click)="crearSocio()">
+                    <i class="bi bi-person-plus-fill me-2"></i>Nuevo Socio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de socios -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                    <!-- Mensaje sin resultados -->
+                    <div *ngIf="socios.length === 0" class="alert alert-info text-center">
+                        <i class="bi bi-info-circle me-2"></i> No se encontraron socios
+                    </div>
+
+                    <!-- Tabla -->
+                    <div *ngIf="socios.length > 0" class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 80px;">Nº Socio</th>
+                                    <th>Nombre Completo</th>
+                                    <th>DNI</th>
+                                    <th style="width: 150px;">Teléfono</th>
+                                    <th>Email</th>
+                                    <th style="width: 150px;">Tipo Socio</th>
+                                    <th style="width: 120px;">Fecha Alta</th>
+                                    <th style="width: 200px;" class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let socio of socios">
+                                    
+                                    <!-- Número de socio -->
+                                    <td>
+                                        <strong class="text-primary">{{ socio.alta?.nsocio || socio.baja?.nsocio || 'N/A' }}</strong>
+                                    </td>
+                                    
+                                    <!-- Nombre completo -->
+                                    <td>{{ getNombreCompleto(socio) | uppercase }}</td>
+                                    
+                                    <!-- DNI -->
+                                    <td>{{ socio.DNI }}</td>
+                                    
+                                    <!-- Teléfono -->
+                                    <td><i class="bi bi-phone me-1"></i> {{ socio.Movil || 'N/A' }}</td>
+                                    
+                                    <!-- Email -->
+                                    <td>
+                                        <a *ngIf="socio.Email" [href]="'mailto:' + socio.Email" class="text-decoration-none">
+                                            <i class="bi bi-envelope me-1"></i>{{ socio.Email }}
+                                        </a>
+                                        <span *ngIf="!socio.Email">N/A</span>
+                                    </td>                                                                        
+
+                                    <!-- Fecha Alta (solo para activos) -->
+                                    <td>
+                                        {{ socio.alta?.fecha_alta | date:'dd/MM/yyyy' }}
+                                    </td>
+
+                                    <td>
+                                        <span class="badge" 
+                                            [class.bg-primary]="socio.alta?.tipo_socio?.exentos_pago === false"
+                                            [class.bg-warning]="socio.alta?.tipo_socio?.exentos_pago === true">
+                                            {{ socio.alta?.tipo_socio?.tipo || socio.baja?.tipo_socio?.tipo }}
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Acciones -->
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            
+                                            <!-- Ver detalle -->
+                                            <button class="btn btn-info" (click)="verSocio(socio.Id_Persona!) "title="Ver detalle"><i class="bi bi-eye"></i></button>
+                                            
+                                            <!-- Editar -->
+                                            <button class="btn btn-warning" (click)="editarSocio(socio.Id_Persona!)" title="Editar"><i class="bi bi-pencil"></i></button>
+                                            
+                                            <!-- Dar de baja (solo activos) -->
+                                            <!-- <button *ngIf="tipoVista === 'activos'" class="btn btn-danger" (click)="darBaja(socio)" title="Dar de baja">
+                                                <i class="bi bi-person-dash"></i>
+                                            </button> -->
+                                            
+                                            <!-- Reactivar socio (solo bajas) -->
+                                            <!-- <button *ngIf="tipoVista === 'bajas'" class="btn btn-success" (click)="reactivar(socio)" title="Reactivar">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button> -->
+                                            
+                                            <!-- Eliminar definitivamente (solo si es baja) -->
+                                            <!-- <button  *ngIf="tipoVista === 'bajas'" class="btn btn-dark" (click)="eliminar(socio)" title="Eliminar definitivamente">
+                                                <i class="bi bi-trash"></i>
+                                            </button> -->
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="alert alert-light">
+                <strong>Total de socios mostrados:</strong> {{ socios.length }}
+            </div>
+        </div>
+    </div>
+
+</div>

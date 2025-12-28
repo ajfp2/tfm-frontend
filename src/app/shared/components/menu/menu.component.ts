@@ -14,72 +14,71 @@ import { ConfigService } from '../../../config/services/config.service';
 })
 
 export class MenuComponent implements OnInit{
-  @Input() isOpen: boolean = true;
-  @Output() closeSidenav = new EventEmitter<void>();
+    @Input() isOpen: boolean = true;
+    @Output() closeSidenav = new EventEmitter<void>();
 
-  // Menú definido en el propio componente
-  menuItems: MenuItem[] = [];
-  configBD = false;
+    // Menú definido en el propio componente
+    menuItems: MenuItem[] = [];
+    configBD = false;
 
-  constructor(private router: Router, private ms: MenuService, private cs: ConfigService) {
-  }
+    constructor(private router: Router, private ms: MenuService, private cs: ConfigService) {}
 
-  ngOnInit(): void {
-    this.cs.getConfigApi().subscribe({
-      next: (conf) => {          
-        let cf = conf;
-        this.configBD = conf.modificado;
+    ngOnInit(): void {
+        this.cs.getConfigApi().subscribe({
+            next: (conf) => {          
+                let cf = conf;
+                this.configBD = conf.modificado;
 
-        if(this.configBD) this.loadMenu();
-        else this.loadMenuDefault();       
-      },
-      error: (error) => {
-        console.error('Error en el componente menu.ts:', error.message);
-        this.loadMenuDefault();
-        this.configBD = false;          
-      }
-    })
-  }
-
-  loadMenuDefault() {
-    this.ms.loadMenuDefault().subscribe({
-      next: (items) => {
-        this.menuItems = items;
-      },
-      error: (error) => {
-        console.error('Error al cargar el menú:', error);
-      }
-    });
-  }
-
-  loadMenu(): void {
-    console.log("CARGA MENU API");
-    
-    this.ms.loadMenuAPI().subscribe({
-      next: (items) => {
-        this.menuItems = items;
-      },
-      error: (error) => {
-        console.error('Error al cargar el menú:', error);
-      }
-    });
-
-    // También puedes suscribirte a cambios del menú
-    this.ms.menuItems$.subscribe(items => {
-      this.menuItems = items;
-    });
-  }
-
-  toggleMenuItem(item: MenuItem): void {
-    if (item.children) {
-      item.expanded = !item.expanded;
+                if(this.configBD) this.loadMenu();
+                else this.loadMenuDefault();       
+            },
+            error: (error) => {
+                console.error('Error en el componente menu.ts:', error.message);
+                this.loadMenuDefault();
+                this.configBD = false;          
+            }
+        })
     }
-  }
 
-
-  closeMenuOnMobile(): void {    
-    if (window.innerWidth < 768) {
-      this.closeSidenav.emit();
+    loadMenuDefault() {
+        this.ms.loadMenuDefault().subscribe({
+            next: (items) => {
+                this.menuItems = items;
+            },
+            error: (error) => {
+                console.error('Error al cargar el menú:', error);
+            }
+        });
     }
-  }
+
+    loadMenu(): void {
+        console.log("CARGA MENU API");
+        
+        this.ms.loadMenuAPI().subscribe({
+            next: (items) => {
+                this.menuItems = items;
+            },
+            error: (error) => {
+                console.error('Error al cargar el menú:', error);
+            }
+        });
+
+            // También puedes suscribirte a cambios del menú
+            this.ms.menuItems$.subscribe(items => {
+            this.menuItems = items;
+        });
+    }
+
+    toggleMenuItem(item: MenuItem): void {
+        if (item.children) {
+            item.expanded = !item.expanded;
+        }
+    }
+
+
+    closeMenuOnMobile(): void {    
+        if (window.innerWidth < 768) {
+            this.closeSidenav.emit();
+        }
+    }
 }

@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit{
             },
             title: {
                 display: true,
-                text: 'Evolución de Saldos por Temporada',
+                text: 'Evolución de Saldos por Ejercicio',
                 font: {
                 size: 16,
                 weight: 'bold'

@@ -1,7 +1,7 @@
 <div class="container-fluid mt-4">
     <!-- Header -->
     <div class="mb-4">
-        <h2><i class="bi bi-calendar-range"></i>{{ isEditMode ? 'Editar' : 'Nueva' }} Temporada</h2>
+        <h2><i class="bi bi-calendar-range"></i>{{ isEditMode ? 'Editar' : 'Nuevo' }} Ejercicio</h2>
     </div>
 
     <!-- Formulario -->
@@ -19,7 +19,7 @@
                 <div class="row">
                     <!-- Temporada -->
                     <div class="col-md-6 mb-3">
-                        <label for="temporada" class="form-label"> Temporada <span class="text-danger">*</span></label>
+                        <label for="temporada" class="form-label"> Ejercicio <span class="text-danger">*</span></label>
                         <input type="text" id="temporada" class="form-control" name="temporada" formControlName="temporada" [class.is-invalid]="isFieldInvalid('temporada')" placeholder="Ej: 2024-2025">
                         <div class="invalid-feedback" *ngIf="isFieldInvalid('temporada')">
                             {{ getFieldError('temporada') }}
@@ -82,7 +82,7 @@
                         <div class="invalid-feedback" *ngIf="isFieldInvalid('saldo_inicial')">
                             {{ getFieldError('saldo_inicial') }}
                         </div>
-                        <small class="text-muted">Saldo con el que inicia la temporada</small>
+                        <small class="text-muted">Saldo con el que inicia el ejercicio</small>
                     </div>
 
                     <div class="col-md-6 mb-3" *ngIf="isEditMode">
@@ -91,7 +91,7 @@
                         <div class="invalid-feedback" *ngIf="isFieldInvalid('saldo_final')">
                             {{ getFieldError('saldo_final') }}
                         </div>
-                        <small class="text-muted">Saldo con el que inicia la temporada</small>
+                        <small class="text-muted">Saldo con el que finaliza ejercicio</small>
                     </div>
 
                     <!-- Activa -->
@@ -113,23 +113,13 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label d-block">Cuotas</label>
                         <div class="form-check form-switch">
-                        <input 
-                            class="form-check-input" 
-                            type="checkbox" 
-                            id="cuotaPasada"
-                            formControlName="cuotaPasada">
-                        <label class="form-check-label" for="cuotaPasada">
-                            <span *ngIf="temporadaForm.get('cuotaPasada')?.value" class="badge bg-info">
-                            <i class="bi bi-check-circle-fill"></i> Cuotas Generadas
-                            </span>
-                            <span *ngIf="!temporadaForm.get('cuotaPasada')?.value" class="badge bg-warning">
-                            <i class="bi bi-hourglass-split"></i> Cuotas Pendientes
-                            </span>
-                        </label>
+                            <input class="form-check-input" type="checkbox"  id="cuotaPasada" formControlName="cuotaPasada">
+                            <label class="form-check-label" for="cuotaPasada">
+                                <span *ngIf="temporadaForm.get('cuotaPasada')?.value" class="badge bg-info"><i class="bi bi-check-circle-fill"></i> Cuotas Generadas</span>
+                                <span *ngIf="!temporadaForm.get('cuotaPasada')?.value" class="badge bg-warning"><i class="bi bi-hourglass-split"></i> Cuotas Pendientes</span>
+                            </label>
                         </div>
-                        <small class="text-muted">
-                        Indica si las cuotas de esta temporada ya fueron generadas
-                        </small>
+                        <small class="text-muted"> Indica si las cuotas de este ejercicio ya fueron generadas </small>
                     </div>
                 </div>
 
@@ -143,7 +133,7 @@
                         </button>
                         
                         <button type="submit" class="btn btn-primary" [disabled]="submitted">
-                            <span><i class="bi bi-check-circle"></i> {{ isEditMode ? 'Actualizar' : 'Crear' }} Temporada
+                            <span><i class="bi bi-check-circle"></i> {{ isEditMode ? 'Actualizar' : 'Crear' }} Ejercicio
                             </span>
                             <span *ngIf="submitted == true"><span class="spinner-border spinner-border-sm" role="status"></span>Guardando...
                             </span>
@@ -162,7 +152,7 @@
         <strong>Información:</strong>
         <ul class="mb-0 mt-2">
         <li>Los campos marcados con <span class="text-danger">*</span> son obligatorios</li>
-        <li>Solo puede haber una temporada activa a la vez</li>
+        <li>Solo puede haber un ejercicio activo a la vez</li>
         <li>La fecha de fin debe ser posterior a la fecha de inicio</li>
         <li>El saldo inicial no puede ser negativo</li>
         </ul>

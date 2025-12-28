@@ -1,0 +1,166 @@
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-house-fill"></i> Datos Generales de la Entidad</h2>
+            <p class="text-muted mb-0">Información general y de contacto</p>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div *ngIf="penya">
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+        
+            <!-- Sección 1: Datos de Identificación -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-card-text"></i> Datos de Identificación</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Nombre -->
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Entidad <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombre"formControlName="nombre" [class.is-invalid]="isFieldInvalid('nombre')" placeholder="Nombre completo de la peña">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('nombre')">
+                                {{ getFieldError('nombre') }}
+                            </div>
+                        </div>
+
+                        <!-- CIF -->
+                        <div class="col-md-3 mb-3">
+                            <label for="cif" class="form-label">CIF / NIF</label>
+                            <input type="text" class="form-control" id="cif" formControlName="cif" [class.is-invalid]="isFieldInvalid('cif')" placeholder="G12345678">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('cif')">
+                                {{ getFieldError('cif') }}
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="fecha_fundacion" class="form-label">Fecha de Fundación</label>
+                            <input type="date" class="form-control" id="fecha_alta" formControlName="fecha_alta">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 2: Datos de Ubicación -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Datos de Ubicación</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Dirección -->
+                        <div class="col-md-12 mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Calle, número, piso">
+                        </div>
+
+                        <!-- Código Postal -->
+                        <div class="col-md-4 mb-3">
+                            <label for="codigo_postal" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="codigo_postal" formControlName="CP" placeholder="03510">
+                        </div>
+
+                        <!-- Población -->
+                        <div class="col-md-4 mb-3">
+                            <label for="poblacion" class="form-label">Población</label>
+                            <input type="text" class="form-control" id="localidad" formControlName="localidad" placeholder="Callosa">
+                        </div>
+
+                        <!-- Provincia -->
+                        <div class="col-md-4 mb-3">
+                            <label for="provincia" class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="provincia" formControlName="provincia" placeholder="Alicante">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Sede -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-geo-fill"></i> Datos de la Sede</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label for="facebook" class="form-label">Sede Social</label>
+                            <input type="url" class="form-control" id="sede_social" formControlName="sede_social" placeholder="Bar Coyote">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="twitter" class="form-label">Telefono Sede</label>
+                            <input type="url" class="form-control" id="tel_sede" formControlName="tel_sede" placeholder="965 884 123">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="instagram" class="form-label">Dirección</label>
+                            <input type="url" class="form-control" id="direccion_sede" formControlName="direccion_sede" placeholder="C/ Mayor Nº3">
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 4: Datos de Contacto -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-telephone-fill"></i> Datos de Contacto</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Teléfono -->
+                        <div class="col-md-4 mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="965 880 456">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-4 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" formControlName="email" [class.is-invalid]="isFieldInvalid('email')" placeholder="info@gmail.com">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                                {{ getFieldError('email') }}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Botones de Acción -->
+            <div class="card">
+                <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <button 
+                    type="button" 
+                    class="btn btn-secondary"
+                    (click)="cancelar()"
+                    [disabled]="guardando">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button 
+                    type="submit" 
+                    class="btn btn-primary"
+                    [disabled]="form.invalid || guardando">
+                    <span *ngIf="!guardando">
+                        <i class="bi bi-save"></i> Guardar Cambios
+                    </span>
+                    <span *ngIf="guardando">
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Guardando...
+                    </span>
+                    </button>
+                </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

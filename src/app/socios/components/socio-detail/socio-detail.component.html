@@ -19,7 +19,7 @@
                     <button class="btn btn-warning" (click)="editarSocio()"><i class="bi bi-pencil me-2"></i> Editar</button>
                     <button *ngIf="isActivo()" class="btn btn-danger" (click)="darBaja()"><i class="bi bi-person-dash me-2"></i> Dar de Baja</button>
                     <button *ngIf="isBaja()" class="btn btn-success" (click)="reactivar()"><i class="bi bi-arrow-counterclockwise me-2"></i> Reactivar</button>
-                    <button *ngIf="isBaja()" class="btn btn-dark" (click)="eliminar()"><i class="bi bi-trash me-2"></i> Eliminar</button>
+                    <button *ngIf="isBaja()" class="btn btn-danger" (click)="eliminar()"><i class="bi bi-trash me-2"></i> Eliminar</button>
                 </div>
 
             </div>
@@ -202,7 +202,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-sm-4 fw-bold">Ficha Madrid:</div>
+                            <div class="col-sm-4 fw-bold">Ficha Entidad:</div>
                             <div class="col-sm-8">
                                 <span class="badge" [class.bg-success]="socio.alta.fichaMadrid" [class.bg-secondary]="!socio.alta.fichaMadrid">
                                     {{ socio.alta.fichaMadrid ? 'Sí' : 'No' }}
@@ -219,6 +219,7 @@
                             <div class="col-sm-4 fw-bold">Tipo de Socio:</div>
                             <div class="col-sm-8">
                                 <span class="badge bg-primary">{{ socio.baja.tipo_socio?.tipo }}</span>
+                                <span class="badge bg-warning ms-2" *ngIf="socio.baja.tipo_socio?.exentos_pago">Exento de pago</span>
                             </div>
                         </div>
 
@@ -274,6 +275,120 @@
                         <div class="col-sm-8">
                             <span class="font-monospace">{{ socio.BIC || 'N/A' }}</span>
                         </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Historial de Deudas -->
+            <div class="card mb-4">
+                <div class="text-white card-header " [class.bg-success]="!tieneDeudas() && datosDeuda" [class.bg-danger]="tieneDeudas()" [class.bg-secondary]="!datosDeuda">
+                    <h5 class="mb-0"><i class="bi bi-cash-coin me-2"></i>Historial de Cuotas</h5>
+                </div>
+                <div class="card-body">
+                                
+
+                    <!-- Resumen de deudas -->
+                    <div *ngIf="datosDeuda">
+                        
+                        <!-- Resumen -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert" [class.alert-success]="!tieneDeudas()" [class.alert-danger]="tieneDeudas()" class="mb-0">
+                                <div class="row">
+                                    <div class="col-md-4 text-center mb-2 mb-md-0">
+                                        <div class="fw-bold text-muted small">TOTAL DEUDA</div>
+                                        <div class="h4 mb-0" [class.text-danger]="tieneDeudas()">
+                                            {{ datosDeuda.resumen.total_deuda | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-2 mb-md-0">
+                                        <div class="fw-bold text-muted small">TOTAL PAGADO</div>
+                                        <div class="h4 mb-0 text-success">
+                                            {{ datosDeuda.resumen.total_pagado | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="fw-bold text-muted small">TEMPORADAS CON DEUDA</div>
+                                        <div class="h4 mb-0">
+                                            {{ datosDeuda.resumen.temporadas_con_deuda }}
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de deudas por temporada -->
+                        <div class="table-responsive" *ngIf="datosDeuda.deudas_por_temporada.length > 0">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Temporada</th>
+                                        <th class="text-end">Cuota</th>
+                                        <th class="text-center">Estado</th>
+                                        <th class="text-end">Pendiente</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let deuda of datosDeuda.deudas_por_temporada"
+                                        [class.table-danger]="deuda.importe_pendiente > 0 && !deuda.exento"
+                                        [class.table-success]="deuda.cuota_pagada"
+                                        [class.table-warning]="deuda.exento">
+                                        
+                                        <!-- Temporada -->
+                                        <td>
+                                            {{ deuda.temporada }}
+                                            <span class="badge bg-primary ms-2" *ngIf="deuda.activa"><i class="bi bi-star-fill"></i> Activa</span>
+                                        </td>
+                                        
+                                        <!-- Importe de la cuota -->
+                                        <td class="text-end">
+                                            {{ deuda.importe_cuota | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+                                        </td>
+                                        
+                                        <!-- Estado -->
+                                        <td class="text-center">
+                                            <span class="badge" [ngClass]="getEstadoBadgeClass(deuda.estado)">
+                                                <i class="bi" 
+                                                [class.bi-check-circle-fill]="deuda.estado === 'PAGADO'"
+                                                [class.bi-exclamation-circle-fill]="deuda.estado === 'PENDIENTE'"
+                                                [class.bi-shield-check]="deuda.estado === 'EXENTO'"></i>
+                                                {{ deuda.estado }}
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end">
+                                        <strong [class.text-danger]="deuda.importe_pendiente > 0">
+                                            {{ deuda.importe_pendiente | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+                                        </strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                
+                                <tfoot class="table-light fw-bold">
+                                    <tr>
+                                        <td colspan="3" class="text-end">TOTAL PENDIENTE:</td>
+                                        <td class="text-end text-danger">
+                                        {{ datosDeuda.resumen.total_deuda | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Sin historial -->
+                        <div *ngIf="datosDeuda.deudas_por_temporada.length === 0" class="text-center py-3">
+                            <i class="bi bi-inbox display-4 text-muted"></i>
+                            <p class="text-muted mt-2">No hay historial de cuotas para este socio</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Sin datos de deuda -->
+                    <div *ngIf="!datosDeuda" class="text-center py-3">
+                        <i class="bi bi-info-circle display-4 text-muted"></i>
+                        <p class="text-muted mt-2">No se encontró información de deudas</p>
                     </div>
 
                 </div>

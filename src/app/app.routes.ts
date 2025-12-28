@@ -26,8 +26,16 @@ export const routes: Routes = [
                 loadComponent: () => import('./dashboard/components/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
             {
+                path: 'penya',
+                loadChildren: () => import('./penya/penya.routes').then(m => m.PENYA_ROUTES)
+            },
+            {
                 path: 'temporadas',
                 loadChildren: () => import('./temporadas/temporadas.routes').then(m => m.TEMPORADAS_ROUTES)
+            },
+            {
+                path: 'junta-directiva',
+                loadChildren: () => import('./directiva/directiva.routes').then(m => m.DIRECTIVA_ROUTES)
             },
             {
                 path: 'socios',

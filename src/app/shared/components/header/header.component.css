@@ -17,7 +17,7 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: cover; /*controla cómo se redimensiona el contenido */
 }
 
 /* Brand Text (Título y Subtítulo) */
@@ -153,18 +153,120 @@
   display: block;
 }
 
-/* Responsive */
+/* Responsive móvil*/
 @media (max-width: 767px) {
-  .navbar-brand {
-    font-size: 1rem;
-  }
-
-  .brand-title {
-    font-size: 1rem;
-  }
+    .navbar {
+      padding: 0.5rem 0.75rem;
+    }
   
-  .brand-subtitle {
-    font-size: 0.65rem;
-  }
+    .navbar .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+  
+    .navbar .btn-link {
+        padding: 0.25rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+        margin-right: 0;
+        padding: 0;
+    }
+
+    .brand-title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .brand-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .user-dropdown-menu {
+        min-width: 260px;
+        right: -10px; 
+    }
+    
+    .user-avatar-large {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .user-info {
+        padding: 1rem 0.75rem 0.75rem;
+    }
+    
+    .user-name {
+        font-size: 0.95rem;
+    }
+    
+    .user-email {
+        font-size: 0.8rem;
+    }
+  
+
+    .user-dropdown-menu .dropdown-item {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+  
+
+    .user-dropdown-toggle i.bi-chevron-down {
+        font-size: 0.9rem;
+    }
+    
+    .navbar .d-flex {
+        flex-wrap: nowrap !important;
+    }
+  
+  
+    .navbar-brand {
+        max-width: calc(100% - 100px);
+        overflow: hidden;
+    }
+    
+    .brand-text {
+        overflow: hidden;
+    }
+    
+    .brand-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .brand-subtitle {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
+/* Tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .brand-title {
+        font-size: 1.15rem;
+    }
+    
+    .brand-subtitle {
+        font-size: 0.75rem;
+    }
+    
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Pantalla grande */
+@media (min-width: 1200px) {
+
+    .brand-title {
+        font-size: 1.3rem;
+    }
+    
+    .brand-subtitle {
+        font-size: 0.85rem;
+    }
+} 
 

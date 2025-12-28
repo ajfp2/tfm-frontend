@@ -37,7 +37,7 @@ export class HeaderComponent {
       const config = this.configService.config();
       this.title = config.appTitle;
       this.subtitle = config.appSubTitle;
-      this.ano = config.appAno;
+      this.ano = config.appAno + ' 25-26';
       this.appLogo = config.appLogo;
     });
 

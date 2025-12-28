@@ -59,13 +59,13 @@
   font-size: 1.1rem;
 }
 
-.menu-link .bi-chevron-down {
+.menu-link .bi-chevron-right {
   font-size: 0.8rem;
   transition: transform 0.3s ease;
 }
 
-.menu-link .bi-chevron-down.rotate {
-  transform: rotate(180deg);
+.menu-link .bi-chevron-right.rotate {
+  transform: rotate(90deg);
 }
 
 /* Submenu */
@@ -110,13 +110,13 @@
   color: white;
 }
 
-.submenu-link .bi-chevron-down {
+.submenu-link .bi-chevron-right {
   font-size: 0.7rem;
   transition: transform 0.3s ease;
 }
 
-.submenu-link .bi-chevron-down.rotate {
-  transform: rotate(180deg);
+.submenu-link .bi-chevron-right.rotate {
+  transform: rotate(90deg);
 }
 
 /* Submenu Nivel 2 */
@@ -182,6 +182,7 @@
 @media (max-width: 767px) {
   .sidenav {
     left: -260px;
+    top: 50px;
   }
 
   .sidenav.sidenav-open {

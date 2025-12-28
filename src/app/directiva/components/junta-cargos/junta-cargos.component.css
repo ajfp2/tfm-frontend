@@ -1,0 +1,370 @@
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border: none;
+  padding: 1rem 1.25rem;
+}
+
+.card-header h5 {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* ===== LISTA DE SOCIOS  ===== */
+.socio-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+}
+
+.socio-item {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.socio-item:hover {
+    border-color: #0d6efd;
+    background-color: #f0f7ff;
+}
+
+.socio-item.selected {
+    border-color: #198754;
+    background-color: #d1f4e0;
+}
+
+.socio-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f8f9fa;
+}
+
+.socio-item.disabled:hover {
+    border-color: transparent;
+    background-color: #f8f9fa;
+}
+
+/* Avatar pequeño en lista de socios */
+.avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #6c757d;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* ===== LISTA DE MIEMBROS ACTUALES ===== */
+.miembros-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.miembro-card {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.miembro-card:hover {
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ===== AVATARES ===== */
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.75em;
+  font-weight: 500;
+}
+
+/* ===== COLORES POR CARGO ===== */
+.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.bg-info {
+  background-color: #0dcaf0 !important;
+}
+
+.bg-success {
+  background-color: #198754 !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+.bg-dark {
+  background-color: #212529 !important;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-outline-danger:hover {
+  transform: scale(1.05);
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
+.socio-list::-webkit-scrollbar,
+.miembros-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.socio-list::-webkit-scrollbar-track,
+.miembros-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.socio-list::-webkit-scrollbar-thumb,
+.miembros-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.socio-list::-webkit-scrollbar-thumb:hover,
+.miembros-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ===== FORMULARIO ===== */
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-select,
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.6rem 0.75rem;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.form-select option:disabled {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+/* ===== ALERT ===== */
+.alert {
+  border-radius: 8px;
+}
+
+/* ===== SPINNER ===== */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  border-width: 0.25rem;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15rem;
+}
+
+/* ===== HEADER ===== */
+h2 {
+  font-weight: 700;
+  color: #212529;
+}
+
+h5 {
+  font-weight: 600;
+}
+
+h6 {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.miembro-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.socio-item {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Stagger animation */
+.miembro-card:nth-child(1) { animation-delay: 0.05s; }
+.miembro-card:nth-child(2) { animation-delay: 0.1s; }
+.miembro-card:nth-child(3) { animation-delay: 0.15s; }
+.miembro-card:nth-child(4) { animation-delay: 0.2s; }
+.miembro-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .socio-list {
+    max-height: 250px;
+  }
+  
+  .miembros-list {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .card-header h5 {
+    font-size: 1rem;
+  }
+  
+  .miembro-card {
+    padding: 0.75rem;
+  }
+  
+  .socio-item {
+    padding: 0.6rem;
+  }
+}
+
+/* ===== EMPTY STATE ===== */
+.bi-inbox {
+  opacity: 0.3;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  border-radius: 8px 0 0 8px;
+}
+
+/* ===== TEXT UTILITIES ===== */
+.text-muted {
+  color: #6c757d !important;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+/* ===== SPACING ===== */
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.me-1 {
+  margin-right: 0.25rem !important;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.me-3 {
+  margin-right: 1rem !important;
+}
+
+.py-2 {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.py-4 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}

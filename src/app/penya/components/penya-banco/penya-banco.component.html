@@ -1,0 +1,175 @@
+
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-bank"></i> Datos Bancarios de la Entidad</h2>
+            <p class="text-muted mb-0">Información de la cuenta bancaria</p>
+        </div>
+    </div>
+
+  <!-- Información de Seguridad -->
+    <div class="alert alert-info">
+        <i class="bi bi-shield-check"></i>
+        <strong> Información Segura:</strong> Los datos bancarios son sensibles. Asegúrate de guardar esta información de forma segura.
+    </div>
+
+
+  <!-- Formulario -->
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      
+        <!-- Sección: Datos Bancarios -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-credit-card-fill"></i> Información de la Cuenta</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Banco -->
+                    <div class="col-md-6 mb-3">
+                        <label for="nombre_banco" class="form-label">Nombre del Banco</label>
+                        <input type="text" class="form-control" id="nombre_banco" formControlName="nombre_banco" [class.is-invalid]="isFieldInvalid('nombre_banco')" placeholder="CaixaBank, BBVA, Santander...">
+                        <small class="form-text text-muted">Entidad bancaria donde está la cuenta</small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('nombre_banco')">
+                            {{ getFieldError('nombre_banco') }}
+                        </div>
+                    </div>
+
+                    <!-- Usuario asociado -->
+                    <div class="col-md-6 mb-3">
+                        <label for="user_banco" class="form-label">Usuario Acceso Banca Online</label>
+                        <input type="text" class="form-control" id="user_banco" formControlName="user_banco" [class.is-invalid]="isFieldInvalid('user_banco')" placeholder="Usuario del banco">
+                        <small class="form-text text-muted">Usuario de la cuenta</small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('user_banco')">
+                            {{ getFieldError('user_banco') }}
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta Claves -->
+                    <div class="col-md-6 mb-3">
+                        <label for="tarjeta_claves" class="form-label">Tarjeta Claves Banca Online</label>
+                        <input type="text" class="form-control" id="tarjeta_claves" formControlName="tarjeta_claves" [class.is-invalid]="isFieldInvalid('tarjeta_claves')" placeholder="Tarjeta Claves">
+                        <small class="form-text text-muted">Usuario de la cuenta</small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('tarjeta_claves')">
+                            {{ getFieldError('tarjeta_claves') }}
+                        </div>
+                    </div>
+
+                    <!-- PWD usuario -->
+                    <div class="col-md-6 mb-3">
+                        <label for="pwd_banco" class="form-label">Contraseña Acceso Banca Online</label>
+                        <input type="password" class="form-control" id="pwd_banco" formControlName="pwd_banco" [class.is-invalid]="isFieldInvalid('pwd_banco')" placeholder="Contraseña de acceso">
+                        <small class="form-text text-muted">Contraseña del usuario la cuenta</small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('pwd_banco')">
+                            {{ getFieldError('pwd_banco') }}
+                        </div>
+                    </div>
+
+                    <!-- IBAN -->
+                    <div class="col-md-12 mb-3">
+                        <label for="iban" class="form-label">IBAN <span class="text-danger">*</span>
+                            <span *ngIf="ibanValido === true" class="badge bg-success ms-2">
+                                <i class="bi bi-check-circle"></i> IBAN Válido
+                            </span>
+                            <span *ngIf="ibanValido === false" class="badge bg-danger ms-2">
+                                <i class="bi bi-x-circle"></i> IBAN No Válido
+                            </span>
+                        </label>
+
+                        <input type="text" class="form-control" id="iban" formControlName="iban" (input)="onIbanInput($event)"
+                        [class.is-invalid]="isFieldInvalid('iban') || ibanValido === false" [class.is-valid]="ibanValido === true" placeholder="ES12 1234 5678 90 1234567890" maxlength="34">
+                        <small class="form-text text-muted">
+                            Formato: ES + 2 dígitos de control + 20 dígitos de cuenta
+                            <span *ngIf="bicDetectado" class="text-primary ms-2"><i class="bi bi-info-circle"></i> BIC detectado automáticamente</span>
+                        </small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('iban')">
+                            {{ getFieldError('iban') }}
+                        </div>
+                        <div class="invalid-feedback" *ngIf="ibanValido === false">
+                            El IBAN no es válido según Módulo 97
+                        </div>
+                    </div>
+
+                    <!-- BIC/SWIFT -->
+                    <div class="col-md-4 mb-3">
+                        <label for="bic" class="form-label">BIC / SWIFT
+                            <span *ngIf="bicDetectado" class="badge bg-info ms-2"><i class="bi bi-lightbulb"></i> Auto-detectado</span>
+                        </label>
+                        <input type="text" class="form-control" id="bic" formControlName="bic"
+                        [class.is-invalid]="isFieldInvalid('bic')" placeholder="CAIXESBBXXX" maxlength="11">
+                        <small class="form-text text-muted">
+                            Código internacional del banco (8 u 11 caracteres)
+                        </small>
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('bic')">
+                            {{ getFieldError('bic') }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="digitos_control" class="form-label">Digitos de Control</label>
+                        <input type="text" class="form-control" id="digitos_control" formControlName="digitos_control" placeholder="ESXX" maxlength="4">                        
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('digitos_control')">
+                            {{ getFieldError('digitos_control') }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="sufijo" class="form-label">Sufijo</label>
+                        <input type="text" class="form-control" id="sufijo" formControlName="sufijo" placeholder="Sufijo: 000" maxlength="3">                        
+                        <div class="invalid-feedback" *ngIf="isFieldInvalid('digitos_control')">
+                            {{ getFieldError('digitos_control') }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" (click)="cancelar()" [disabled]="guardando"><i class="bi bi-x-circle"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="form.invalid || !ibanValido || guardando">
+                        <span *ngIf="!guardando"><i class="bi bi-save"></i> Guardar Cambios</span>
+                        <span *ngIf="guardando"><span class="spinner-border spinner-border-sm me-2"></span>Guardando...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ayuda sobre el IBAN -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-question-circle-fill"></i> Ayuda sobre el IBAN</h5>
+            </div>
+            <div class="card-body">
+                <h6>¿Dónde encontrar el IBAN?</h6>
+                <ul>
+                    <li>En tu extracto bancario (online o en papel)</li>
+                    <li>En la app o web de tu banco</li>
+                    <li>Llamando a tu banco</li>
+                </ul>
+
+                <h6 class="mt-3">Formato del IBAN Español:</h6>
+                <div class="p-3 bg-light rounded">
+                    <code>ES12 3456 7890 12 3456789012</code>
+                    <ul class="mt-2 mb-0">
+                        <li><strong>ES</strong> - Código del país (España)</li>
+                        <li><strong>12</strong> - Dígitos de control (validación Módulo 97)</li>
+                        <li><strong>3456</strong> - Código de la entidad bancaria</li>
+                        <li><strong>7890</strong> - Código de la oficina</li>
+                        <li><strong>12</strong> - Dígitos de control de la cuenta</li>
+                        <li><strong>3456789012</strong> - Número de cuenta</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="bi bi-shield-check"></i><strong> Validación Módulo 97:</strong> 
+                    Esta aplicación valida automáticamente el IBAN usando el algoritmo estándar Módulo 97, asegurando que el número sea matemáticamente correcto.
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

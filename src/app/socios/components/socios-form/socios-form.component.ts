@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrearSocioDTO, FormaPago, Municipio, Nacionalidad, Provincia, TipoSocio } from '../../models/socio.interface';
@@ -45,7 +45,8 @@ export class SociosFormComponent implements OnInit{
         private auxSocioService: SociosRealcionesService,
         private toast: ToastService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private location: Location
     ) {
         this.createForm();
     }
@@ -302,7 +303,8 @@ export class SociosFormComponent implements OnInit{
 
     cancelar(): void {
         if (confirm('¿Está seguro de cancelar? Los cambios no se guardarán.')) {
-            this.router.navigate(['/socios/list']);
+            this.location.back();
+            // this.router.navigate(['/socios/list']);
         }
     }
 
@@ -544,7 +546,6 @@ export class SociosFormComponent implements OnInit{
             this.toast.success(`BIC detectado automáticamente: ${bic}`);
         } else this.toast.error(`No se encontró BIC para el código de entidad: ${codigoEntidad}`);
     }
-
 
     limpiarIBAN(): void {
         this.ibanParte1 = '';

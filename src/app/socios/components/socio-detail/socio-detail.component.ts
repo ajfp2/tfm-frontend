@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DarBajaDTO, SocioPersona } from '../../models/socio.interface';
+import { DarBajaDTO, DatosDeuda, SocioPersona } from '../../models/socio.interface';
 import { SociosService } from '../../services/socios.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ export class SocioDetailComponent implements OnInit{
     socio: SocioPersona | null = null;
     id_socio: number | null = null;
 
-    // Datos para el modal
+    // Datos para el modal de baja
     datosBaja: DarBajaDTO = {
         fecha_baja: '',
         motivo_baja: '',
@@ -28,13 +28,18 @@ export class SocioDetailComponent implements OnInit{
         deuda: 0
     };
 
-    constructor(private socioService: SociosService, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
+    // Datos de deudas
+    datosDeuda: DatosDeuda | null = null;
+
+
+    constructor(private socioService: SociosService, private route: ActivatedRoute, private router: Router, private toast: ToastService, private location: Location) {}
     
     ngOnInit(): void {
         const paramURL = this.route.snapshot.paramMap.get('id');
         if (paramURL) {
             this.id_socio = Number(paramURL);
             this.loadSocio(this.id_socio);
+            this.loadDeudaSocio(this.id_socio);
         } else {
             this.toast.error('ID de socio no válido');
             this.router.navigate(['/socios/list']);
@@ -51,6 +56,22 @@ export class SocioDetailComponent implements OnInit{
                 console.error('Error al cargar socio:', err);
                 this.toast.error('Error al cargar los datos del socio');
                 this.router.navigate(['/socios/list']);
+            }
+        });
+    }
+
+    loadDeudaSocio(id: number): void {
+
+        this.socioService.getDeudaSocio(id).subscribe({
+            next: (response) => {
+                if (response.code == 200) {
+                    this.datosDeuda = response.data;
+                    console.log('Deudas cargadas:', this.datosDeuda);
+                }
+            },
+            error: (err) => {
+                console.error('Error al cargar deudas:', err);
+                // No mostramos error si no hay deudas, solo lo registramos
             }
         });
     }
@@ -162,7 +183,8 @@ export class SocioDetailComponent implements OnInit{
     }
 
     volver(): void {
-        this.router.navigate(['/socios/list']);
+        // this.router.navigate(['/socios/list']);
+        this.location.back();
     }
 
     private obtenerFechaHoraActual(): string {
@@ -209,6 +231,24 @@ export class SocioDetailComponent implements OnInit{
 
     isBaja(): boolean {
         return !!this.socio?.baja;
+    }
+
+    getEstadoBadgeClass(estado: string): string {
+        switch (estado) {
+        case 'PAGADO':
+            return 'bg-success';
+        case 'PENDIENTE':
+            return 'bg-danger';
+        case 'EXENTO':
+            return 'bg-warning';
+        default:
+            return 'bg-secondary';
+        }
+    }
+
+    // Verificar si tiene deudas pendientes
+    tieneDeudas(): boolean {
+        return this.datosDeuda !== null && this.datosDeuda.resumen.total_deuda > 0;
     }
 
 }

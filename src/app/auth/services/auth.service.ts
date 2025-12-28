@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthState, LoginCredentials, LoginResponse, User } from '../models/auth.model';
 import { Observable, tap, catchError, throwError, map, of, finalize } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ConfigService } from '../../config/services/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class AuthService {
     public currentUser = computed(() => this.authState().user);
     public token = computed(() => this.authState().token);
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient, private router: Router, private cf: ConfigService) {
         // Cargar estado de autenticación al iniciar
         this.loadAuthState();
     }
@@ -44,6 +45,7 @@ export class AuthService {
                 
                 this.setAuthData(response.token, response.user);
                 console.log('Login exitoso:', response.user);
+                this.cf.initialize();
             }),
             catchError(error => {
                 console.error('Error en login:', error);
