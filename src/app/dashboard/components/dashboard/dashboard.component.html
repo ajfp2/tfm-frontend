@@ -264,7 +264,7 @@
                         </div>
 
                         <div *ngIf="!loadingGrafico && saldosTemporadas.length > 0" style="height: 400px;">
-                            <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line"></canvas>
+                           <canvas #lineChart [style.display]="saldosTemporadas.length > 0 ? 'block' : 'none'"></canvas>
                         </div>
 
                         <div *ngIf="!loadingGrafico && saldosTemporadas.length === 0" class="text-center py-5">
