@@ -124,14 +124,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
                     setTimeout(() => {
                         if (this.chartReady) {
-                            console.log("Grafff");
-                            
-                            // this.configurarGrafico();
-                            // this.loadingGrafico = false;
+                            console.log("Grafff");                            
+                            this.configurarGrafico();                            
                         } else {
                             console.warn('Canvas aún no está listo');
                         }
-                    }, 1500);
+                    }, 500);
                 }                
             },
             error: (error) => {
@@ -211,7 +209,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             options: this.lineChartOptions
         };
 
-        this.lineChart = new Chart(ctx, config);        
+        this.lineChart = new Chart(ctx, config); 
+        this.loadingGrafico = false;       
     }
 
     // Calcular porcentaje de socios activos

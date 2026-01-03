@@ -1,19 +1,25 @@
 .table th {
     font-weight: 600;
+    white-space: nowrap;
     text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 0.5px;
 }
 
-.btn-group-sm .btn {
-    padding: 0.25rem 0.5rem;
+.table td {
+  vertical-align: middle;
 }
 
 .table-hover tbody tr:hover {
     background-color: rgba(0, 123, 255, 0.05);
 }
 
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+}
+
 .badge {
     padding: 0.4em 0.8em;
     font-weight: 500;
 }
+
