@@ -125,13 +125,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     setTimeout(() => {
                         if (this.chartReady) {
                             this.configurarGrafico();
-
                         } else {
                             console.warn('Canvas aún no está listo');
                         }
-                    }, 250);
-                }
-                
+                    }, 500);
+                }                
             },
             error: (error) => {
                 console.error('Error al cargar gráfico de saldos:', error);
