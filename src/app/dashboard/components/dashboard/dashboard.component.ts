@@ -129,7 +129,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                         } else {
                             console.warn('Canvas aún no está listo');
                         }
-                    }, 500);
+                    }, 700);
                 }                
             },
             error: (error) => {
