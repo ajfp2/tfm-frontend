@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { DefaultImagePipe } from "../../../shared/pipes/default-image.pipe";
+import { ConfigService } from '../../../config/services/config.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-usuarios-form',
@@ -15,20 +17,16 @@ import { DefaultImagePipe } from "../../../shared/pipes/default-image.pipe";
 })
 export class UsuariosFormComponent implements OnInit {
 
+    bloqueROL: boolean = false;
     registerUser: UserDTO;
-    nombre: UntypedFormControl;
-    apellidos: UntypedFormControl;
-    usuario: UntypedFormControl;
-    email: UntypedFormControl;
-    password: UntypedFormControl;
-    telefono: UntypedFormControl;
-    perfil: UntypedFormControl;
 
-    registerForm: UntypedFormGroup;
+    currentUser: any = null; // guardar autenticado 
+
+    registerForm!: UntypedFormGroup;
     isValidForm: boolean | null;
 
-    private isUpdateMode: boolean;
-    private userId: number | null;
+    isUpdateMode: boolean;
+    userId: number | null;
 
     // Para manejar las imagenes del usuario.
     selectedFile: File | null = null;
@@ -36,123 +34,204 @@ export class UsuariosFormComponent implements OnInit {
 
     title: string = 'Crear Usuario';
     icon: string = 'bi bi-person-add';
+    color: string = 'btn-success';
 
-    constructor(private activatedRoute: ActivatedRoute, private formBuilder: UntypedFormBuilder, private userService: UserService, private toast: ToastService, private router: Router) {
+    constructor(private activatedRoute: ActivatedRoute, private formBuilder: UntypedFormBuilder, private userService: UserService, private authService: AuthService,
+        private toast: ToastService, private router: Router) {
+
         this.registerUser = new UserDTO('', '', '', '', '', 2, '');
         const paramURL = this.activatedRoute.snapshot.paramMap.get('id');
         this.userId = paramURL ? Number(paramURL) : null;
-        this.isUpdateMode = false;
+        this.isUpdateMode = !!this.userId;
 
         this.isValidForm = null;
-
-        this.nombre = new UntypedFormControl(this.registerUser.nombre, [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(25),
-        ]);
-
-        this.apellidos = new UntypedFormControl(this.registerUser.apellidos, [
-            Validators.required,
-            Validators.minLength(5),
-            Validators.maxLength(50),
-        ]);
-
-        this.usuario = new UntypedFormControl(this.registerUser.usuario, [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(25),
-        ]);
-
-        this.email = new UntypedFormControl(this.registerUser.email, [
-            Validators.required,
-            Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
-        ]);
-
-        this.password = new UntypedFormControl(this.registerUser.password, [
-            Validators.required,
-            Validators.minLength(8),
-        ]);
-
-        this.telefono = new UntypedFormControl(this.registerUser.telefono, [
-            Validators.required,
-            Validators.pattern('^[67][0-9]{8}$')
-        ]);
-
-        
-        this.perfil = new UntypedFormControl(this.registerUser.perfil, [
-            Validators.required
-        ]);
-
-        this.registerForm = this.formBuilder.group({
-            nombre: this.nombre,
-            apellidos: this.apellidos,
-            usuario: this.usuario,
-            telefono: this.telefono,
-            email: this.email,
-            password: this.password,
-            perfil: this.perfil
-        });
-
     }
 
     ngOnInit(): void {
-        if (this.userId) {
-            this.isUpdateMode = true;
-            this.title = 'Editar Usuario';
-            this.icon = 'bi bi-person-vcard';
-
-            // Quitamos la validacion para el modo editar
-            this.password.clearValidators();
-            this.password.updateValueAndValidity();
-
-            this.userService.getUserById(this.userId).subscribe({
-                next: (resp) => {
-                    this.registerUser = resp;
-
-                    if (resp.foto) {
-                        this.imagePreview = resp.foto;
-                    }
-                    
-                    this.registerForm.patchValue({
-                        nombre: resp.nombre,
-                        apellidos: resp.apellidos,
-                        usuario: resp.usuario,
-                        email: resp.email,
-                        telefono: resp.telefono,
-                        perfil: resp.perfil                        
-                    });
-                },
-                error: (err) => {
-                    this.toast.error('Error al cargar el usuario');
-                    console.error(err);
-                }
-            });
-
-            this.userService.getUserById(this.userId).subscribe(resp => {
-                this.registerUser = resp;                
-            });
-
+        // Usuario autenticado
+        this.obtenerUsuarioAutenticado();
+        
+        // Bloqueamos según rol
+        this.determinarBloqueoRol();
+        
+        // Inicilizamos el formutlario
+        this.inicializarFormulario();
+        
+        // Cargar datos modo edición
+        if (this.isUpdateMode && this.userId) {
+            this.cargarUsuario();
         }
+    }
+    
+    obtenerUsuarioAutenticado(): void {        
+        this.currentUser = this.authService.currentUser();
+        
+        console.log('Usuario autenticado:', this.currentUser);
+        
+        if (!this.currentUser) {
+            console.warn('No hay usuario autenticado');
+            this.toast.error('No se pudo verificar tu sesión');
+            this.router.navigate(['/login']);
+        }
+    }
+
+    // Determinar bloqueo según ROL- Solo Admin puede cambiar roles, un usuario no puede cambiar su rol
+    determinarBloqueoRol(): void {
+        if (!this.currentUser) {
+            this.bloqueROL = true;
+            console.log('Sin usuario, ROL bloqueado');
+            return;
+        }
+
+        const esAdmin = this.currentUser.perfil === 1 || this.currentUser.perfil === '1';
+        
+        // Si NO es admin, siempre bloquear
+        if (!esAdmin) {
+            this.bloqueROL = true;
+            console.log('Usuario normal, ROL bloqueado');
+            return;
+        }
+
+        // Si es admin creando nuevo usuario
+        if (!this.isUpdateMode) {
+            this.bloqueROL = false;
+            console.log('Admin creando usuario, ROL desbloqueado');
+            return;
+        }
+
+        // Si es admin editando su propio perfil
+        if (this.userId === this.currentUser.id) {
+            this.bloqueROL = true;
+            console.log('Admin editando su propio perfil, ROL bloqueado');
+            return;
+        }
+
+        // Si es admin editando otro usuario
+        this.bloqueROL = false;
+        console.log('Admin editando otro usuario, ROL desbloqueado');
+    }
+
+    // Inicializar formulario
+    inicializarFormulario(): void {
+        this.registerForm = this.formBuilder.group({
+            nombre: ['', [
+                Validators.required,
+                Validators.minLength(4),
+                Validators.maxLength(25)
+            ]],
+            apellidos: ['', [
+                Validators.required,
+                Validators.minLength(5),
+                Validators.maxLength(50)
+            ]],
+            usuario: ['', [
+                Validators.required,
+                Validators.minLength(4),
+                Validators.maxLength(25)
+            ]],
+            email: ['', [
+                Validators.required,
+                Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
+            ]],
+            telefono: ['', [
+                Validators.required,
+                Validators.pattern('^[67][0-9]{8}$')
+            ]],
+            password: [''], 
+            perfil: [
+                { 
+                    value: 2, 
+                    disabled: this.bloqueROL 
+                }
+            ]
+        });
+
+        // Validadores de password según modo
+        if (!this.isUpdateMode) {
+            // Modo creación: password obligatorio
+            this.registerForm.get('password')?.setValidators([
+                Validators.required,
+                Validators.minLength(8)
+            ]);
+        }
+        // En modo edición, password es opcional (solo si se quiere cambiar)
+
+        console.log('📝 Formulario inicializado. bloqueROL:', this.bloqueROL);
+    }
+
+    cargarUsuario(): void {
+        if (!this.userId) return;
+
+        this.title = 'Editar Usuario';
+        this.icon = 'bi bi-person-vcard';
+        this.color = 'btn-primary';
+
+        this.userService.getUserById(this.userId).subscribe({
+            next: (resp) => {
+                this.registerUser = resp;
+                console.log('Usuario cargado:', this.registerUser);
+                
+                if (resp.foto) {
+                    this.imagePreview = resp.foto;
+                }
+                
+                this.registerForm.patchValue({
+                    nombre: resp.nombre,
+                    apellidos: resp.apellidos,
+                    usuario: resp.usuario,
+                    email: resp.email,
+                    telefono: resp.telefono,
+                    perfil: resp.perfil
+                });
+
+                //determinar bloqueo después de cargar datos
+                this.determinarBloqueoRol();
+                this.actualizarEstadoCampoPerfil();
+            },
+            error: (err) => {
+                this.toast.error('Error al cargar el usuario');
+                console.error(err);
+                this.router.navigate(['/usuarios/list']);
+            }
+        });
+    }
+
+    actualizarEstadoCampoPerfil(): void {
+        const perfilControl = this.registerForm.get('perfil');
+        
+        if (this.bloqueROL) {
+            perfilControl?.disable();
+        } else {
+            perfilControl?.enable();
+        }
+        
+        console.log('Estado campo perfil actualizado. Disabled:', this.bloqueROL);
     }
 
     register(): void {
         if (this.registerForm.invalid) {
+            this.toast.error('Por favor, todos los campos obligatorios');
+            this.registerForm.markAllAsTouched();
             return;
         }
 
         this.isValidForm = true;
 
-            console.log('=== DATOS DEL FORMULARIO ===');
-            console.log('Valores del form:', this.registerForm.value);
-            console.log('isUpdateMode:', this.isUpdateMode);
-            console.log('userId:', this.userId);
+        // Usar getRawValue() para incluir campos disabled
+        const formValues = this.registerForm.getRawValue();
+
+        console.log('=== DATOS DEL FORMULARIO ===');
+        console.log('Valores del form (con disabled):', formValues);
+        console.log('isUpdateMode:', this.isUpdateMode);
+        console.log('userId:', this.userId);
+        console.log('bloqueROL:', this.bloqueROL);
 
         const formData = new FormData();
         
-        // Copiamos todos los campos del formulario para añadir la foto, sino enviariamos this.registerUser
-        Object.keys(this.registerForm.value).forEach(key => {
-            const value = this.registerForm.value[key];
-            if (value !== null && value !== undefined) {
+        // Copiar todos los campos del formulario
+        Object.keys(formValues).forEach(key => {
+            const value = formValues[key];
+            if (value !== null && value !== undefined && value !== '') {
                 formData.append(key, value);
             }
         });
@@ -163,41 +242,72 @@ export class UsuariosFormComponent implements OnInit {
             formData.append('foto', this.selectedFile, this.selectedFile.name);
         }
 
+        // Debug: mostrar todos los campos
+        console.log('Datos a enviar:');
         formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
+            console.log(`  ${key}:`, value);
         });
 
         if (this.isUpdateMode && this.userId) {
-            // Actualizar usuario
-            formData.append('_method', 'PUT'); // para poder enivar imgs
-            this.userService.updateUser(this.userId, formData).subscribe({
-                next: () => {
-                    this.toast.success('Usuario actualizado correctamente');
-                    this.router.navigate(['/usuarios/list']);
-                },
-                error: (err) => {
-                    this.toast.error('Error al actualizar el usuario');
-                    // Mostrar errores específicos
-                    if (err.error?.errors) {
-                        Object.keys(err.error.errors).forEach(field => {
-                            console.error(`Campo ${field}:`, err.error.errors[field]);
-                        });
-                    }
-                }
-            });
+            this.actualizarUsuario(formData);
         } else {
-            // Crear usuario
-            this.userService.createUser(formData).subscribe({
-                next: () => {
-                    this.toast.success('Usuario creado correctamente');
-                    this.router.navigate(['/usuarios/list']);
-                },
-                error: (err) => {
-                    this.toast.error('Error al crear el usuario');
-                    console.error(err);
-                }
-            });
+            this.crearUsuario(formData);
         }
+    }
+
+    private crearUsuario(formData: FormData): void {
+        this.userService.createUser(formData).subscribe({
+            next: () => {
+                this.toast.success('Usuario creado correctamente');
+                this.router.navigate(['/usuarios/list']);
+            },
+            error: (err) => {
+                this.toast.error('Error al crear el usuario');
+                console.error('Error creación:', err);
+                
+                // Mostrar errores específicos de validación
+                if (err.error?.errors) {
+                    Object.keys(err.error.errors).forEach(field => {
+                        const messages = err.error.errors[field];
+                        console.error(`Campo ${field}:`, messages);
+                        this.toast.error(`${field}: ${messages[0]}`);
+                    });
+                }
+            }
+        });
+    }
+
+    private actualizarUsuario(formData: FormData): void {
+        // Laravel necesita _method para FormData con archivos
+        formData.append('_method', 'PUT');
+
+        this.userService.updateUser(this.userId!, formData).subscribe({
+            next: () => {
+                this.toast.success('Usuario actualizado correctamente');
+                
+                // Si el usuario editó su propio perfil, actualizar sesión
+                if (this.userId === this.currentUser?.id) {
+                    console.log('Actualizando usuario en sesión...');
+                    // Refrescar Perfil auth???? probarrrr
+                    // this.authService.refreshCurrentUser();
+                }
+                
+                this.router.navigate(['/usuarios/list']);
+            },
+            error: (err) => {
+                this.toast.error('Error al actualizar el usuario');
+                console.error('Error actualización:', err);
+                
+                // Mostrar errores específicos
+                if (err.error?.errors) {
+                    Object.keys(err.error.errors).forEach(field => {
+                        const messages = err.error.errors[field];
+                        console.error(`Campo ${field}:`, messages);
+                        this.toast.error(`${field}: ${messages[0]}`);
+                    });
+                }
+            }
+        });
     }
 
     // Archivo img elegido
@@ -247,5 +357,21 @@ export class UsuariosFormComponent implements OnInit {
     volver(){
         let back = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/dashboard';
         this.router.navigate([back]);
+    }
+
+    tieneError(campo: string, error: string): boolean {
+        const control = this.registerForm.get(campo);
+        return !!(control?.hasError(error) && control?.touched);
+    }
+
+    getClaseCampo(campo: string): string {
+        const control = this.registerForm.get(campo);
+        if (control?.invalid && control?.touched) {
+            return 'is-invalid';
+        }
+        if (control?.valid && control?.touched) {
+            return 'is-valid';
+        }
+        return '';
     }
 }

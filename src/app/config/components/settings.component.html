@@ -2,7 +2,20 @@
     <div class="mb-4">
         <h2 class="mb-2"><i class="bi bi-gear-fill me-2"></i> Configuración</h2>
         <p class="text-muted">Personaliza la apariencia de tu aplicación</p>
+
+        <div *ngIf="!isInitialized" class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+            <div>
+                <strong>¡Atención!</strong> Esta es la primera vez que configuras el sistema.
+                <br>
+                Los campos <strong>Tipo de Entidad</strong> y <strong>Ejercicio Económico</strong> no podrán modificarse después de guardar.
+            </div>
+        </div>
+
     </div>
+
+    
+    
 
 
     <!-- Sección: Tipo de Entidad de la Aplicación -->
@@ -12,18 +25,31 @@
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <label class="form-label fw-semibold">Tipo Entidad: <small>(Ej: Asociación/Club/Comparsa/Filà/Peña)</small></label>
-                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción">
+                <label class="form-label fw-semibold">
+                    Tipo Entidad: <small>(Ej: Asociación/Club/Entidad/Filà/Peña)</small>
+                    <span *ngIf="isInitialized" class="badge bg-secondary ms-2">
+                        <i class="bi bi-lock-fill"></i> Bloqueado
+                    </span>
+                </label>
+                <select class="form-select" [(ngModel)]="config.appSubTitle" aria-label="Elegir una opción" [disabled]="isInitialized">
                     <option value="">Elegir</option>
+                    <option value="Entidad">Entidad</option>
                     <option value="Asociación">Asociación</option>
                     <option value="Club">Club</option>
                     <option value="Comparsa">Comparsa</option>
                     <option value="Filà">Filà</option>
                     <option value="Peña">Peña</option>
                 </select>
-                <!-- <small class="form-text text-danger mb-0">
-                    Esta opción no se podrá volver a modificar (*). Esto servirá para describir ciertos puntos del menú.
-                </small> -->
+
+                <small class="form-text text-muted" *ngIf="isInitialized">
+                    <i class="bi bi-info-circle"></i>                    
+                    <span> Valor configurado: <strong>{{ originalTipo }}</strong>. No se puede modificar.</span>
+                </small>
+
+                <small class="form-text text-danger mb-0" *ngIf="!isInitialized">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <b> Esta opción no se podrá volver a modificar despues de guardar.</b> Se usará para personalizar el menú y textos de la aplicación.
+                </small>
             </div>            
         </div>
     </div>
@@ -35,17 +61,29 @@
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <label class="form-label fw-semibold">Ejercicio económico <small>(Ej: Año/Año festero/Cusro/Temporada)</small></label>
-                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción">
+                <label class="form-label fw-semibold">
+                    Ejercicio económico <small>(Ej: Año/Año festero/Cusro/Temporada)</small>
+                    <span *ngIf="isInitialized" class="badge bg-secondary ms-2">
+                        <i class="bi bi-lock-fill"></i> Bloqueado
+                    </span>
+                </label>
+                <select class="form-select" [(ngModel)]="config.appAno" aria-label="Elegir una opción" [disabled]="isInitialized">
+                    
                     <option value="">Elegir</option>
                     <option value="Ejercicio">Ejercicio</option>
                     <option value="Temporadas">Temporadas</option>
                     <option value="Año">Año</option>
                     <option value="Fiestas">Fiestas</option>                    
                 </select>
-                <!-- <small class="form-text text-danger">
-                    Esta opción no se podrá volver a modificar (*). Como manejar los años (Ej: Temporada 2025-2026, Año 2025-2026, Fiestas 2025-2026 ...).
-                </small> -->
+                <small class="form-text text-muted" *ngIf="isInitialized">
+                    <i class="bi bi-info-circle"></i>                    
+                    <span> Valor configurado: <strong>{{ originalEjercicio  }}</strong>. No se puede modificar.</span>
+                </small>
+
+                <small class="form-text text-danger mb-0" *ngIf="!isInitialized">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <b> Esta opción no se podrá volver a modificar.</b> Define como manejar los periodos (Ej: Temporada 2025-2026, Año 2025-2026, Fiestas 2025-2026 ...).
+                </small>
             </div>            
         </div>
     </div>
@@ -185,10 +223,12 @@
     <!-- Botones -->
     <div class="d-flex justify-content-center gap-3 py-4 border-top">
         <button type="button" class="btn btn-primary btn-lg px-5" (click)="saveConfig()">
-            <i class="bi bi-check-lg me-2"></i> Guardar Cambios
+            <i class="bi" [class.bi-check-lg]="isInitialized" [class.bi-save]="!isInitialized"></i>
+            <span *ngIf="!isInitialized" class="ms-2">Guardar Configuración Inicial</span>
+            <span *ngIf="isInitialized" class="ms-2">Guardar Cambios</span>
         </button>
         
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4" (click)="resetToDefault()">
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4" (click)="resetToDefault()" [disabled]="!isInitialized">
             <i class="bi bi-arrow-counterclockwise me-2"></i> Restaurar Valores por Defecto
         </button>
     </div>

@@ -39,9 +39,9 @@ export interface AppConfig {
 
 export class ConfigService {
 
-
     private apiUrl = `${environment.api_url}/configuracion`;
-    
+
+    private readonly CONFIG_INITIALIZED_KEY = 'app_config_initialized';    
     private readonly CONFIG_KEY = 'app_config';
 
     // Configuración por defecto
@@ -51,17 +51,20 @@ export class ConfigService {
             from: '#667eea',
             to: '#764ba2'
         },
-        appTitle: 'Sistema de Gestión',
-        appSubTitle: 'Peña',
+        appTitle: 'GestiSOC',
+        appSubTitle: 'Entidad',
         appAno: 'Ejercicio',
         appLogo: 'https://ui-avatars.com/api/?name=MA&background=ffffff&color=0d6efd&size=40&bold=true'
     };
 
-    // Signal para la configuración reactiva
+    // Signal para la configuración
     config = signal<AppConfig>(this.loadConfig());
 
+    // Otro Signal para saber si la config está inicializada
+    isConfigInitialized = signal<boolean>(this.comprobarInicializada());
+
     constructor(private http: HttpClient) {
-        // Aplicar configuración al cargar
+        // Aplicar configuración al cargar la app
         effect(() => {
             this.applyConfig();
         });        
@@ -70,6 +73,30 @@ export class ConfigService {
     initialize(): void {
         this.syncConfigFromDB();
     }
+
+    /* ================================
+    VERIFICACIÓN DE INICIALIZACIÓN
+    ==================================*/
+
+    // Verificar si la configuración ya fue inicializada
+    private comprobarInicializada(): boolean {
+        const initialized = localStorage.getItem(this.CONFIG_INITIALIZED_KEY);
+        return initialized === 'true';
+    }
+
+    /**
+     * Marcar la configuración como inicializada
+     */
+    private marcarComoInicilizada(): void {
+        localStorage.setItem(this.CONFIG_INITIALIZED_KEY, 'true');
+        this.isConfigInitialized.set(true);
+    }
+
+    // Obtener estado de inicialización (público)
+    getInitializationStatus(): boolean {
+        return this.isConfigInitialized();
+    }
+
 
     /* ================================
     LOCALSTORAGE CONFIg
@@ -109,7 +136,7 @@ export class ConfigService {
     }
 
     /* ================================
-    BD CONFIG
+    CONFIGURACIÓN BD
     ==================================*/
 
     // Comprobar si hay configuración en BD
@@ -127,14 +154,6 @@ export class ConfigService {
             })
         );
     }      
-    
-    // Update toda la config
-    updateConfigApi_OLD(id: number, conf: ConfigBD): Observable<ConfigBD> {
-        return this.http.put<ConfigBD>(`${this.apiUrl}/${id}`, conf)
-            .pipe(catchError((error) => {
-                return throwError( () => new Error('No se ha podido ACTUALIZAR la configuración'));
-        }));
-    }
 
     updateConfigApi(id: number, conf: Partial<ConfigBD>): Observable<any> {
         return this.http.put(`${this.apiUrl}/${id}`, conf).pipe(
@@ -174,9 +193,7 @@ export class ConfigService {
         );
     }
 
-    /**
-    * Actualizar y subir logo al backend
-    */
+    // Actualizar y subir logo al backend
     uploadLogo(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('logo', file);
@@ -195,9 +212,7 @@ export class ConfigService {
         );
     }
 
-    /**
-    * Eliminar logo del backend
-    */
+    // Eliminar logo del backend
     deleteLogo(): Observable<any> {
         return this.http.delete(`${this.apiUrl}/delete-logo`).pipe(
             map((response: any) => {
@@ -217,25 +232,42 @@ export class ConfigService {
     syncConfigFromDB(): void {
         const token = localStorage.getItem('auth_token');
         if (!token) return; // No hacer petición sin token
+        
         this.getConfigApi().subscribe({
             next: (configBD) => {
-                // Mapear configuración de BD a AppConfig
-                const appConfig: AppConfig = {
-                    appTitle: configBD.titulo || this.defaultConfig.appTitle,
-                    appSubTitle: this.buildSubtitle(configBD),
-                    appAno: this.buildAno(configBD),
-                    appLogo: configBD.logo || this.defaultConfig.appLogo,
-                    navbarColor: configBD.navbar_color || this.defaultConfig.navbarColor,
-                    userDropdownGradient: {
-                        from: configBD.gradient_from || this.defaultConfig.userDropdownGradient.from,
-                        to: configBD.gradient_to || this.defaultConfig.userDropdownGradient.to
-                    }
-                };
-                // Guardar en localStorage y actualizar signal
-                this.saveConfigToLocalStorage(appConfig);
+                // Verificar si la configuración está modificada
+                if (configBD.modificado) {
+                    // Configuración YA inicializada
+                    this.marcarComoInicilizada();
+                    
+                    // Convertir configuración de BD a AppConfig
+                    const appConfig: AppConfig = {
+                        appTitle: configBD.titulo || this.defaultConfig.appTitle,
+                        appSubTitle: this.buildSubtitle(configBD),
+                        appAno: this.buildAno(configBD),
+                        appLogo: configBD.logo || this.defaultConfig.appLogo,
+                        navbarColor: configBD.navbar_color || this.defaultConfig.navbarColor,
+                        userDropdownGradient: {
+                            from: configBD.gradient_from || this.defaultConfig.userDropdownGradient.from,
+                            to: configBD.gradient_to || this.defaultConfig.userDropdownGradient.to
+                        }
+                    };
+                    
+                    // Guardar en localStorage y actualizar signal
+                    this.saveConfigToLocalStorage(appConfig);
+                } else {
+                    // Configuración NO inicializada (primera vez)
+                    console.log('Configuración no inicializada. Usando valores por defecto.');
+                    this.isConfigInitialized.set(false);
+                    
+                    // Cargar configuración por defecto
+                    this.saveConfigToLocalStorage(this.defaultConfig);
+                }
             },
             error: (error) => {
                 console.error('Error al sincronizar configuración desde BD:', error);
+                // Si hay error, se asume que no está inicilizada
+                this.isConfigInitialized.set(false);
             }
         });
     }
@@ -244,7 +276,39 @@ export class ConfigService {
     MÉTDOSO PÚBLICOS Y AUXILIARES
     ==================================*/
 
-    // Guardar configuración completa (BD + localStorage)
+    /*
+     Guarda configuración completa (PRIMERA VEZ)
+     Este método lo llamo desde SettingsComponent cuando el usuario administrador guarda por primera vez
+    */
+    saveInitialConfig(config: AppConfig, tipo: string, ejercicio: string): Observable<any> {
+        // Mapear AppConfig + tipo + ejercicio a ConfigBD
+        const configBD: Partial<ConfigBD> = {
+            tipo: tipo,
+            ejercicio: ejercicio,
+            titulo: config.appTitle,
+            subtitulo: config.appSubTitle,
+            logo: config.appLogo,
+            navbar_color: config.navbarColor,
+            gradient_from: config.userDropdownGradient.from,
+            gradient_to: config.userDropdownGradient.to,
+            modificado: true  // MARCAR COMO MODIFICADO
+        };
+
+        // Guardar en BD
+        return this.updateConfigApi(1, configBD).pipe(
+            tap((response) => {
+                // Marcar como inicializada
+                this.marcarComoInicilizada();
+                
+                // Guardar en localStorage
+                this.saveConfigToLocalStorage(config);
+                
+                console.log('Configuración inicial guardada correctamente');
+            })
+        );
+    }
+
+    // Guardar configuración visual, se llama cuando la configuración ya esta inicializada
     saveConfig(config: AppConfig): Observable<any> {
         // Mapear AppConfig a ConfigBD
         const configBD: Partial<ConfigBD> = {
@@ -306,10 +370,10 @@ export class ConfigService {
 
     // Construir subtítulo con temporada activaFormato: "Tipo Temporada 25-26"
     private buildSubtitle(configBD: ConfigBD): string {
-        const tipo = configBD.tipo || configBD.subtitulo || 'Peña';
-        
+        const tipo = configBD.tipo || configBD.subtitulo || 'Entidad';
+        const ejer = configBD.ejercicio || 'Ejercicio';
         if (configBD.temporada_activa?.abreviatura) {
-            return `${tipo} Temporada ${configBD.temporada_activa.abreviatura}`;
+            return `${tipo} ${ejer} ${configBD.temporada_activa.abreviatura}`;
         }
         
         return tipo;

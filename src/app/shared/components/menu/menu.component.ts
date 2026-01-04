@@ -19,28 +19,47 @@ export class MenuComponent implements OnInit{
 
     // Menú definido en el propio componente
     menuItems: MenuItem[] = [];
+    isConfigInitialized = false;
     configBD = false;
 
     constructor(private router: Router, private ms: MenuService, private cs: ConfigService) {}
 
     ngOnInit(): void {
-        this.cs.getConfigApi().subscribe({
-            next: (conf) => {          
-                let cf = conf;
-                this.configBD = conf.modificado;
+        // Verificar si la configuración está inicializada
+        this.checkConfigurationStatus();
 
-                if(this.configBD) this.loadMenu();
-                else this.loadMenuDefault();       
-            },
-            error: (error) => {
-                console.error('Error en el componente menu.ts:', error.message);
-                this.loadMenuDefault();
-                this.configBD = false;          
-            }
-        })
+        // Suscribirse a cambios del menú => Visto en PEC- Ecommerce de asig FRONTND
+        this.ms.menuItems$.subscribe(items => {
+            this.menuItems = items;
+        });
     }
 
-    loadMenuDefault() {
+    // Verificar el estado de la configuración y cargar menú apropiado
+    checkConfigurationStatus(): void {
+        this.cs.getConfigApi().subscribe({
+            next: (configBD) => {
+                this.isConfigInitialized = configBD.modificado;
+                
+                if (this.isConfigInitialized) {
+                    // Configuración inicializada-> Cargar menú completo desde API
+                    console.log('Config inicializada - Cargando menú completo desde API');
+                    this.loadMenu();
+                } else {
+                    // Primera vez -> Cargar menú por defecto
+                    console.log('Config NO inicializada - Cargando menú por defecto');
+                    this.loadDefaultMenu();
+                }
+            },
+            error: (error) => {
+                console.error('Error al verificar configuración:', error.message);
+                // Si hay error, cargar menú por defecto
+                this.loadDefaultMenu();
+                this.isConfigInitialized = false;
+            }
+        });
+    }
+
+    loadDefaultMenu() {
         this.ms.loadMenuDefault().subscribe({
             next: (items) => {
                 this.menuItems = items;
@@ -60,13 +79,15 @@ export class MenuComponent implements OnInit{
             },
             error: (error) => {
                 console.error('Error al cargar el menú:', error);
+                this.loadDefaultMenu();
             }
         });
+    }
 
-            // También puedes suscribirte a cambios del menú
-            this.ms.menuItems$.subscribe(items => {
-            this.menuItems = items;
-        });
+    // Recargar menú (llamado desde otros componentes)
+    reloadMenu(): void {
+        console.log('🔄 Recargando menú...');
+        this.checkConfigurationStatus();
     }
 
     toggleMenuItem(item: MenuItem): void {

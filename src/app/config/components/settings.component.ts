@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppConfig, ConfigBD, ConfigService } from '../services/config.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { MenuService } from '../../shared/services/menu.service';
 
 @Component({
     selector: 'app-settings',
@@ -10,6 +11,7 @@ import { ToastService } from '../../shared/services/toast.service';
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.css'
 })
+
 export class SettingsComponent implements OnInit {
     config: AppConfig = {
         navbarColor: '',
@@ -29,6 +31,15 @@ export class SettingsComponent implements OnInit {
         ejercicio: '',
         modificado: false
     };
+
+    // Estado de inicialización
+    isInitialized = false;
+    isFirstTimeSave = false;
+
+    // Valores originales de tipo y ejercicio (para bloquear después de guardar)
+    originalTipo = '';
+    originalEjercicio = '';
+
     // Colores predefinidos para selección rápida
     navbarColors = [
         { name: 'Azul', value: '#0d6efd' },
@@ -49,31 +60,139 @@ export class SettingsComponent implements OnInit {
         { name: 'Azul', from: '#4776E6', to: '#8E54E9' }
     ];
 
-    constructor(private configService: ConfigService, private toast: ToastService) { }
+    constructor(private configService: ConfigService, private toast: ToastService, private ms: MenuService) { }
 
     ngOnInit(): void {        
         this.config = { ...this.configService.getConfig() };
         this.previewLogo = this.config.appLogo;
-        console.log("NgOnInit LoadConfig API", this.config);
+
+        // Verificar si la configuración está inicializada
+        this.isInitialized = this.configService.getInitializationStatus();
+        
+        // Cargar configuración desde BD
+        this.loadConfigFromDB();
+
+        console.log("NgOnInit LoadConfig API inicial");
+    }
+
+    // Cargar configuración desde BD    
+    loadConfigFromDB(): void {
+        this.configService.getConfigApi().subscribe({
+            next: (configBD) => {
+                this.confBD = configBD;
+                
+                // Guardar valores originales
+                this.originalTipo = configBD.tipo || '';
+                this.originalEjercicio = configBD.ejercicio || '';
+                
+                // Verificar si está modificado (inicializado)
+                this.isInitialized = configBD.modificado;
+                
+                if (!this.isInitialized) {
+                    console.log('Primera vez - Configuración no inicializada');
+                    this.isFirstTimeSave = true;
+                } else {
+                    console.log('Configuración ya inicializada');
+                }
+            },
+            error: (error) => {
+                console.error('Error al cargar configuración:', error);
+                this.toast.error('Error al cargar la configuración');
+            }
+        });
     }
 
     // Guardar configuración
-    saveConfig(): void {    
-        // solo actualiza la primera vez
+    saveConfig(): void {
+        // Validar campos obligatorios en primera configuración
+        if (!this.isInitialized) {
+            if (!this.config.appSubTitle || this.config.appSubTitle.trim() === '') {
+                this.toast.error('Por favor, selecciona el tipo de entidad');
+                return;
+            }
+            
+            if (!this.config.appAno || this.config.appAno.trim() === '') {
+                this.toast.error('Por favor, selecciona el tipo de ejercicio económico');
+                return;
+            }
+        }
+
+        if (this.isFirstTimeSave || !this.isInitialized) {
+            // PRIMERA VEZ - Guardo configuración completa
+            this.saveInitialConfiguration();
+        } else {
+            // CONFIGURACIÓN YA INICIALIZADA - Solo guardo los cambios visuales
+            this.saveVisualConfiguration();
+        }
+    }
+
+    // Guardar configuración inicial (primera vez)
+    private saveInitialConfiguration(): void {
+        const tipo = this.config.appSubTitle;
+        const ejercicio = this.config.appAno;
+        
+        this.configService.saveInitialConfig(this.config, tipo, ejercicio).subscribe({
+            next: (response) => {
+                if (response.code == 200 || response) {
+                    this.toast.success('¡Configuración inicial guardada correctamente!');
+                    
+                    // Actualizar estado
+                    this.confBD = response.data || response;
+                    this.isInitialized = true;
+                    this.isFirstTimeSave = false;
+                    
+                    // Guardar valores originales (para bloquear)
+                    this.originalTipo = tipo;
+                    this.originalEjercicio = ejercicio;
+                    
+                    // Recargar el menú completo desde la API
+                    this.reloadMenu();
+                    
+                    // Opcional: Redirigir al dashboard
+                    // this.router.navigate(['/dashboard']);
+                }
+            },
+            error: (error) => {
+                console.error('Error al guardar configuración inicial:', error);
+                this.toast.error('Error al guardar la configuración inicial');
+            }
+        });
+    }
+
+    /**
+     * Guardar solo cambios visuales (config ya inicializada)
+     */
+    private saveVisualConfiguration(): void {
         this.configService.saveConfig(this.config).subscribe({
             next: (response) => {
-                if (response.code == 200) {
-                    this.toast.success('Configuración guardada correctamente');                    
-                    this.confBD = response.data;
-                }                
+                if (response.code == 200 || response) {
+                    this.toast.success('Configuración actualizada correctamente');
+                    this.confBD = response.data || response;
+                }
             },
             error: (error) => {
                 console.error('Error al guardar configuración:', error);
-                this.toast.error('Error al guardar la configuración');                
+                this.toast.error('Error al guardar la configuración');
             }
         });
-
     }
+
+    // Recargar menú completo desde la API
+    private reloadMenu(): void {
+        console.log('🔄 Recargando menú completo desde API...');
+        
+        this.ms.loadMenuAPI().subscribe({
+            next: (menuItems) => {
+                console.log('Menú completo cargado:', menuItems.length, 'items');
+                this.toast.success('Menú actualizado correctamente');
+            },
+            error: (error) => {
+                console.error('Error al recargar menú:', error);
+                this.toast.warning('Configuración guardada, pero hubo un error al actualizar el menú');
+            }
+        });
+    }
+
 
     // Restaurar valores por defecto
     resetToDefault(): void {
@@ -145,5 +264,4 @@ export class SettingsComponent implements OnInit {
     getGradientStyle(): string {
         return `linear-gradient(135deg, ${this.config.userDropdownGradient.from} 0%, ${this.config.userDropdownGradient.to} 100%)`;
     }
-
 }
