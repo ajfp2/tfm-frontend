@@ -20,7 +20,7 @@ export class UsuariosFormComponent implements OnInit {
     bloqueROL: boolean = false;
     registerUser: UserDTO;
 
-    currentUser: any = null; // guardar autenticado 
+    currentUser: any = null; // guardar user autenticado 
 
     registerForm!: UntypedFormGroup;
     isValidForm: boolean | null;
@@ -79,36 +79,31 @@ export class UsuariosFormComponent implements OnInit {
     determinarBloqueoRol(): void {
         if (!this.currentUser) {
             this.bloqueROL = true;
-            console.log('Sin usuario, ROL bloqueado');
             return;
         }
 
         const esAdmin = this.currentUser.perfil === 1 || this.currentUser.perfil === '1';
         
-        // Si NO es admin, siempre bloquear
+        // NO es admin, siempre bloquear
         if (!esAdmin) {
             this.bloqueROL = true;
-            console.log('Usuario normal, ROL bloqueado');
             return;
         }
 
         // Si es admin creando nuevo usuario
         if (!this.isUpdateMode) {
             this.bloqueROL = false;
-            console.log('Admin creando usuario, ROL desbloqueado');
             return;
         }
 
         // Si es admin editando su propio perfil
         if (this.userId === this.currentUser.id) {
             this.bloqueROL = true;
-            console.log('Admin editando su propio perfil, ROL bloqueado');
             return;
         }
 
         // Si es admin editando otro usuario
         this.bloqueROL = false;
-        console.log('Admin editando otro usuario, ROL desbloqueado');
     }
 
     // Inicializar formulario
@@ -169,7 +164,6 @@ export class UsuariosFormComponent implements OnInit {
         this.userService.getUserById(this.userId).subscribe({
             next: (resp) => {
                 this.registerUser = resp;
-                console.log('Usuario cargado:', this.registerUser);
                 
                 if (resp.foto) {
                     this.imagePreview = resp.foto;
@@ -205,7 +199,6 @@ export class UsuariosFormComponent implements OnInit {
             perfilControl?.enable();
         }
         
-        console.log('Estado campo perfil actualizado. Disabled:', this.bloqueROL);
     }
 
     register(): void {
@@ -220,12 +213,6 @@ export class UsuariosFormComponent implements OnInit {
         // Usar getRawValue() para incluir campos disabled
         const formValues = this.registerForm.getRawValue();
 
-        console.log('=== DATOS DEL FORMULARIO ===');
-        console.log('Valores del form (con disabled):', formValues);
-        console.log('isUpdateMode:', this.isUpdateMode);
-        console.log('userId:', this.userId);
-        console.log('bloqueROL:', this.bloqueROL);
-
         const formData = new FormData();
         
         // Copiar todos los campos del formulario
@@ -238,7 +225,6 @@ export class UsuariosFormComponent implements OnInit {
 
         // Añadir img si se ha seleccionado
         if (this.selectedFile) {
-            console.log('Añadiendo foto:', this.selectedFile.name);
             formData.append('foto', this.selectedFile, this.selectedFile.name);
         }
 
@@ -278,7 +264,6 @@ export class UsuariosFormComponent implements OnInit {
     }
 
     private actualizarUsuario(formData: FormData): void {
-        // Laravel necesita _method para FormData con archivos
         formData.append('_method', 'PUT');
 
         this.userService.updateUser(this.userId!, formData).subscribe({
@@ -287,7 +272,6 @@ export class UsuariosFormComponent implements OnInit {
                 
                 // Si el usuario editó su propio perfil, actualizar sesión
                 if (this.userId === this.currentUser?.id) {
-                    console.log('Actualizando usuario en sesión...');
                     // Refrescar Perfil auth???? probarrrr
                     // this.authService.refreshCurrentUser();
                 }

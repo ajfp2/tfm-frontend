@@ -252,25 +252,33 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Evolución de Saldos por Ejercicio<span class="badge bg-light text-dark ms-2">Últimos 5 Ejercicios</span></h5>
+                        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Evolución de Saldos por Ejercicio<span class="badge bg-light text-dark ms-2">Últimos {{ saldosTemporadas.length }} Ejercicios</span></h5>
                     </div>
 
-                    <div class="card-body">
-                        <div *ngIf="loadingGrafico" class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando gráfico...</span>
+                    <div class="card-body">                        
+                        <div style="height: 400px;">
+                            <div *ngIf="loadingGrafico" class="d-flex justify-content-center align-items-center h-100">
+                                <div class="spinner-border text-primary"><span class="visually-hidden">Cargando gráfico...</span></div>
+                                <p class="mt-2 text-muted">Cargando datos del gráfico...</p>
                             </div>
-                            <p class="mt-2 text-muted">Cargando datos del gráfico...</p>
+                            
+                            <canvas #lineChart [style.display]="saldosTemporadas.length > 0 ? 'block' : 'none'"></canvas>
+                            
+                            <div *ngIf="!loadingGrafico && saldosTemporadas.length === 0" 
+                                class="text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted"></i>
+                                <p class="text-muted mt-3 mb-0">No hay datos para el gráfico</p>
+                            </div>
                         </div>
 
-                        <div *ngIf="!loadingGrafico && saldosTemporadas.length > 0" style="height: 400px;">
+                        <!-- <div *ngIf="!loadingGrafico && saldosTemporadas.length > 0" style="height: 400px;">
                            <canvas #lineChart [style.display]="saldosTemporadas.length > 0 ? 'block' : 'none'"></canvas>
-                        </div>
+                        </div> -->
 
-                        <div *ngIf="!loadingGrafico && saldosTemporadas.length === 0" class="text-center py-5">
+                        <!-- <div *ngIf="!loadingGrafico && saldosTemporadas.length === 0" class="text-center py-5">
                             <i class="bi bi-inbox fs-1 text-muted"></i>
                             <p class="text-muted mt-3 mb-0">No hay suficientes ejercicios para mostrar el gráfico</p>
-                        </div>
+                        </div> -->
 
                         <!-- Tabla de datos debajo del gráfico -->
                         <div *ngIf="!loadingGrafico && saldosTemporadas.length > 0" class="mt-4">

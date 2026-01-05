@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -84,11 +84,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         }
     };
 
-    constructor(private ds: DashboardService, private toast: ToastService) {}
+    constructor(private ds: DashboardService, private toast: ToastService, private change: ChangeDetectorRef) {}
 
 
     // Nos aseguramos que el HTML y el viewChild están listos
     ngAfterViewInit(): void {
+        console.log('ngAfterViewInit ejecutado');
+        console.log('lineChartRef existe:', !!this.lineChartRef);
+        console.log('lineChartRef.nativeElement:', this.lineChartRef?.nativeElement);
+
         this.chartReady = true;
         this.cargarGraficoSaldos();        
     }
@@ -115,13 +119,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     cargarGraficoSaldos(): void {
         this.loadingGrafico = true;
 
-        this.ds.getSaldosTemporadas(5).subscribe({
+        this.ds.getSaldosTemporadas(4).subscribe({
             next: (response) => {
                 if (response.code == 200 && response.data.length > 0) {
                     this.saldosTemporadas = response.data;
                     console.log('Datos cargados:', this.saldosTemporadas.length);
                     console.log('chartReady:', this.chartReady);
-
+                    // Forzamos cambios
+                    // this.change.detectChanges();
                     setTimeout(() => {
                         if (this.chartReady) {
                             console.log("Grafff");                            
@@ -129,8 +134,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                         } else {
                             console.warn('Canvas aún no está listo');
                         }
-                    }, 700);
-                }                
+                    }, 200);
+                }
+                this.loadingGrafico = false;
             },
             error: (error) => {
                 console.error('Error al cargar gráfico de saldos:', error);
@@ -142,6 +148,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     configurarGrafico(): void {
         // Si el gráfico ya existe, destruirlo
         if (this.lineChart) {
+            console.log('Destruyendo otros gráficos');
             this.lineChart.destroy();
         }
 
@@ -154,8 +161,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const ctx = this.lineChartRef.nativeElement.getContext('2d');
         if (!ctx) {
             console.error('No se pudo obtener el contexto 2D del canvas');
+            this.toast.error('Error: No se pudo inicializar el gráfico');
             return;
         }
+
+        console.log('Canvas OK, creando gráfico...');
 
         const labels = this.saldosTemporadas.map(t => t.abreviatura);
 
@@ -208,9 +218,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             options: this.lineChartOptions
         };
+        try {
+            this.lineChart = new Chart(ctx, config);
+            console.log('Gráfico creado exitosamente');
+        } catch (error) {
+            console.error('Error al crear el gráfico:', error);
+            this.toast.error('Error al crear el gráfico');
+        }
 
-        this.lineChart = new Chart(ctx, config); 
-        this.loadingGrafico = false;       
+        // this.lineChart = new Chart(ctx, config);         
     }
 
     // Calcular porcentaje de socios activos

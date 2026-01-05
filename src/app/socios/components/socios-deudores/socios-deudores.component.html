@@ -60,8 +60,7 @@
                                     <th style="width: 85px;">Nº Socio</th>
                                     <th>Nombre Completo</th>
                                     <!-- <th>DNI</th> -->
-                                    <th style="width: 150px;">Teléfono</th>
-                                    <th>Email</th>
+                                    <th style="width: 150px;">Teléfono</th>                                    
                                     <th style="width: 150px;">Tipo Socio</th>
                                     <th style="width: 120px;">Fecha Alta</th>
                                     <th>Deuda</th>
@@ -83,16 +82,7 @@
                                     <!-- <td>{{ socio.DNI }}</td> -->
                                     
                                     <!-- Teléfono -->
-                                    <td><i class="bi bi-phone me-1"></i> {{ socio.Movil || 'N/A' }}</td>
-                                    
-                                    <!-- Email -->
-                                    <td>
-                                        <a *ngIf="socio.Email" [href]="'mailto:' + socio.Email" class="text-decoration-none">
-                                            <i class="bi bi-envelope me-1"></i>
-                                            {{ socio.Email }}
-                                        </a>
-                                        <span *ngIf="!socio.Email">N/A</span>
-                                    </td>
+                                    <td><i class="bi bi-phone me-1"></i> {{ socio.Movil || 'N/A' }}</td>                                                                        
                                     
                                     <!-- Tipo de socio -->
                                     <td>
