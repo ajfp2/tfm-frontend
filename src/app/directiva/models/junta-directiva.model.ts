@@ -33,7 +33,7 @@ export interface HistorialCargoDirectivo {
 
 export interface CargoDirectivoResponse {
   data: CargoDirectivo;
-  message?: string;
+  message: string;
   code: number;
 }
 
@@ -43,7 +43,7 @@ export interface CargosDirectivosResponse {
 
 export interface CargoDirectivoResponse {
   data: CargoDirectivo;
-  message?: string;
+  message: string;
 }
 
 export interface HistorialCargosResponse {

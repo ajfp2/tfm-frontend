@@ -71,8 +71,6 @@ export class SettingsComponent implements OnInit {
         
         // Cargar configuración desde BD
         this.loadConfigFromDB();
-
-        console.log("NgOnInit LoadConfig API inicial");
     }
 
     // Cargar configuración desde BD    
@@ -80,6 +78,7 @@ export class SettingsComponent implements OnInit {
         this.configService.getConfigApi().subscribe({
             next: (configBD) => {
                 this.confBD = configBD;
+                console.log("CONF BD", configBD);
                 
                 // Guardar valores originales
                 this.originalTipo = configBD.tipo || '';

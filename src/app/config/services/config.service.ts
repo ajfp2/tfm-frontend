@@ -53,8 +53,8 @@ export class ConfigService {
         },
         appTitle: 'GestiSOC',
         appSubTitle: 'Entidad',
-        appAno: 'Ejercicio',
-        appLogo: 'https://ui-avatars.com/api/?name=MA&background=ffffff&color=0d6efd&size=40&bold=true'
+        appAno: 'Ejercicio 25-26',
+        appLogo: 'https://ui-avatars.com/api/?name=Gesti+Soc&background=ffffff&color=0d6efd&size=40&bold=true'
     };
 
     // Signal para la configuración

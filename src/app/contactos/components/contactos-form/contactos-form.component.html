@@ -1,0 +1,150 @@
+<div class="container-fluid mt-4">
+    <div class="mb-4">
+        <h2><i [class]="'bi ' + icon + ' me-2'"></i>{{ title }}</h2>
+        <p class="text-muted mb-0">Complete los datos del contacto/proveedor</p>
+    </div>
+
+    <!-- Form contacto -->
+    <form [formGroup]="contactoForm" (ngSubmit)="guardar()" *ngIf="!loadingDatosAuxiliares || !isEditMode">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white"><i class="bi bi-building me-2"></i>Datos de la Empresa</div>
+            <div class="card-body">
+                <!-- Nombre y CIF -->
+                <div class="row">                    
+                    <div class="col-md-8 mb-3">
+                        <label for="nom_emp" class="form-label">Nombre de la Empresa:</label>
+                        <input type="text" id="nom_emp" class="form-control" [class]="getClaseCampo('nom_emp')" formControlName="nom_emp" placeholder="Ej: Almacenes García S.L.">
+                        <div class="invalid-feedback" *ngIf="tieneError('nom_emp', 'required')">El nombre de la empresa es obligatorio</div>
+                        <div class="invalid-feedback" *ngIf="tieneError('nom_emp', 'minlength')">Mínimo 3 caracteres</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="dni_cif" class="form-label"><i class="bi bi-info-circle text-muted" title="Formato: Letra + 8 números (Ej: A12345678)"></i> CIF:</label>
+                        <input type="text" id="dni_cif" class="form-control text-uppercase" [class]="getClaseCampo('dni_cif')" 
+                        formControlName="dni_cif" placeholder="A12345678" maxlength="9">
+                        <div class="invalid-feedback" *ngIf="tieneError('dni_cif', 'required')">El CIF es obligatorio</div>
+                        <div class="invalid-feedback" *ngIf="tieneError('dni_cif', 'pattern')">Formato: Letra + 8 números</div>
+                    </div>
+                </div>
+
+                <!-- Teléfono, email,faxz -->
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" id="telefono" class="form-control" [class]="getClaseCampo('telefono')" formControlName="telefono" placeholder="612345678"
+                        maxlength="11" (input)="formatearTelefono('telefono', $event)">
+                        <div class="invalid-feedback" *ngIf="tieneError('telefono', 'required')">El teléfono es obligatorio</div>
+                        <div class="invalid-feedback" *ngIf="tieneError('telefono', 'pattern')">Formato: 6XX XXX XXX o 7XX XXX XXX</div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="fax" class="form-label">Fax</label>
+                        <input type="text" id="fax" class="form-control"[class]="getClaseCampo('fax')" formControlName="fax"
+                        placeholder="812345678" maxlength="11" (input)="formatearTelefono('fax', $event)">
+                        <div class="invalid-feedback" *ngIf="tieneError('fax', 'pattern')">Formato: 8XX XXX XXX o 9XX XXX XXX</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" id="email" class="form-control" [class]="getClaseCampo('email')" formControlName="email" placeholder="contacto@empresa.com">
+                        <div class="invalid-feedback" *ngIf="tieneError('email', 'required')">El email es obligatorio</div>
+                        <div class="invalid-feedback" *ngIf="tieneError('email', 'email')">Email inválido</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direccion contacto(cp, mun, prov ...) -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-white"><i class="bi bi-geo-alt me-2"></i> Dirección</div>
+            <div class="card-body">
+                
+                <!-- Dirección y CP -->
+                <div class="row">                    
+                    <div class="col-md-8 mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" id="direccion" class="form-control" [class]="getClaseCampo('direccion')" formControlName="direccion" placeholder="Calle, número, piso...">
+                        <div class="invalid-feedback" *ngIf="tieneError('direccion', 'required')">La dirección es obligatoria</div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="cp" class="form-label">Código Postal:</label>
+                        <input type="text" id="cp" class="form-control" [class]="getClaseCampo('cp')" formControlName="cp" placeholder="03001" maxlength="5">                    
+                        <div class="invalid-feedback" *ngIf="tieneError('cp', 'pattern')">Debe ser 5 dígitos</div>
+                    </div>
+                </div>
+
+                <!-- País, Prov, Muni -->
+                <div class="row">
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="pais" class="form-label">País: </label>
+                        <select id="pais" class="form-select" [class]="getClaseCampo('pais')" formControlName="pais">
+                            <option value="">Seleccionar país...</option>
+                            <option *ngFor="let p of paises" [value]="p.id">{{ p.pais }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="tieneError('pais', 'required')">El país es obligatorio</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="provincia" class="form-label">Provincia:</label>
+                        <select id="provincia" class="form-select" [class]="getClaseCampo('provincia')" formControlName="provincia">
+                            <option value="">Seleccionar provincia...</option>
+                            <option *ngFor="let p of provincias" [value]="p.id">{{ p.provincia }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="tieneError('provincia', 'required')">La provincia es obligatoria</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="poblacion" class="form-label">Municipio:</label>
+                        <select id="poblacion" class="form-select" [class]="getClaseCampo('poblacion')" formControlName="poblacion" [disabled]="municipiosFiltrados.length === 0">
+                            <option value="">Seleccionar municipio...</option>
+                            <option *ngFor="let m of municipiosFiltrados" [value]="m.id">{{ m.municipio }}</option>
+                        </select>
+                        <small class="text-muted" *ngIf="municipiosFiltrados.length === 0 && contactoForm.get('provincia')?.value">Selecciona una provincia primero</small>
+                        <div class="invalid-feedback" *ngIf="tieneError('poblacion', 'required')">El municipio es obligatoria</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white"><i class="bi bi-info-circle me-2"></i>Información Adicional</div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Persona de Contacto -->
+                    <div class="col-md-4 mb-3">
+                        <label for="contacto" class="form-label">Persona de Contacto</label>
+                        <input type="text" id="contacto" class="form-control" formControlName="contacto" placeholder="Nombre del contacto">
+                    </div>
+
+                    <!-- IBAN -->
+                    <div class="col-md-4 mb-3">
+                        <label for="IBAN" class="form-label">IBAN <i class="bi bi-info-circle text-muted" title="Formato: ES00 0000 0000 0000 0000 0000"></i></label>
+                        <input type="text" id="IBAN" class="form-control text-uppercase"
+                        [class]="getClaseCampo('IBAN')" formControlName="IBAN" placeholder="ES00 0000 0000 0000 0000 0000" maxlength="29" (input)="formatearIBAN($event)">
+                        <div class="invalid-feedback" *ngIf="tieneError('IBAN', 'pattern') || tieneError('IBAN', 'minlength')">
+                            IBAN inválido (24 caracteres)
+                        </div>
+                    </div>
+
+                    <!-- BIC -->
+                    <div class="col-md-4 mb-3">
+                        <label for="BIC" class="form-label">BIC/SWIFT</label>
+                        <input type="text" id="BIC" class="form-control text-uppercase" [class]="getClaseCampo('BIC')" formControlName="BIC" placeholder="CAHMESMMXXX" maxlength="11">
+                        <div class="invalid-feedback" *ngIf="tieneError('BIC', 'pattern')">BIC inválido</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-end gap-2 mb-4">
+            <button type="button" class="btn btn-secondary" (click)="cancelar()"><i class="bi bi-x-circle me-2"></i> Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-2"></i>{{ isEditMode ? 'Actualizar' : 'Crear' }} Contacto
+            </button>
+        </div>
+    </form>
+</div>

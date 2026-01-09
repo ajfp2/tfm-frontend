@@ -1,0 +1,118 @@
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-person-rolodex me-2"></i> Contactos / Proveedores</h2>
+            <p class="text-muted mb-0">Gestión de contactos y proveedores de la entidad</p>
+        </div>
+        <button class="btn btn-success" (click)="nuevo()"><i class="bi bi-plus-circle me-2"></i> Nuevo Contacto</button>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Buscar por nombre, CIF o email..." [(ngModel)]="searchTerm" (keyup.enter)="buscar()">
+                        <button class="btn btn-outline-secondary" type="button" (click)="limpiarBusqueda()" *ngIf="searchTerm"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-primary" type="button" (click)="buscar()">Buscar</button>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-secondary" (click)="recargar()"><i class="bi bi-arrow-clockwise me-2"></i> Recargar</button>
+                </div> -->
+            </div>
+
+            <!-- Resultados -->
+            <div class="mt-3" *ngIf="contactos.length > 0">
+                <small class="text-muted">
+                    Mostrando {{ contactosFiltrados.length }} contacto(s)
+                    <span *ngIf="searchTerm"> - Búsqueda activa: "{{ searchTerm }}"</span>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de contactos -->
+    <div class="card shadow-sm" *ngIf="contactos.length > 0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 60px;"></th>
+                            <th>Empresa</th>
+                            <th>CIF</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Población</th>
+                            <th>Contacto</th>
+                            <th style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sin resultados -->
+                        <tr *ngIf="contactosFiltrados.length === 0">
+                            <td colspan="9" class="text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted"></i>
+                                <p class="text-muted mt-3 mb-0">
+                                    <span *ngIf="searchTerm">No se encontraron contactos con "{{ searchTerm }}"</span>
+                                    <span *ngIf="!searchTerm">No hay contactos registrados</span>
+                                </p>
+                                <button class="btn btn-primary mt-3" (click)="nuevo()" *ngIf="!searchTerm">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    Crear primer contacto
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Lista de contactos -->
+                        <tr *ngFor="let contacto of contactosFiltrados; let i = index">
+                            <td><div class="avatar-circle bg-primary text-white">{{ getIniciales(contacto.nom_emp) }}</div></td>
+                            <td>
+                                <strong>{{ contacto.nom_emp }}</strong>
+                                <br>
+                                <small class="text-muted" *ngIf="contacto.direccion">{{ contacto.direccion }}</small>
+                            </td>
+                            <td><span class="badge bg-secondary">{{ contacto.dni_cif }}</span></td>
+                            <td>
+                                <i class="bi bi-telephone me-1"></i>{{ formatearTelefono(contacto.telefono) }}
+                                <br>
+                                <small class="text-muted" *ngIf="contacto.fax"><i class="bi bi-printer me-1"></i>{{ formatearTelefono(contacto.fax) }}</small>
+                            </td>
+                            <td>
+                                <a *ngIf="contacto.email" [href]="'mailto:' + contacto.email" class="text-decoration-none"><i class="bi bi-envelope me-1"></i>{{ contacto.email }}</a>
+                                <span *ngIf="!contacto.email" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span *ngIf="contacto.municipio">
+                                    {{ contacto.municipio.municipio }}
+                                </span>
+                                <span *ngIf="!contacto.municipio">-</span>
+                                <br>
+                                <small class="text-muted">
+                                    <span *ngIf="contacto.provincia_relacion">
+                                        {{ contacto.provincia_relacion.provincia }}
+                                    </span>
+                                </small>
+                            </td>
+                            <td>
+                                <span *ngIf="contacto.contacto">{{ contacto.contacto }}</span>
+                                <span *ngIf="!contacto.contacto" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <!-- <button class="btn btn-info" (click)="verDetalle(contacto.id)" title="Ver detalles"><i class="bi bi-eye"></i></button> -->
+                                    <button class="btn btn-warning" (click)="editar(contacto.id)" title="Editar"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-danger" (click)="eliminar(contacto)" title="Eliminar"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

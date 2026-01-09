@@ -40,11 +40,7 @@ export class AuthService {
     login(credentials: LoginCredentials): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
-                // Guardar token y usuario
-                console.log(response);
-                
                 this.setAuthData(response.token, response.user);
-                console.log('Login exitoso:', response.user);
                 this.cf.initialize();
             }),
             catchError(error => {
@@ -127,7 +123,6 @@ export class AuthService {
                     user: user,
                     token: token
                 });
-                console.log('Estado de autenticación cargado:', user.nombre);
             } catch (error) {
                 console.error('Error al cargar estado de autenticación:', error);
                 this.clearAuthData();

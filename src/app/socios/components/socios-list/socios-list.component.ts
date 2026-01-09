@@ -44,7 +44,6 @@ export class SociosListComponent implements OnInit{
         this.socioService.getSocios(this.tipoVista, this.searchTerm, this.tipoSocioFiltro).subscribe({
             next: (response) => {
                 this.socios = response.data;
-                console.log('Socios cargados:', this.socios);
             },
             error: (err) => {
                 console.error('Error al cargar socios:', err);

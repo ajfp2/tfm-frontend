@@ -34,16 +34,12 @@ export class LoginComponent {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     }
 
-    /**
-     * Getter para ACCEDER a los campos del formulario
-     */
+    // Getter para ACCEDER a los campos del formulario
     get f() {
         return this.loginForm.controls;
     }
 
-    /**
-     * Enviar formulario de login
-     */
+    // Enviar formulario de login
     login(): void {
         // Validar formulario
         if (this.loginForm.invalid) {
@@ -53,8 +49,6 @@ export class LoginComponent {
         }
 
         this.loading = true;
-
-        // Llamar al servicio de autenticación
         this.authService.login(this.loginForm.value).subscribe({
             next: (response) => {
                 this.toastService.success(`Bienvenido ${response.user.nombre}!`, 'Login exitoso');
@@ -79,16 +73,12 @@ export class LoginComponent {
         });
     }
 
-    /**
-     * Toggle para mostrar/ocultar contraseña
-     */
+    // Toggle para mostrar/ocultar contraseña
     togglePasswordVisibility(): void {
         this.showPassword = !this.showPassword;
     }
 
-    /**
-     * Marcar todos los campos como touched para mostrar errores
-     */
+    // Marcar todos los campos como touched para mostrar errores
     private markFormGroupTouched(formGroup: FormGroup): void {
         Object.keys(formGroup.controls).forEach(key => {
             const control = formGroup.get(key);

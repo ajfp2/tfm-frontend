@@ -89,10 +89,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Nos aseguramos que el HTML y el viewChild están listos
     ngAfterViewInit(): void {
-        console.log('ngAfterViewInit ejecutado');
-        console.log('lineChartRef existe:', !!this.lineChartRef);
-        console.log('lineChartRef.nativeElement:', this.lineChartRef?.nativeElement);
-
         this.chartReady = true;
         this.cargarGraficoSaldos();        
     }
@@ -123,13 +119,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             next: (response) => {
                 if (response.code == 200 && response.data.length > 0) {
                     this.saldosTemporadas = response.data;
-                    console.log('Datos cargados:', this.saldosTemporadas.length);
-                    console.log('chartReady:', this.chartReady);
-                    // Forzamos cambios
+                    // Forzamos cambios, si no funciona el grafico descomentar
                     // this.change.detectChanges();
                     setTimeout(() => {
-                        if (this.chartReady) {
-                            console.log("Grafff");                            
+                        if (this.chartReady) {                         
                             this.configurarGrafico();                            
                         } else {
                             console.warn('Canvas aún no está listo');
@@ -164,8 +157,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             this.toast.error('Error: No se pudo inicializar el gráfico');
             return;
         }
-
-        console.log('Canvas OK, creando gráfico...');
 
         const labels = this.saldosTemporadas.map(t => t.abreviatura);
 
@@ -220,7 +211,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         };
         try {
             this.lineChart = new Chart(ctx, config);
-            console.log('Gráfico creado exitosamente');
         } catch (error) {
             console.error('Error al crear el gráfico:', error);
             this.toast.error('Error al crear el gráfico');

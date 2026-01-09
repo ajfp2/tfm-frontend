@@ -38,17 +38,21 @@ export const routes: Routes = [
                 loadChildren: () => import('./directiva/directiva.routes').then(m => m.DIRECTIVA_ROUTES)
             },
             {
+                path: 'contactos',
+                loadChildren: () => import('./contactos/contactos.routes').then(m => m.CONTACTOS_ROUTES)
+            },
+            {
                 path: 'socios',
                 loadChildren: () => import('./socios/socios.routes').then(m => m.SOCIOS_ROUTES)
             },
             {
-                path: 'config',
-                loadComponent: () => import('./config/components/settings.component').then(m => m.SettingsComponent)
-            },
-            {
                 path: 'usuarios',
                 loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROUTES)
-            }
+            },
+            {
+                path: 'config',
+                loadComponent: () => import('./config/components/settings.component').then(m => m.SettingsComponent)
+            }            
         ]
     },
     {

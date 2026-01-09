@@ -13,7 +13,7 @@ export class SociosRealcionesService {
 
     constructor(private http: HttpClient) { }
 
-    // Nacionalidades Tabla
+    // Paises Tabla
     getNacionalidades(): Observable<{ data: Nacionalidad[] }> {
         return this.http.get<{ data: Nacionalidad[] }>(`${this.apiUrl}/nacionalidades`);
     }

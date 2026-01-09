@@ -42,15 +42,7 @@ export class JuntaListComponent implements OnInit{
         this.hs.getJuntaPorTemporada(tempID).subscribe({
             next: (response) => {
                 if (response.data && response.data.length > 0) {
-                    // Mapear datos de la API a MiembroJuntaDirectiva
-                    console.log(response);
-                    
                     this.miembros = response.data.map(item => this.mapToMiembro(item));
-                    // Obtener info de temporada del primer registro
-                    // if (item.temporada) {
-                    //     this.temporadaActual = item.temporada.temporada;
-                    //     this.temporadaId = item.temporada.id;
-                    // }
                 } else {
                     this.toast.warning('No hay cargos asignados en la temporada actual');
                 }                

@@ -145,8 +145,8 @@ export class SociosFormComponent implements OnInit{
                 const espana = this.nacionalidades.find(n => n.id === 60);
                 if (espana) {
                     this.socioForm.patchValue({ 
-                    Pais: espana.id,
-                    Nacionalidad: espana.id
+                        Pais: espana.id,
+                        Nacionalidad: espana.id
                     });
                 }
                 }

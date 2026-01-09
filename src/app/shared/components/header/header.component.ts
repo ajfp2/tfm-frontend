@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
             this.title = config.appTitle || 'GestiSOC';
             this.subtitle = config.appSubTitle || '';
             this.ano = config.appAno || '';
-            this.appLogo = config.appLogo || 'https://ui-avatars.com/api/?name=SG&background=ffffff&color=0d6efd&size=40&bold=true';
+            this.appLogo = config.appLogo || 'https://ui-avatars.com/api/?name=GS&background=ffffff&color=0d6efd&size=40&bold=true';
         });
 
         // Reaccionar a cambios en el usuario autenticado
